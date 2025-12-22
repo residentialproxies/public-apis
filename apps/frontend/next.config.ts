@@ -39,9 +39,10 @@ const nextConfig: NextConfig = {
   // Experimental features for performance
   experimental: {
     // Turbopack configuration for monorepo
-    turbo: {
-      root: "../../",
-    },
+    // Note: turbo config moved to turbo.json in Next.js 16
+    // turbo: {
+    //   root: "../../",
+    // },
     // Optimize package imports
     optimizePackageImports: [
       "@scalar/api-reference-react",
