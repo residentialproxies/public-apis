@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: payload
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?required}
+      POSTGRES_DB: api_navigator
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U payload -d api_navigator"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: api-navigator-backend:local
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URI: postgres://payload:${POSTGRES_PASSWORD}@postgres:5432/api_navigator
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:3001:3000"
+
+  scheduler:
+    image: api-navigator-backend:local
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    env_file:
+      - .env
+    environment:
+      JOB_BASE_URL: http://backend:3000
+      HEALTH_EVERY_MINUTES: 10
+      SYNC_EVERY_HOURS: 24
+      RUN_HEALTH_ON_START: "true"
+      RUN_SYNC_ON_START: "false"
+    command: ["node", "apps/backend/scripts/scheduler.mjs"]
+
+volumes:
+  pgdata:

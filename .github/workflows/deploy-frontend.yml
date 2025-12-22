@@ -1,0 +1,64 @@
+name: Deploy Frontend to Cloudflare Workers
+
+on:
+  push:
+    branches:
+      - main
+      - production
+    paths:
+      - 'apps/frontend/**'
+      - 'packages/shared/**'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Cloudflare Workers
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.17.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend for Workers
+        run: pnpm --filter @api-navigator/frontend build:worker
+        env:
+          NEXT_PUBLIC_CMS_URL: ${{ secrets.NEXT_PUBLIC_CMS_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+
+      - name: Create wrangler.toml from template
+        working-directory: apps/frontend
+        run: |
+          cp wrangler.example.toml wrangler.toml
+          # Replace placeholder values with secrets
+          sed -i "s/YOUR_PRODUCTION_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}/g" wrangler.toml
+          sed -i "s/YOUR_PREVIEW_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}/g" wrangler.toml
+          sed -i "s|https://cms.api-navigator.com|${{ secrets.NEXT_PUBLIC_CMS_URL }}|g" wrangler.toml
+          sed -i "s|https://api-navigator.com|${{ secrets.NEXT_PUBLIC_SITE_URL }}|g" wrangler.toml
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/frontend
+          command: deploy
+
+      - name: Cleanup
+        if: always()
+        working-directory: apps/frontend
+        run: rm -f wrangler.toml

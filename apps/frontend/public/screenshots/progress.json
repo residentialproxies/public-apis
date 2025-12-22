@@ -1,0 +1,1667 @@
+[
+  {
+    "name": "AdoptAPet",
+    "url": "https://www.adoptapet.com/public/apis/pet_list.html",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":5009,\"message\":\"Network error when attempting to load page\",\"detail\":\"net::ERR_INVALID_AUTH_CREDENTIALS at https://www.adoptapet.com/public/apis/pet_list.html\"}]}"
+  },
+  {
+    "name": "Axolotl",
+    "url": "https://theaxolotlapi.netlify.app/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/axolotl.webp",
+    "size": 24388
+  },
+  {
+    "name": "Cat Facts",
+    "url": "https://alexwohlbruck.github.io/cat-facts/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/cat-facts.webp",
+    "size": 23320
+  },
+  {
+    "name": "Cataas",
+    "url": "https://cataas.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/cataas.webp",
+    "size": 30156
+  },
+  {
+    "name": "The Cat API",
+    "url": "https://docs.thecatapi.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/the-cat-api.webp",
+    "size": 60594
+  },
+  {
+    "name": "Dog Facts",
+    "url": "https://dukengn.github.io/Dog-facts-API/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/dog-facts.webp",
+    "size": 41874
+  },
+  {
+    "name": "Dog CEO",
+    "url": "https://dog.ceo/dog-api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/dog-ceo.webp",
+    "size": 50700
+  },
+  {
+    "name": "FishWatch",
+    "url": "https://www.fishwatch.gov/developers",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/fishwatch.webp",
+    "size": 81964
+  },
+  {
+    "name": "HTTP Cat",
+    "url": "https://http.cat/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/http-cat.webp",
+    "size": 40518
+  },
+  {
+    "name": "HTTP Dog",
+    "url": "https://http.dog/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/http-dog.webp",
+    "size": 55484
+  },
+  {
+    "name": "Petfinder",
+    "url": "https://www.petfinder.com/developers/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/petfinder.webp",
+    "size": 40918
+  },
+  {
+    "name": "PlaceBear",
+    "url": "https://placebear.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/placebear.webp",
+    "size": 62870
+  },
+  {
+    "name": "PlaceDog",
+    "url": "https://place.dog",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/placedog.webp",
+    "size": 33208
+  },
+  {
+    "name": "PlaceKitten",
+    "url": "https://placekitten.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/placekitten.webp",
+    "size": 28010
+  },
+  {
+    "name": "The Dog API",
+    "url": "https://thedogapi.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/the-dog-api.webp",
+    "size": 52780
+  },
+  {
+    "name": "Zoo Animals",
+    "url": "https://zoo-animal-api.herokuapp.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/zoo-animals.webp",
+    "size": 7488
+  },
+  {
+    "name": "AniAPI",
+    "url": "https://aniapi.com/docs/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/aniapi.webp",
+    "size": 2182
+  },
+  {
+    "name": "Jikan",
+    "url": "https://jikan.moe",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/jikan.webp",
+    "size": 74950
+  },
+  {
+    "name": "MangaDex",
+    "url": "https://api.mangadex.org/docs.html",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/mangadex.webp",
+    "size": 4216
+  },
+  {
+    "name": "NekosBest",
+    "url": "https://docs.nekos.best",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/nekosbest.webp",
+    "size": 38160
+  },
+  {
+    "name": "Waifu.im",
+    "url": "https://waifu.im/docs",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/waifu-im.webp",
+    "size": 39200
+  },
+  {
+    "name": "Waifu.pics",
+    "url": "https://waifu.pics/docs",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/waifu-pics.webp",
+    "size": 31652
+  },
+  {
+    "name": "Art Institute of Chicago",
+    "url": "https://api.artic.edu/docs/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/art-institute-of-chicago.webp",
+    "size": 62134
+  },
+  {
+    "name": "Cooper Hewitt",
+    "url": "https://collection.cooperhewitt.org/api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/cooper-hewitt.webp",
+    "size": 68216
+  },
+  {
+    "name": "Dribbble",
+    "url": "https://developer.dribbble.com",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/dribbble.webp",
+    "size": 23594
+  },
+  {
+    "name": "Europeana",
+    "url": "https://pro.europeana.eu/resources/apis/search",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/europeana.webp",
+    "size": 50514
+  },
+  {
+    "name": "Icon Horse",
+    "url": "https://icon.horse",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/icon-horse.webp",
+    "size": 31848
+  },
+  {
+    "name": "Iconfinder",
+    "url": "https://developer.iconfinder.com",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/iconfinder.webp",
+    "size": 45014
+  },
+  {
+    "name": "Lordicon",
+    "url": "https://lordicon.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/lordicon.webp",
+    "size": 43278
+  },
+  {
+    "name": "Metropolitan Museum",
+    "url": "https://metmuseum.github.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/metropolitan-museum.webp",
+    "size": 36058
+  },
+  {
+    "name": "PHP Noise",
+    "url": "https://php-noise.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/php-noise.webp",
+    "size": 61054
+  },
+  {
+    "name": "Rijksmuseum",
+    "url": "https://data.rijksmuseum.nl/object-metadata/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/rijksmuseum.webp",
+    "size": 12682
+  },
+  {
+    "name": "Auth0",
+    "url": "https://auth0.com",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/auth0.webp",
+    "size": 46314
+  },
+  {
+    "name": "MojoAuth",
+    "url": "https://mojoauth.com",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/mojoauth.webp",
+    "size": 37544
+  },
+  {
+    "name": "Stytch",
+    "url": "https://stytch.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/stytch.webp",
+    "size": 32706
+  },
+  {
+    "name": "Warrant",
+    "url": "https://warrant.dev/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/warrant.webp",
+    "size": 33322
+  },
+  {
+    "name": "Bitquery",
+    "url": "https://graphql.bitquery.io/ide",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/bitquery.webp",
+    "size": 26418
+  },
+  {
+    "name": "Chainlink",
+    "url": "https://chain.link/developer-resources",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/chainlink.webp",
+    "size": 46896
+  },
+  {
+    "name": "Covalent",
+    "url": "https://www.covalenthq.com/docs/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/covalent.webp",
+    "size": 16734
+  },
+  {
+    "name": "Etherscan",
+    "url": "https://etherscan.io/apis",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/etherscan.webp",
+    "size": 45456
+  },
+  {
+    "name": "The Graph",
+    "url": "https://thegraph.com",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/the-graph.webp",
+    "size": 40922
+  },
+  {
+    "name": "Bible API",
+    "url": "https://bible-api.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/bible-api.webp",
+    "size": 68304
+  },
+  {
+    "name": "Google Books",
+    "url": "https://developers.google.com/books/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/google-books.webp",
+    "size": 60256
+  },
+  {
+    "name": "Gutendex",
+    "url": "https://gutendex.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/gutendex.webp",
+    "size": 12942
+  },
+  {
+    "name": "Open Library",
+    "url": "https://openlibrary.org/developers/api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/open-library.webp",
+    "size": 73888
+  },
+  {
+    "name": "Quran Cloud",
+    "url": "https://alquran.cloud/api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/quran-cloud.webp",
+    "size": 45356
+  },
+  {
+    "name": "Clearbit Logo",
+    "url": "https://clearbit.com/docs#logo-api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/clearbit-logo.webp",
+    "size": 10474
+  },
+  {
+    "name": "Domainsdb",
+    "url": "https://domainsdb.info/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/domainsdb.webp",
+    "size": 28334
+  },
+  {
+    "name": "Freelancer",
+    "url": "https://developers.freelancer.com",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/freelancer.webp",
+    "size": 44232
+  },
+  {
+    "name": "Mailchimp",
+    "url": "https://mailchimp.com/developer/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/mailchimp.webp",
+    "size": 45316
+  },
+  {
+    "name": "Mailjet",
+    "url": "https://www.mailjet.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/mailjet.webp",
+    "size": 52570
+  },
+  {
+    "name": "Square",
+    "url": "https://developer.squareup.com/reference/square",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/square.webp",
+    "size": 61850
+  },
+  {
+    "name": "Trello",
+    "url": "https://developers.trello.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/trello.webp",
+    "size": 76704
+  },
+  {
+    "name": "Calendarific",
+    "url": "https://calendarific.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/calendarific.webp",
+    "size": 45210
+  },
+  {
+    "name": "Nager Date",
+    "url": "https://date.nager.at",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/nager-date.webp",
+    "size": 47512
+  },
+  {
+    "name": "Namedays Calendar",
+    "url": "https://nameday.abalin.net",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/namedays-calendar.webp",
+    "size": 4376
+  },
+  {
+    "name": "UK Bank Holidays",
+    "url": "https://www.gov.uk/bank-holidays.json",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/uk-bank-holidays.webp",
+    "size": 279332
+  },
+  {
+    "name": "Box",
+    "url": "https://developer.box.com/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":6002,\"message\":\"A timeout was reached. Check gotoOptions/waitForSelector/waitForTimeout/actionTimeout options.\",\"detail\":\"Navigation timeout of 30000 ms exceeded\"}]}"
+  },
+  {
+    "name": "Dropbox",
+    "url": "https://www.dropbox.com/developers",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/dropbox.webp",
+    "size": 65336
+  },
+  {
+    "name": "File.io",
+    "url": "https://www.file.io",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/file-io.webp",
+    "size": 16130
+  },
+  {
+    "name": "Google Drive",
+    "url": "https://developers.google.com/drive/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/google-drive.webp",
+    "size": 56606
+  },
+  {
+    "name": "OneDrive",
+    "url": "https://developer.microsoft.com/onedrive",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/onedrive.webp",
+    "size": 51756
+  },
+  {
+    "name": "Pastebin",
+    "url": "https://pastebin.com/doc_api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/pastebin.webp",
+    "size": 69220
+  },
+  {
+    "name": "Pinata",
+    "url": "https://docs.pinata.cloud/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/pinata.webp",
+    "size": 43276
+  },
+  {
+    "name": "0x",
+    "url": "https://0x.org/api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/0x.webp",
+    "size": 14098
+  },
+  {
+    "name": "1inch",
+    "url": "https://1inch.io/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/1inch.webp",
+    "size": 23600
+  },
+  {
+    "name": "Binance",
+    "url": "https://www.binance.com/en/binance-api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/binance.webp",
+    "size": 47694
+  },
+  {
+    "name": "CoinGecko",
+    "url": "https://www.coingecko.com/en/api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/coingecko.webp",
+    "size": 14976
+  },
+  {
+    "name": "CoinMarketCap",
+    "url": "https://coinmarketcap.com/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/coinmarketcap.webp",
+    "size": 45186
+  },
+  {
+    "name": "Kraken",
+    "url": "https://docs.kraken.com/rest/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/kraken.webp",
+    "size": 36084
+  },
+  {
+    "name": "Exchange Rate API",
+    "url": "https://www.exchangerate-api.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/exchange-rate-api.webp",
+    "size": 53572
+  },
+  {
+    "name": "Fixer",
+    "url": "https://fixer.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/fixer.webp",
+    "size": 32776
+  },
+  {
+    "name": "Frankfurter",
+    "url": "https://www.frankfurter.app/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/frankfurter.webp",
+    "size": 32598
+  },
+  {
+    "name": "Open Exchange Rates",
+    "url": "https://openexchangerates.org/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/open-exchange-rates.webp",
+    "size": 65674
+  },
+  {
+    "name": "Agify.io",
+    "url": "https://agify.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/agify-io.webp",
+    "size": 16236
+  },
+  {
+    "name": "Bored API",
+    "url": "https://www.boredapi.com/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":5006,\"message\":\"Network connection closed.\",\"detail\":\"Can also happen due to failure to resolve DNS.\"}]}"
+  },
+  {
+    "name": "Cloudflare",
+    "url": "https://developers.cloudflare.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/cloudflare.webp",
+    "size": 34892
+  },
+  {
+    "name": "CountAPI",
+    "url": "https://countapi.xyz/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":5006,\"message\":\"Network connection closed.\",\"detail\":\"Can also happen due to failure to resolve DNS.\"}]}"
+  },
+  {
+    "name": "Genderize",
+    "url": "https://genderize.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/genderize.webp",
+    "size": 16560
+  },
+  {
+    "name": "GitHub",
+    "url": "https://docs.github.com/en/rest",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/github.webp",
+    "size": 35822
+  },
+  {
+    "name": "GitLab",
+    "url": "https://docs.gitlab.com/ee/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/gitlab.webp",
+    "size": 49532
+  },
+  {
+    "name": "HTTP Bin",
+    "url": "https://httpbin.org/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/http-bin.webp",
+    "size": 16810
+  },
+  {
+    "name": "IP API",
+    "url": "https://ipapi.co/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/ip-api.webp",
+    "size": 26824
+  },
+  {
+    "name": "JSON Placeholder",
+    "url": "https://jsonplaceholder.typicode.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/json-placeholder.webp",
+    "size": 24560
+  },
+  {
+    "name": "Lorem Ipsum",
+    "url": "https://loremipsum.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/lorem-ipsum.webp",
+    "size": 64678
+  },
+  {
+    "name": "Nationalize",
+    "url": "https://nationalize.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/nationalize.webp",
+    "size": 16366
+  },
+  {
+    "name": "Public APIs",
+    "url": "https://api.publicapis.org/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":5006,\"message\":\"Network connection closed.\",\"detail\":\"Can also happen due to failure to resolve DNS.\"}]}"
+  },
+  {
+    "name": "QR Code Generator",
+    "url": "https://goqr.me/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/qr-code-generator.webp",
+    "size": 47796
+  },
+  {
+    "name": "Random Data",
+    "url": "https://random-data-api.com/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":5006,\"message\":\"Network connection closed.\",\"detail\":\"Can also happen due to failure to resolve DNS.\"}]}"
+  },
+  {
+    "name": "ReqRes",
+    "url": "https://reqres.in/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/reqres.webp",
+    "size": 45076
+  },
+  {
+    "name": "UUID Generator",
+    "url": "https://www.uuidtools.com/api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/uuid-generator.webp",
+    "size": 33978
+  },
+  {
+    "name": "Free Dictionary",
+    "url": "https://dictionaryapi.dev/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/free-dictionary.webp",
+    "size": 24708
+  },
+  {
+    "name": "Lingua Robot",
+    "url": "https://www.linguarobot.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/lingua-robot.webp",
+    "size": 31232
+  },
+  {
+    "name": "Merriam-Webster",
+    "url": "https://dictionaryapi.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/merriam-webster.webp",
+    "size": 59454
+  },
+  {
+    "name": "Urban Dictionary",
+    "url": "https://rapidapi.com/community/api/urban-dictionary",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/urban-dictionary.webp",
+    "size": 42432
+  },
+  {
+    "name": "Wordnik",
+    "url": "https://developer.wordnik.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/wordnik.webp",
+    "size": 53590
+  },
+  {
+    "name": "Chuck Norris",
+    "url": "https://api.chucknorris.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/chuck-norris.webp",
+    "size": 27760
+  },
+  {
+    "name": "Dad Jokes",
+    "url": "https://icanhazdadjoke.com/api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/dad-jokes.webp",
+    "size": 45022
+  },
+  {
+    "name": "Fun Translations",
+    "url": "https://funtranslations.com/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/fun-translations.webp",
+    "size": 49246
+  },
+  {
+    "name": "Joke API",
+    "url": "https://jokeapi.dev/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/joke-api.webp",
+    "size": 78656
+  },
+  {
+    "name": "Quotes",
+    "url": "https://quotes.rest/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/quotes.webp",
+    "size": 41158
+  },
+  {
+    "name": "Trakt",
+    "url": "https://trakt.docs.apiary.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/trakt.webp",
+    "size": 2550
+  },
+  {
+    "name": "Alpha Vantage",
+    "url": "https://www.alphavantage.co/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/alpha-vantage.webp",
+    "size": 33362
+  },
+  {
+    "name": "Financial Modeling Prep",
+    "url": "https://financialmodelingprep.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/financial-modeling-prep.webp",
+    "size": 36472
+  },
+  {
+    "name": "IEX Cloud",
+    "url": "https://iexcloud.io/docs/api/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":6002,\"message\":\"A timeout was reached. Check gotoOptions/waitForSelector/waitForTimeout/actionTimeout options.\",\"detail\":\"Navigation timeout of 30000 ms exceeded\"}]}"
+  },
+  {
+    "name": "Plaid",
+    "url": "https://plaid.com/docs/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/plaid.webp",
+    "size": 77490
+  },
+  {
+    "name": "Yahoo Finance",
+    "url": "https://www.yahoofinanceapi.com/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":6002,\"message\":\"A timeout was reached. Check gotoOptions/waitForSelector/waitForTimeout/actionTimeout options.\",\"detail\":\"Navigation timeout of 30000 ms exceeded\"}]}"
+  },
+  {
+    "name": "Edamam",
+    "url": "https://developer.edamam.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/edamam.webp",
+    "size": 49694
+  },
+  {
+    "name": "Open Brewery DB",
+    "url": "https://www.openbrewerydb.org/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/open-brewery-db.webp",
+    "size": 39658
+  },
+  {
+    "name": "Open Food Facts",
+    "url": "https://world.openfoodfacts.org/data",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/open-food-facts.webp",
+    "size": 86408
+  },
+  {
+    "name": "Spoonacular",
+    "url": "https://spoonacular.com/food-api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/spoonacular.webp",
+    "size": 51836
+  },
+  {
+    "name": "TheCocktailDB",
+    "url": "https://www.thecocktaildb.com/api.php",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/thecocktaildb.webp",
+    "size": 55048
+  },
+  {
+    "name": "TheMealDB",
+    "url": "https://www.themealdb.com/api.php",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/themealdb.webp",
+    "size": 45614
+  },
+  {
+    "name": "Board Game Geek",
+    "url": "https://boardgamegeek.com/wiki/page/BGG_XML_API2",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/board-game-geek.webp",
+    "size": 54272
+  },
+  {
+    "name": "Chess.com",
+    "url": "https://www.chess.com/news/view/published-data-api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/chess-com.webp",
+    "size": 52844
+  },
+  {
+    "name": "Clash of Clans",
+    "url": "https://developer.clashofclans.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/clash-of-clans.webp",
+    "size": 22328
+  },
+  {
+    "name": "Clash Royale",
+    "url": "https://developer.clashroyale.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/clash-royale.webp",
+    "size": 22400
+  },
+  {
+    "name": "EVE Online",
+    "url": "https://esi.evetech.net/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/eve-online.webp",
+    "size": 37774
+  },
+  {
+    "name": "Fortnite",
+    "url": "https://fortnitetracker.com/site-api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/fortnite.webp",
+    "size": 18788
+  },
+  {
+    "name": "Giant Bomb",
+    "url": "https://www.giantbomb.com/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/giant-bomb.webp",
+    "size": 18554
+  },
+  {
+    "name": "IGDB",
+    "url": "https://www.igdb.com/api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/igdb.webp",
+    "size": 18784
+  },
+  {
+    "name": "League of Legends",
+    "url": "https://developer.riotgames.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/league-of-legends.webp",
+    "size": 67266
+  },
+  {
+    "name": "Marvel",
+    "url": "https://developer.marvel.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/marvel.webp",
+    "size": 83542
+  },
+  {
+    "name": "Minecraft",
+    "url": "https://wiki.vg/Main_Page",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":6002,\"message\":\"A timeout was reached. Check gotoOptions/waitForSelector/waitForTimeout/actionTimeout options.\",\"detail\":\"Navigation timeout of 30000 ms exceeded\"}]}"
+  },
+  {
+    "name": "PokeAPI",
+    "url": "https://pokeapi.co/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/pokeapi.webp",
+    "size": 41382
+  },
+  {
+    "name": "Pokémon TCG",
+    "url": "https://pokemontcg.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/pok-mon-tcg.webp",
+    "size": 20514
+  },
+  {
+    "name": "RAWG",
+    "url": "https://rawg.io/apidocs",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/rawg.webp",
+    "size": 75136
+  },
+  {
+    "name": "Steam",
+    "url": "https://developer.valvesoftware.com/wiki/Steam_Web_API",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/steam.webp",
+    "size": 23408
+  },
+  {
+    "name": "Superhero API",
+    "url": "https://superheroapi.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/superhero-api.webp",
+    "size": 23258
+  },
+  {
+    "name": "Valorant",
+    "url": "https://valorant-api.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/valorant.webp",
+    "size": 23366
+  },
+  {
+    "name": "Wargaming",
+    "url": "https://developers.wargaming.net/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/wargaming.webp",
+    "size": 50832
+  },
+  {
+    "name": "Abstract IP Geolocation",
+    "url": "https://www.abstractapi.com/ip-geolocation-api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/abstract-ip-geolocation.webp",
+    "size": 23776
+  },
+  {
+    "name": "Country.is",
+    "url": "https://country.is/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/country-is.webp",
+    "size": 26130
+  },
+  {
+    "name": "GeoJS",
+    "url": "https://www.geojs.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/geojs.webp",
+    "size": 13328
+  },
+  {
+    "name": "Google Maps",
+    "url": "https://developers.google.com/maps",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/google-maps.webp",
+    "size": 52726
+  },
+  {
+    "name": "IP2Location",
+    "url": "https://www.ip2location.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/ip2location.webp",
+    "size": 50940
+  },
+  {
+    "name": "IPinfo",
+    "url": "https://ipinfo.io/developers",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/ipinfo.webp",
+    "size": 70408
+  },
+  {
+    "name": "Mapbox",
+    "url": "https://docs.mapbox.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/mapbox.webp",
+    "size": 25158
+  },
+  {
+    "name": "OpenCage",
+    "url": "https://opencagedata.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/opencage.webp",
+    "size": 37622
+  },
+  {
+    "name": "OpenStreetMap",
+    "url": "https://wiki.openstreetmap.org/wiki/API",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/openstreetmap.webp",
+    "size": 62884
+  },
+  {
+    "name": "REST Countries",
+    "url": "https://restcountries.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/rest-countries.webp",
+    "size": 33602
+  },
+  {
+    "name": "Census.gov",
+    "url": "https://www.census.gov/data/developers.html",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/census-gov.webp",
+    "size": 103918
+  },
+  {
+    "name": "Data.gov",
+    "url": "https://api.data.gov/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/data-gov.webp",
+    "size": 58908
+  },
+  {
+    "name": "EU Open Data",
+    "url": "https://data.europa.eu/en",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/eu-open-data.webp",
+    "size": 45024
+  },
+  {
+    "name": "NASA",
+    "url": "https://api.nasa.gov/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/nasa.webp",
+    "size": 3908
+  },
+  {
+    "name": "UK Government",
+    "url": "https://www.api.gov.uk/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/uk-government.webp",
+    "size": 74476
+  },
+  {
+    "name": "USAspending",
+    "url": "https://api.usaspending.gov/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/usaspending.webp",
+    "size": 35972
+  },
+  {
+    "name": "COVID-19",
+    "url": "https://covid19api.com/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":6002,\"message\":\"A timeout was reached. Check gotoOptions/waitForSelector/waitForTimeout/actionTimeout options.\",\"detail\":\"Navigation timeout of 30000 ms exceeded\"}]}"
+  },
+  {
+    "name": "Healthcare.gov",
+    "url": "https://www.healthcare.gov/developers/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/healthcare-gov.webp",
+    "size": 76700
+  },
+  {
+    "name": "Makeup API",
+    "url": "https://makeup-api.herokuapp.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/makeup-api.webp",
+    "size": 40224
+  },
+  {
+    "name": "NPPES",
+    "url": "https://npiregistry.cms.hhs.gov/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/nppes.webp",
+    "size": 27464
+  },
+  {
+    "name": "OpenFDA",
+    "url": "https://open.fda.gov/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/openfda.webp",
+    "size": 74720
+  },
+  {
+    "name": "Clarifai",
+    "url": "https://docs.clarifai.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/clarifai.webp",
+    "size": 57664
+  },
+  {
+    "name": "Deepgram",
+    "url": "https://developers.deepgram.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/deepgram.webp",
+    "size": 52720
+  },
+  {
+    "name": "Dialogflow",
+    "url": "https://cloud.google.com/dialogflow",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/dialogflow.webp",
+    "size": 62628
+  },
+  {
+    "name": "Hugging Face",
+    "url": "https://huggingface.co/docs/api-inference/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/hugging-face.webp",
+    "size": 55278
+  },
+  {
+    "name": "OpenAI",
+    "url": "https://platform.openai.com/docs/api-reference",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/openai.webp",
+    "size": 65832
+  },
+  {
+    "name": "Replicate",
+    "url": "https://replicate.com/docs",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/replicate.webp",
+    "size": 50280
+  },
+  {
+    "name": "Stability AI",
+    "url": "https://platform.stability.ai/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/stability-ai.webp",
+    "size": 40284
+  },
+  {
+    "name": "Deezer",
+    "url": "https://developers.deezer.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/deezer.webp",
+    "size": 53564
+  },
+  {
+    "name": "Genius",
+    "url": "https://docs.genius.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/genius.webp",
+    "size": 58860
+  },
+  {
+    "name": "Last.fm",
+    "url": "https://www.last.fm/api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/last-fm.webp",
+    "size": 33274
+  },
+  {
+    "name": "Lyrics.ovh",
+    "url": "https://lyricsovh.docs.apiary.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/lyrics-ovh.webp",
+    "size": 24720
+  },
+  {
+    "name": "MusicBrainz",
+    "url": "https://musicbrainz.org/doc/MusicBrainz_API",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/musicbrainz.webp",
+    "size": 93732
+  },
+  {
+    "name": "SoundCloud",
+    "url": "https://developers.soundcloud.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/soundcloud.webp",
+    "size": 46096
+  },
+  {
+    "name": "Spotify",
+    "url": "https://developer.spotify.com/documentation/web-api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/spotify.webp",
+    "size": 64520
+  },
+  {
+    "name": "Currents API",
+    "url": "https://currentsapi.services/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/currents-api.webp",
+    "size": 34618
+  },
+  {
+    "name": "GNews",
+    "url": "https://gnews.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/gnews.webp",
+    "size": 45294
+  },
+  {
+    "name": "Hacker News",
+    "url": "https://github.com/HackerNews/API",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/hacker-news.webp",
+    "size": 52808
+  },
+  {
+    "name": "News API",
+    "url": "https://newsapi.org/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/news-api.webp",
+    "size": 31502
+  },
+  {
+    "name": "New York Times",
+    "url": "https://developer.nytimes.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/new-york-times.webp",
+    "size": 64136
+  },
+  {
+    "name": "The Guardian",
+    "url": "https://open-platform.theguardian.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/the-guardian.webp",
+    "size": 30512
+  },
+  {
+    "name": "Datamuse",
+    "url": "https://www.datamuse.com/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/datamuse.webp",
+    "size": 55084
+  },
+  {
+    "name": "Open Notify",
+    "url": "http://open-notify.org/Open-Notify-API/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/open-notify.webp",
+    "size": 28742
+  },
+  {
+    "name": "Wikipedia",
+    "url": "https://www.mediawiki.org/wiki/API:Main_page",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/wikipedia.webp",
+    "size": 83282
+  },
+  {
+    "name": "World Bank",
+    "url": "https://datahelpdesk.worldbank.org/knowledgebase/topics/125589",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":6002,\"message\":\"A timeout was reached. Check gotoOptions/waitForSelector/waitForTimeout/actionTimeout options.\",\"detail\":\"Navigation timeout of 30000 ms exceeded\"}]}"
+  },
+  {
+    "name": "Flickr",
+    "url": "https://www.flickr.com/services/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/flickr.webp",
+    "size": 33904
+  },
+  {
+    "name": "Imgur",
+    "url": "https://apidocs.imgur.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/imgur.webp",
+    "size": 19286
+  },
+  {
+    "name": "Lorem Picsum",
+    "url": "https://picsum.photos/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/lorem-picsum.webp",
+    "size": 18928
+  },
+  {
+    "name": "Pexels",
+    "url": "https://www.pexels.com/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/pexels.webp",
+    "size": 18566
+  },
+  {
+    "name": "PlaceImg",
+    "url": "https://placeimg.com/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":5006,\"message\":\"Network connection closed.\",\"detail\":\"Can also happen due to failure to resolve DNS.\"}]}"
+  },
+  {
+    "name": "Unsplash",
+    "url": "https://unsplash.com/developers",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/unsplash.webp",
+    "size": 54696
+  },
+  {
+    "name": "arXiv",
+    "url": "https://arxiv.org/help/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/arxiv.webp",
+    "size": 68464
+  },
+  {
+    "name": "Newton",
+    "url": "https://newton.vercel.app/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/newton.webp",
+    "size": 14692
+  },
+  {
+    "name": "Numbers API",
+    "url": "http://numbersapi.com/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":5002,\"message\":\"Timeout when browsing to url\",\"detail\":\"net::ERR_TIMED_OUT at http://numbersapi.com/\"}]}"
+  },
+  {
+    "name": "Open Science Framework",
+    "url": "https://developer.osf.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/open-science-framework.webp",
+    "size": 44344
+  },
+  {
+    "name": "Wolfram Alpha",
+    "url": "https://products.wolframalpha.com/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/wolfram-alpha.webp",
+    "size": 41064
+  },
+  {
+    "name": "AbuseIPDB",
+    "url": "https://docs.abuseipdb.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/abuseipdb.webp",
+    "size": 61328
+  },
+  {
+    "name": "Have I Been Pwned",
+    "url": "https://haveibeenpwned.com/API/v3",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/have-i-been-pwned.webp",
+    "size": 35030
+  },
+  {
+    "name": "Shodan",
+    "url": "https://developer.shodan.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/shodan.webp",
+    "size": 106738
+  },
+  {
+    "name": "URLScan.io",
+    "url": "https://urlscan.io/about-api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/urlscan-io.webp",
+    "size": 86518
+  },
+  {
+    "name": "VirusTotal",
+    "url": "https://www.virustotal.com/en/documentation/public-api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/virustotal.webp",
+    "size": 65722
+  },
+  {
+    "name": "Discord",
+    "url": "https://discord.com/developers/docs/intro",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/discord.webp",
+    "size": 33214
+  },
+  {
+    "name": "Facebook",
+    "url": "https://developers.facebook.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/facebook.webp",
+    "size": 24984
+  },
+  {
+    "name": "Instagram",
+    "url": "https://developers.facebook.com/docs/instagram-api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/instagram.webp",
+    "size": 58976
+  },
+  {
+    "name": "LinkedIn",
+    "url": "https://developer.linkedin.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/linkedin.webp",
+    "size": 48742
+  },
+  {
+    "name": "Pinterest",
+    "url": "https://developers.pinterest.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/pinterest.webp",
+    "size": 47586
+  },
+  {
+    "name": "Reddit",
+    "url": "https://www.reddit.com/dev/api/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/reddit.webp",
+    "size": 87724
+  },
+  {
+    "name": "Slack",
+    "url": "https://api.slack.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/slack.webp",
+    "size": 63604
+  },
+  {
+    "name": "Telegram",
+    "url": "https://core.telegram.org/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/telegram.webp",
+    "size": 67012
+  },
+  {
+    "name": "TikTok",
+    "url": "https://developers.tiktok.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/tiktok.webp",
+    "size": 81488
+  },
+  {
+    "name": "Tumblr",
+    "url": "https://www.tumblr.com/docs/en/api/v2",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/tumblr.webp",
+    "size": 55026
+  },
+  {
+    "name": "Twitch",
+    "url": "https://dev.twitch.tv/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/twitch.webp",
+    "size": 72202
+  },
+  {
+    "name": "Twitter",
+    "url": "https://developer.twitter.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/twitter.webp",
+    "size": 31582
+  },
+  {
+    "name": "API-FOOTBALL",
+    "url": "https://www.api-football.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/api-football.webp",
+    "size": 9420
+  },
+  {
+    "name": "balldontlie",
+    "url": "https://www.balldontlie.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/balldontlie.webp",
+    "size": 33628
+  },
+  {
+    "name": "ESPN",
+    "url": "https://www.espn.com/apis/devcenter/docs/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/espn.webp",
+    "size": 57280
+  },
+  {
+    "name": "Football Data",
+    "url": "https://www.football-data.org/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/football-data.webp",
+    "size": 39806
+  },
+  {
+    "name": "NBA",
+    "url": "https://www.nba.com/stats/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/nba.webp",
+    "size": 69314
+  },
+  {
+    "name": "NHL",
+    "url": "https://gitlab.com/dword4/nhlapi",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/nhl.webp",
+    "size": 32338
+  },
+  {
+    "name": "Sportradar",
+    "url": "https://developer.sportradar.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/sportradar.webp",
+    "size": 26894
+  },
+  {
+    "name": "Strava",
+    "url": "https://developers.strava.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/strava.webp",
+    "size": 56674
+  },
+  {
+    "name": "Faker API",
+    "url": "https://fakerapi.it/en",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/faker-api.webp",
+    "size": 35264
+  },
+  {
+    "name": "Mockaroo",
+    "url": "https://www.mockaroo.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/mockaroo.webp",
+    "size": 42908
+  },
+  {
+    "name": "Random User",
+    "url": "https://randomuser.me/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/random-user.webp",
+    "size": 23170
+  },
+  {
+    "name": "UI Faces",
+    "url": "https://uifaces.co/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/ui-faces.webp",
+    "size": 61238
+  },
+  {
+    "name": "Aylien",
+    "url": "https://aylien.com/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":5006,\"message\":\"Network connection closed.\",\"detail\":\"Can also happen due to failure to resolve DNS.\"}]}"
+  },
+  {
+    "name": "Google Cloud NLP",
+    "url": "https://cloud.google.com/natural-language",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/google-cloud-nlp.webp",
+    "size": 49258
+  },
+  {
+    "name": "Perspective API",
+    "url": "https://perspectiveapi.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/perspective-api.webp",
+    "size": 32420
+  },
+  {
+    "name": "Retext",
+    "url": "https://github.com/retextjs/retext",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/retext.webp",
+    "size": 49420
+  },
+  {
+    "name": "Text Razor",
+    "url": "https://www.textrazor.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/text-razor.webp",
+    "size": 75702
+  },
+  {
+    "name": "ADS-B Exchange",
+    "url": "https://www.adsbexchange.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/ads-b-exchange.webp",
+    "size": 100886
+  },
+  {
+    "name": "AviationStack",
+    "url": "https://aviationstack.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/aviationstack.webp",
+    "size": 49282
+  },
+  {
+    "name": "FlightAware",
+    "url": "https://flightaware.com/commercial/flightxml/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/flightaware.webp",
+    "size": 80740
+  },
+  {
+    "name": "HERE",
+    "url": "https://developer.here.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/here.webp",
+    "size": 42750
+  },
+  {
+    "name": "Transport for London",
+    "url": "https://api.tfl.gov.uk/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/transport-for-london.webp",
+    "size": 40556
+  },
+  {
+    "name": "Uber",
+    "url": "https://developer.uber.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/uber.webp",
+    "size": 25830
+  },
+  {
+    "name": "Bitly",
+    "url": "https://dev.bitly.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/bitly.webp",
+    "size": 72950
+  },
+  {
+    "name": "Rebrandly",
+    "url": "https://developers.rebrandly.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/rebrandly.webp",
+    "size": 53146
+  },
+  {
+    "name": "Short.io",
+    "url": "https://developers.short.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/short-io.webp",
+    "size": 28774
+  },
+  {
+    "name": "TinyURL",
+    "url": "https://tinyurl.com/app/dev",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/tinyurl.webp",
+    "size": 26198
+  },
+  {
+    "name": "Dailymotion",
+    "url": "https://developer.dailymotion.com/",
+    "success": false,
+    "error": "422: {\"success\":false,\"errors\":[{\"code\":6002,\"message\":\"A timeout was reached. Check gotoOptions/waitForSelector/waitForTimeout/actionTimeout options.\",\"detail\":\"Navigation timeout of 30000 ms exceeded\"}]}"
+  },
+  {
+    "name": "Vimeo",
+    "url": "https://developer.vimeo.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/vimeo.webp",
+    "size": 20020
+  },
+  {
+    "name": "YouTube",
+    "url": "https://developers.google.com/youtube/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/youtube.webp",
+    "size": 32178
+  },
+  {
+    "name": "Open-Meteo",
+    "url": "https://open-meteo.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/open-meteo.webp",
+    "size": 47048
+  },
+  {
+    "name": "OpenWeatherMap",
+    "url": "https://openweathermap.org/api",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/openweathermap.webp",
+    "size": 65266
+  },
+  {
+    "name": "Visual Crossing",
+    "url": "https://www.visualcrossing.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/visual-crossing.webp",
+    "size": 41916
+  },
+  {
+    "name": "Weather API",
+    "url": "https://www.weatherapi.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/weather-api.webp",
+    "size": 46488
+  },
+  {
+    "name": "WeatherBit",
+    "url": "https://www.weatherbit.io/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/weatherbit.webp",
+    "size": 42064
+  },
+  {
+    "name": "Weatherstack",
+    "url": "https://weatherstack.com/",
+    "success": true,
+    "file": "/Volumes/SSD/dev/project/public-apis/apps/backend/screenshots/weatherstack.webp",
+    "size": 41706
+  }
+]

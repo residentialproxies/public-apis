@@ -1,0 +1,39 @@
+{
+  "name": "@api-navigator/shared",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./types": {
+      "types": "./src/types.ts",
+      "default": "./src/types.ts"
+    },
+    "./pseo": {
+      "types": "./src/pseo-templates.ts",
+      "default": "./src/pseo-templates.ts"
+    },
+    "./pseo/generators": {
+      "types": "./src/pseo-generators.ts",
+      "default": "./src/pseo-generators.ts"
+    },
+    "./pseo/schemas": {
+      "types": "./src/pseo-schemas.ts",
+      "default": "./src/pseo-schemas.ts"
+    },
+    "./pseo/quality": {
+      "types": "./src/pseo-quality.ts",
+      "default": "./src/pseo-quality.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "25.0.3",
+    "typescript": "^5.7.3"
+  }
+}

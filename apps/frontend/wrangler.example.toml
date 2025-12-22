@@ -1,0 +1,41 @@
+# Cloudflare Workers 配置示例
+# 复制此文件为 wrangler.toml 并填写实际值
+
+# ⚠️ account_id 已移除，改用环境变量 CLOUDFLARE_ACCOUNT_ID
+# 获取方法: wrangler whoami
+# 本地部署: export CLOUDFLARE_ACCOUNT_ID=your_account_id
+# CI/CD: 在 GitHub Secrets 中设置
+
+name = "api-navigator"
+main = ".open-next/worker.js"
+compatibility_date = "2025-12-15"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+NEXT_PUBLIC_CMS_URL = "https://cms.api-navigator.com"
+NEXT_PUBLIC_SITE_URL = "https://api-navigator.com"
+
+# OpenNext (Cloudflare) cache bindings
+# - R2: incremental cache (ISR)
+# 创建命令: wrangler r2 bucket create api-navigator-inc-cache
+[[r2_buckets]]
+binding = "NEXT_INC_CACHE_R2_BUCKET"
+bucket_name = "api-navigator-inc-cache"
+preview_bucket_name = "api-navigator-inc-cache-preview"
+
+# - KV: tag cache (revalidation tags)
+# 创建命令: wrangler kv namespace create "NEXT_TAG_CACHE_KV"
+# ⚠️ 必须配置：使用实际的 KV namespace ID
+[[kv_namespaces]]
+binding = "NEXT_TAG_CACHE_KV"
+id = "YOUR_PRODUCTION_KV_NAMESPACE_ID"
+preview_id = "YOUR_PREVIEW_KV_NAMESPACE_ID"
+
+# 自定义域名配置（可选）
+# [[routes]]
+# pattern = "api-navigator.com/*"
+# custom_domain = true
+
+# [[routes]]
+# pattern = "www.api-navigator.com/*"
+# custom_domain = true

@@ -1,0 +1,25 @@
+node_modules/
+.pnpm-store/
+.turbo/
+.next/
+.open-next/
+dist/
+build/
+coverage/
+
+# Env
+.env
+.env.*
+
+# Cloudflare Workers
+apps/frontend/wrangler.toml
+.wrangler/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+
