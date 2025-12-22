@@ -34,12 +34,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build frontend for Workers
-        run: pnpm --filter @api-navigator/frontend build:worker
-        env:
-          NEXT_PUBLIC_CMS_URL: ${{ secrets.NEXT_PUBLIC_CMS_URL }}
-          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
-
       - name: Create wrangler.toml from template
         working-directory: apps/frontend
         run: |
@@ -49,6 +43,12 @@ jobs:
           sed -i "s/YOUR_PREVIEW_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}/g" wrangler.toml
           sed -i "s|https://cms.api-navigator.com|${{ secrets.NEXT_PUBLIC_CMS_URL }}|g" wrangler.toml
           sed -i "s|https://api-navigator.com|${{ secrets.NEXT_PUBLIC_SITE_URL }}|g" wrangler.toml
+
+      - name: Build frontend for Workers
+        run: pnpm --filter @api-navigator/frontend build:worker
+        env:
+          NEXT_PUBLIC_CMS_URL: ${{ secrets.NEXT_PUBLIC_CMS_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
