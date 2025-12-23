@@ -1,6 +1,7 @@
 name: Deploy Frontend to Cloudflare Workers
 
 on:
+  # Trigger on push to main or production branches
   push:
     branches:
       - main
@@ -9,12 +10,26 @@ on:
       - 'apps/frontend/**'
       - 'packages/shared/**'
       - '.github/workflows/deploy-frontend.yml'
+
+  # Allow manual deployment from GitHub UI
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy to Cloudflare Workers
+
+    # Only run if not a bot commit
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     steps:
       - name: Checkout repository
@@ -23,7 +38,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.17.0
+          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -34,21 +49,31 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build shared package
+        run: pnpm --filter @api-navigator/shared build
+
       - name: Create wrangler.toml from template
         working-directory: apps/frontend
         run: |
-          cp wrangler.example.toml wrangler.toml
-          # Replace placeholder values with secrets
-          sed -i "s/YOUR_PRODUCTION_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}/g" wrangler.toml
-          sed -i "s/YOUR_PREVIEW_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}/g" wrangler.toml
-          sed -i "s|https://cms.api-navigator.com|${{ secrets.NEXT_PUBLIC_CMS_URL }}|g" wrangler.toml
-          sed -i "s|https://api-navigator.com|${{ secrets.NEXT_PUBLIC_SITE_URL }}|g" wrangler.toml
+          cp wrangler.toml.example wrangler.toml
+
+          # Replace KV namespace IDs
+          sed -i "s/REPLACE_WITH_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}/g" wrangler.toml
+          sed -i "s/REPLACE_WITH_KV_PREVIEW_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}/g" wrangler.toml
+
+          # Update environment variables if provided
+          if [ -n "${{ secrets.NEXT_PUBLIC_CMS_URL }}" ]; then
+            sed -i "s|https://cms.api-navigator.com|${{ secrets.NEXT_PUBLIC_CMS_URL }}|g" wrangler.toml
+          fi
+          if [ -n "${{ secrets.NEXT_PUBLIC_SITE_URL }}" ]; then
+            sed -i "s|https://public-api.org|${{ secrets.NEXT_PUBLIC_SITE_URL }}|g" wrangler.toml
+          fi
 
       - name: Build frontend for Workers
         run: pnpm --filter @api-navigator/frontend build:worker
         env:
-          NEXT_PUBLIC_CMS_URL: ${{ secrets.NEXT_PUBLIC_CMS_URL }}
-          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_CMS_URL: ${{ secrets.NEXT_PUBLIC_CMS_URL || 'https://cms.api-navigator.com' }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://public-api.org' }}
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
@@ -58,7 +83,18 @@ jobs:
           workingDirectory: apps/frontend
           command: deploy
 
+      - name: Deployment Summary
+        if: success()
+        run: |
+          echo "### 🚀 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL**: https://public-api.org" >> $GITHUB_STEP_SUMMARY
+          echo "- **Time**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+
       - name: Cleanup
         if: always()
         working-directory: apps/frontend
         run: rm -f wrangler.toml
+

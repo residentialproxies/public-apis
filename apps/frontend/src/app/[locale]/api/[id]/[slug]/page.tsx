@@ -206,19 +206,69 @@ export default async function ApiDetailPage(props: Props) {
   // Build template context for PSEO content generation
   const templateContext: TemplateContext = {
     api: {
-      ...api,
       id: typeof api.id === "string" ? parseInt(api.id, 10) : api.id,
+      name: api.name,
+      description: api.description,
+      link: api.link,
+      openapiUrl: api.openapiUrl ?? undefined,
+      category: api.category ? {
+        id: typeof api.category.id === "string" ? parseInt(api.category.id, 10) : api.category.id,
+        name: api.category.name,
+        slug: api.category.slug,
+      } : undefined,
+      auth: api.auth,
+      cors: api.cors,
+      https: api.https,
+      healthStatus: api.healthStatus,
+      latencyMs: api.latencyMs ?? undefined,
+      lastCheckedAt: api.lastCheckedAt ?? undefined,
+      lastError: api.lastError ?? undefined,
+      seoMetadata: api.seoMetadata ? {
+        title: api.seoMetadata.title ?? undefined,
+        description: api.seoMetadata.description ?? undefined,
+        keywords: api.seoMetadata.keywords?.map(k => ({ keyword: k.keyword ?? "" })).filter(k => k.keyword) ?? undefined,
+        h1: api.seoMetadata.h1 ?? undefined,
+        h2s: api.seoMetadata.h2s?.map(h => ({ heading: h.heading ?? "" })).filter(h => h.heading) ?? undefined,
+        languages: api.seoMetadata.languages?.map(l => ({ language: l.language ?? "" })).filter(l => l.language) ?? undefined,
+        docQualityScore: api.seoMetadata.docQualityScore ?? undefined,
+        hasCodeExamples: api.seoMetadata.hasCodeExamples ?? undefined,
+        ogImage: api.seoMetadata.ogImage ?? undefined,
+        extractedAt: api.seoMetadata.extractedAt ?? undefined,
+      } : undefined,
+      aiAnalysis: api.aiAnalysis ? {
+        summary: api.aiAnalysis.summary ?? undefined,
+        useCases: api.aiAnalysis.useCases?.map(u => ({ tag: u.tag ?? "" })).filter(u => u.tag) ?? undefined,
+      } : undefined,
+      generatedContent: api.generatedContent ? {
+        seoTitle: api.generatedContent.seoTitle ?? undefined,
+        blogPost: api.generatedContent.blogPost ?? undefined,
+        model: api.generatedContent.model ?? undefined,
+        lastGeneratedAt: api.generatedContent.lastGeneratedAt ?? undefined,
+      } : undefined,
+      screenshot: api.screenshot?.thumbnailUrl && api.screenshot?.fullUrl && api.screenshot?.capturedAt ? {
+        thumbnailUrl: api.screenshot.thumbnailUrl,
+        fullUrl: api.screenshot.fullUrl,
+        capturedAt: api.screenshot.capturedAt,
+      } : undefined,
     },
     healthSummary: healthSummary
       ? {
           uptimePct: healthSummary.uptimePct ?? undefined,
           avgLatencyMs: healthSummary.avgLatencyMs ?? undefined,
-          series: healthSummary.series,
+          series: healthSummary.series.map((s) => ({
+            date: s.checkedAt ?? "",
+            status: s.healthStatus ?? "",
+            latencyMs: s.latencyMs ?? undefined,
+          })),
         }
       : undefined,
     relatedApis: related.map((r) => ({
       ...r,
       id: typeof r.id === "string" ? parseInt(r.id, 10) : r.id,
+      category: r.category ? {
+        name: r.category.name,
+        slug: r.category.slug,
+      } : undefined,
     })),
     locale,
   };

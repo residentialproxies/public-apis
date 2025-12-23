@@ -92,7 +92,7 @@ export default async function OpenGraphImage() {
               background: "#28c840",
             }}
           />
-          <div style={{ marginLeft: 16, fontSize: 14, color: "#6b7280" }}>
+          <div style={{ marginLeft: 16, fontSize: 14, color: "#6b7280", display: "flex" }}>
             public-api.org ~ /apis
           </div>
         </div>
@@ -124,7 +124,7 @@ export default async function OpenGraphImage() {
                 color: "#00ff88",
               }}
             >
-              {"</>"}
+              &lt;/&gt;
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
               <div
@@ -133,11 +133,12 @@ export default async function OpenGraphImage() {
                   fontWeight: 800,
                   color: "#e0e8e4",
                   letterSpacing: "-1px",
+                  display: "flex",
                 }}
               >
                 Public_API
               </div>
-              <div style={{ fontSize: 18, color: "#00d9ff" }}>
+              <div style={{ fontSize: 18, color: "#00d9ff", display: "flex" }}>
                 $ discover --apis --health --docs
               </div>
             </div>
@@ -149,6 +150,7 @@ export default async function OpenGraphImage() {
               fontSize: 28,
               color: "#9ca3af",
               lineHeight: 1.4,
+              display: "flex",
             }}
           >
             <span style={{ color: "#00ff88" }}>&gt;</span> Find, compare, and
@@ -171,8 +173,8 @@ export default async function OpenGraphImage() {
                 border: "1px solid rgba(0, 255, 136, 0.3)",
               }}
             >
-              <div style={{ fontSize: 14, color: "#6b7280" }}>APIs Indexed</div>
-              <div style={{ fontSize: 32, fontWeight: 800, color: "#00ff88" }}>
+              <div style={{ fontSize: 14, color: "#6b7280", display: "flex" }}>APIs Indexed</div>
+              <div style={{ fontSize: 32, fontWeight: 800, color: "#00ff88", display: "flex" }}>
                 {apiCount}
               </div>
             </div>
@@ -188,8 +190,8 @@ export default async function OpenGraphImage() {
                 border: "1px solid rgba(0, 217, 255, 0.3)",
               }}
             >
-              <div style={{ fontSize: 14, color: "#6b7280" }}>GitHub Stars</div>
-              <div style={{ fontSize: 32, fontWeight: 800, color: "#00d9ff" }}>
+              <div style={{ fontSize: 14, color: "#6b7280", display: "flex" }}>GitHub Stars</div>
+              <div style={{ fontSize: 32, fontWeight: 800, color: "#00d9ff", display: "flex" }}>
                 {stars}
               </div>
             </div>
@@ -205,10 +207,10 @@ export default async function OpenGraphImage() {
                 border: "1px solid rgba(255, 170, 0, 0.3)",
               }}
             >
-              <div style={{ fontSize: 14, color: "#6b7280" }}>
+              <div style={{ fontSize: 14, color: "#6b7280", display: "flex" }}>
                 Health Checks
               </div>
-              <div style={{ fontSize: 32, fontWeight: 800, color: "#ffaa00" }}>
+              <div style={{ fontSize: 32, fontWeight: 800, color: "#ffaa00", display: "flex" }}>
                 Hourly
               </div>
             </div>
@@ -224,13 +226,13 @@ export default async function OpenGraphImage() {
               borderTop: "1px solid rgba(255, 255, 255, 0.1)",
             }}
           >
-            <div style={{ fontSize: 16, color: "#6b7280" }}>
+            <div style={{ fontSize: 16, color: "#6b7280", display: "flex" }}>
               <span style={{ color: "#9333ea" }}>auth</span> |{" "}
               <span style={{ color: "#00d9ff" }}>cors</span> |{" "}
               <span style={{ color: "#00ff88" }}>https</span> |{" "}
               <span style={{ color: "#ffaa00" }}>latency</span> | categories
             </div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: "#e0e8e4" }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "#e0e8e4", display: "flex" }}>
               public-api.org
             </div>
           </div>

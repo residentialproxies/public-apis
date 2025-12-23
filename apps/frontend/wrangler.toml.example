@@ -1,0 +1,40 @@
+# Wrangler Configuration Template for API Navigator
+# Copy this file to wrangler.toml and fill in your values
+# NEVER commit wrangler.toml to git - it's already in .gitignore
+
+name = "api-navigator"
+main = ".open-next/worker.js"
+compatibility_date = "2025-12-15"
+compatibility_flags = ["nodejs_compat"]
+
+# Custom domain configuration
+# Uncomment and configure after setting up your domain in Cloudflare
+# [[routes]]
+# pattern = "public-api.org"
+# custom_domain = true
+#
+# [[routes]]
+# pattern = "www.public-api.org"
+# custom_domain = true
+
+[vars]
+# Public environment variables
+NEXT_PUBLIC_CMS_URL = "https://cms.api-navigator.com"
+NEXT_PUBLIC_SITE_URL = "https://public-api.org"
+
+# OpenNext (Cloudflare) cache bindings
+# R2 bucket for incremental cache (ISR)
+[[r2_buckets]]
+binding = "NEXT_INC_CACHE_R2_BUCKET"
+bucket_name = "api-navigator-inc-cache"
+preview_bucket_name = "api-navigator-inc-cache-preview"
+
+# KV namespace for tag cache (revalidation tags)
+# Steps to create:
+# 1. Run: wrangler kv:namespace create NEXT_TAG_CACHE_KV
+# 2. Run: wrangler kv:namespace create NEXT_TAG_CACHE_KV --preview
+# 3. Replace the IDs below with the output from above commands
+[[kv_namespaces]]
+binding = "NEXT_TAG_CACHE_KV"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+preview_id = "REPLACE_WITH_KV_PREVIEW_NAMESPACE_ID"
