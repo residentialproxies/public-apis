@@ -11,9 +11,14 @@ main = ".open-next/worker.js"
 compatibility_date = "2025-12-15"
 compatibility_flags = ["nodejs_compat"]
 
+# Assets binding - serves static files (CSS, JS, images, etc.)
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
 [vars]
-NEXT_PUBLIC_CMS_URL = "https://cms.api-navigator.com"
-NEXT_PUBLIC_SITE_URL = "https://api-navigator.com"
+NEXT_PUBLIC_CMS_URL = "https://publicapi.expertbeacon.com"
+NEXT_PUBLIC_SITE_URL = "https://public-api.org"
 
 # OpenNext (Cloudflare) cache bindings
 # - R2: incremental cache (ISR)

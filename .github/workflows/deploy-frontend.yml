@@ -7,17 +7,17 @@ on:
       - main
       - production
     paths:
-      - 'apps/frontend/**'
-      - 'packages/shared/**'
-      - '.github/workflows/deploy-frontend.yml'
+      - "apps/frontend/**"
+      - "packages/shared/**"
+      - ".github/workflows/deploy-frontend.yml"
 
   # Allow manual deployment from GitHub UI
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deployment environment'
+        description: "Deployment environment"
         required: true
-        default: 'production'
+        default: "production"
         type: choice
         options:
           - production
@@ -41,8 +41,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "20"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -61,7 +61,7 @@ jobs:
 
           # Update environment variables if provided
           if [ -n "${{ secrets.NEXT_PUBLIC_CMS_URL }}" ]; then
-            sed -i "s|https://cms.api-navigator.com|${{ secrets.NEXT_PUBLIC_CMS_URL }}|g" wrangler.toml
+            sed -i "s|https://publicapi.expertbeacon.com|${{ secrets.NEXT_PUBLIC_CMS_URL }}|g" wrangler.toml
           fi
           if [ -n "${{ secrets.NEXT_PUBLIC_SITE_URL }}" ]; then
             sed -i "s|https://public-api.org|${{ secrets.NEXT_PUBLIC_SITE_URL }}|g" wrangler.toml
@@ -70,7 +70,7 @@ jobs:
       - name: Build frontend for Workers
         run: pnpm --filter @api-navigator/frontend build:worker
         env:
-          NEXT_PUBLIC_CMS_URL: ${{ secrets.NEXT_PUBLIC_CMS_URL || 'https://cms.api-navigator.com' }}
+          NEXT_PUBLIC_CMS_URL: ${{ secrets.NEXT_PUBLIC_CMS_URL || 'https://publicapi.expertbeacon.com' }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://public-api.org' }}
 
       - name: Deploy to Cloudflare Workers
@@ -94,4 +94,3 @@ jobs:
         if: always()
         working-directory: apps/frontend
         run: rm -f wrangler.toml
-
