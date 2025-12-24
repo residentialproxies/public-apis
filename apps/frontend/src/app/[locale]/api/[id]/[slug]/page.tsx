@@ -590,25 +590,28 @@ export default async function ApiDetailPage(props: Props) {
         </div>
       </header>
 
-      {/* Screenshot section - only show if database has screenshot URL */}
-      {api.screenshot?.thumbnailUrl ? (
-        <section className="ui-surface mt-6 p-6">
-          <h2 className="text-sm font-semibold text-[var(--text-primary)]">
-            {t("livePreview")}
-          </h2>
-          <div className="mt-4">
-            <ApiScreenshot
-              thumbnailUrl={api.screenshot.thumbnailUrl}
-              fullUrl={api.screenshot.fullUrl}
-              apiName={api.name}
-              capturedAt={api.screenshot.capturedAt}
-            />
-          </div>
-          <p className="mt-3 text-xs text-[var(--text-muted)]">
-            {t("screenshotNote")}
-          </p>
-        </section>
-      ) : null}
+      {/* Screenshot section - fallback to static file if database has no URL */}
+      <section className="ui-surface mt-6 p-6">
+        <h2 className="text-sm font-semibold text-[var(--text-primary)]">
+          {t("livePreview")}
+        </h2>
+        <div className="mt-4">
+          <ApiScreenshot
+            thumbnailUrl={
+              api.screenshot?.thumbnailUrl ||
+              `/screenshots/${canonicalSlug}.webp`
+            }
+            fullUrl={
+              api.screenshot?.fullUrl || `/screenshots/${canonicalSlug}.webp`
+            }
+            apiName={api.name}
+            capturedAt={api.screenshot?.capturedAt}
+          />
+        </div>
+        <p className="mt-3 text-xs text-[var(--text-muted)]">
+          {t("screenshotNote")}
+        </p>
+      </section>
 
       {healthSummary &&
       healthSummary.series &&
