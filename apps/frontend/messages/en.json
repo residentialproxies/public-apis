@@ -21,13 +21,7 @@
     "closeMenu": "Close navigation menu"
   },
   "footer": {
-    "description": "Discover, evaluate, and integrate public APIs with live health monitoring and real-time availability signals.",
-    "domain": "public-api.org",
-    "navigation": "Navigation",
-    "resources": "Resources",
-    "sitemap": "Sitemap",
-    "allSystemsOperational": "All systems operational",
-    "exitCode": "exit 0"
+    "githubRepo": "GitHub Repo"
   },
   "home": {
     "asciiLogo": "API Navigator ASCII art logo",
@@ -106,7 +100,9 @@
     "upstreamLabel": "Upstream Source",
     "upstreamDesc": "public-apis/public-apis - Community catalog",
     "botLabel": "Health Check Bot",
-    "botDesc": "Learn about ApiNavigatorBot"
+    "botDesc": "Learn about ApiNavigatorBot",
+    "backendConnectionError": "Cannot connect to backend",
+    "backendConnectionFailed": "Backend Connection Failed"
   },
   "catalog": {
     "title": "Public API",
@@ -118,6 +114,9 @@
     "forks": "Forks",
     "searchTitle": "search.sh",
     "searchPlaceholder": "Search APIs...",
+    "searchLabel": "Search",
+    "categoryLabel": "Category",
+    "sortLabel": "Sort",
     "allCategories": "All categories",
     "sortPopular": "Popular",
     "sortRecent": "Recent",
@@ -126,6 +125,8 @@
     "runSearch": "./run",
     "foundResults": "Found {count} results",
     "forQuery": "for \"{query}\"",
+    "foundResultsText": "Found {count} results",
+    "forQueryText": "for \"{query}\"",
     "clearFilters": "[clear filters]",
     "resetFilters": "[reset filters]",
     "filterAuth": "filter --auth",
@@ -135,12 +136,36 @@
     "httpsAny": "ANY",
     "httpsYes": "YES",
     "httpsNo": "NO",
+    "httpsLabelAny": "ANY",
+    "httpsLabelYes": "YES",
+    "httpsLabelNo": "NO",
     "noResults": "No APIs match \"{query}\". Try different keywords.",
     "noResultsFilters": "No APIs match your filters.",
+    "noResultsSimple": "No APIs match your filters.",
+    "noResultsQuery": "No APIs match \"{query}\". Try different keywords.",
+    "noResultsFiltersSimple": "No APIs match your filters.",
+    "resultsTitle": "results.txt",
     "page": "Page {current}/{total}",
+    "pageLabel": "Page {current}/{total}",
+    "pageText": "Page {current}/{total}",
     "prevPage": "<prev",
     "nextPage": "next>",
+    "prevPageLabel": "<prev",
+    "nextPageLabel": "next>",
     "change": "[change]",
+    "searchAndFilterAriaLabel": "Search and filter APIs",
+    "filterByAuthAriaLabel": "Filter by authentication type",
+    "filterByAuthItemAriaLabel": "Filter by {auth} authentication ({count} APIs)",
+    "filterByCorsAriaLabel": "Filter by CORS support",
+    "filterByCorsItemAriaLabel": "Filter by CORS {cors} ({count} APIs)",
+    "filterByStatusAriaLabel": "Filter by health status",
+    "filterByStatusItemAriaLabel": "Filter by {status} status ({count} APIs)",
+    "filterByHttpsAriaLabel": "Filter by HTTPS support",
+    "apiListAriaLabel": "API list",
+    "paginationAriaLabel": "Pagination",
+    "pageAriaLabel": "Page {page}",
+    "prevPageAriaLabel": "Previous page",
+    "nextPageAriaLabel": "Next page",
     "errorTitle": "error.log",
     "errorMessage": "Catalog temporarily unavailable",
     "errorDesc": "Unable to connect to catalog service. Please retry.",
@@ -233,7 +258,61 @@
     "yes": "Yes",
     "no": "No",
     "general": "general",
-    "realProblems": "real problems"
+    "realProblems": "real problems",
+    "gettingStarted": "Getting Started",
+    "faq": "Frequently Asked Questions",
+    "authGuide": "Authentication Guide",
+    "authType": "Authentication Type",
+    "authDescApiKey": "This API requires an API key for authentication. You'll need to register on the provider's website to obtain your key.",
+    "authDescOAuth": "This API uses OAuth 2.0 for authentication. You'll need to set up an OAuth flow with client credentials.",
+    "authDescMashape": "This API uses RapidAPI (formerly Mashape) for authentication. Sign up on RapidAPI to get your API key.",
+    "authDescUserAgent": "This API requires a custom User-Agent header. Set it to identify your application.",
+    "authDescOther": "Check the official documentation for specific authentication requirements.",
+    "commonImplementation": "Common Implementation",
+    "securityBestPractices": "Security Best Practices",
+    "securityPractice1": "Never expose API keys in client-side code",
+    "securityPractice2": "Use environment variables for sensitive credentials",
+    "securityPractice3": "Implement rate limiting on your backend",
+    "securityPractice4": "Rotate keys periodically and revoke compromised ones immediately",
+    "rateLimitsTitle": "Rate Limits",
+    "comingSoon": "Coming Soon",
+    "rateLimitsDesc": "Rate limit information will be extracted automatically in a future update.",
+    "requestsPerMinute": "Requests/minute",
+    "dailyQuota": "Daily quota",
+    "burstLimit": "Burst limit",
+    "sdksTitle": "SDKs & Libraries",
+    "sdksDesc": "Official and community SDKs will be listed here when available.",
+    "pricingTitle": "Pricing",
+    "pricingDesc": "Pricing tiers will be extracted automatically in a future update.",
+    "pricingFree": "Free",
+    "pricingBasic": "Basic usage",
+    "pricingPro": "Pro",
+    "pricingEnhanced": "Enhanced limits",
+    "pricingEnterprise": "Enterprise",
+    "pricingCustom": "Custom solutions",
+    "errorCodesTitle": "Error Codes & Troubleshooting",
+    "commonHttpStatusCodes": "Common HTTP Status Codes",
+    "status200": "OK",
+    "status200Desc": "Request succeeded. The response contains the requested data.",
+    "status400": "Bad Request",
+    "status400Desc": "The request was malformed. Check your parameters and try again.",
+    "status401": "Unauthorized",
+    "status401Desc": "Authentication failed. Verify your API key or token.",
+    "status403": "Forbidden",
+    "status403Desc": "Access denied. You may lack permissions for this resource.",
+    "status429": "Too Many Requests",
+    "status429Desc": "Rate limit exceeded. Wait and retry with exponential backoff.",
+    "status500": "Internal Server Error",
+    "status500Desc": "Server-side error. Try again later or contact support.",
+    "debugChecklist": "Quick Debug Checklist",
+    "debugCheckItem1": "Verify API key/token is valid and not expired",
+    "debugCheckItem2": "Check request URL and HTTP method",
+    "debugCheckItem3": "Validate request body format (JSON, form-data)",
+    "debugCheckItem4": "Confirm required headers are present",
+    "debugCheckItem5": "Test with curl to isolate client issues",
+    "debugCheckItem6": "Check API status page for outages",
+    "debugCheckItem7": "Review rate limit headers in response",
+    "latestError": "Latest Error from Health Check"
   },
   "about": {
     "backToCatalog": "back to catalog",
@@ -280,7 +359,10 @@
     "statsOpenApi": "OpenAPI handling",
     "statsOpenApiValue": "Auto-normalized",
     "statsOpenApiWhy": "Swagger UI renders reliably without guessing hosts.",
-    "statsNote": "Source repo: public-apis/public-apis. Numbers above refresh automatically; if GitHub is unreachable we display conservative defaults."
+    "statsNote": "Source repo: public-apis/public-apis. Numbers above refresh automatically; if GitHub is unreachable we display conservative defaults.",
+    "metaDescription": "Learn how Public API helps developers discover, evaluate, and integrate public APIs with live health checks, OpenAPI documentation, and real-time availability signals.",
+    "ogDescription": "Discover how we help developers find the best public APIs with live health monitoring and structured metadata.",
+    "breadcrumbLabel": "Breadcrumb"
   },
   "bot": {
     "backToCatalog": "back to catalog",
@@ -399,12 +481,17 @@
   "common": {
     "skipToMain": "Skip to main content",
     "loading": "Loading...",
+    "loadingCatalog": "Loading API catalog...",
+    "connectingToBackend": "Connecting to backend...",
+    "fetchingDataFromBackend": "Fetching data from backend, please wait...",
+    "initializingConnection": "Initializing connection",
+    "loadingData": "Loading data",
+    "renderingPage": "Rendering page",
     "copySpec": "Copy spec URL"
   },
   "languageSwitcher": {
-    "label": "Language",
-    "english": "English",
-    "chinese": "Chinese"
+    "switchToEnglish": "Switch to English",
+    "switchToChinese": "Switch to Chinese"
   },
   "categories": {
     "Development": "Development",
@@ -455,5 +542,59 @@
     "Cloud Storage & File Sharing": "Cloud Storage & File Sharing",
     "Environment": "Environment",
     "Authentication & Authorization": "Authentication & Authorization"
+  },
+  "copyButton": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "failed": "Failed"
+  },
+  "healthChart": {
+    "noData": "No health check data available yet.",
+    "live": "Live",
+    "slow": "Slow",
+    "down": "Down",
+    "unknown": "Unknown",
+    "avgLatency": "Avg latency",
+    "healthHistory": "Health check history"
+  },
+  "themeToggle": {
+    "toggleTheme": "Toggle color theme"
+  },
+  "header": {
+    "home": "Public API - Home"
+  },
+  "screenshot": {
+    "notAvailable": "Screenshot not available",
+    "viewFull": "View full screenshot of {name}",
+    "clickToEnlarge": "Click to enlarge",
+    "close": "Close screenshot",
+    "modalLabel": "Screenshot modal",
+    "captured": "Captured"
+  },
+  "thumbnail": {
+    "alt": "{name} screenshot"
+  },
+  "apiReference": {
+    "loadingDocs": "Loading API documentation..."
+  },
+  "backendLoading": {
+    "connecting": "Connecting to backend...",
+    "fetchingData": "Fetching data from backend, please wait...",
+    "initializing": "Initializing connection",
+    "loadingData": "Loading data",
+    "renderingPage": "Rendering page"
+  },
+  "statusPill": {
+    "ariaLabel": "API health status: {status}. {description}",
+    "labelOnline": "ONLINE",
+    "labelSlow": "SLOW",
+    "labelDown": "DOWN",
+    "labelUnknown": "???",
+    "labelPending": "WAIT",
+    "descOnline": "API is responding normally",
+    "descSlow": "API is responding but with high latency",
+    "descDown": "API is not responding",
+    "descUnknown": "API status could not be determined",
+    "descPending": "API has not been checked yet"
   }
 }
