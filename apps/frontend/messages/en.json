@@ -148,6 +148,7 @@
     "help": "help"
   },
   "api": {
+    "defaultSeoTitle": "{name} API - Documentation, Review & Integration Guide",
     "breadcrumbHome": "Public API",
     "livePreview": "Live Preview",
     "screenshotNote": "Automated screenshot of the API documentation page. May not reflect real-time changes.",

@@ -124,8 +124,11 @@ function normalizeOpenApiSpec(
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
-  const { id } = await props.params;
-  const api = await fetchApiDetail(id).catch(() => null);
+  const { locale, id } = await props.params;
+  const [api, t] = await Promise.all([
+    fetchApiDetail(id).catch(() => null),
+    getTranslations({ locale, namespace: "api" }),
+  ]);
   if (!api) return { title: "API not found" };
   const fallbackDescription =
     api.aiAnalysis?.summary?.trim() || api.description;
@@ -140,7 +143,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const description = generatedDescription || fallbackDescription;
   const title =
     (api.generatedContent?.seoTitle && api.generatedContent.seoTitle.trim()) ||
-    `${api.name} API Documentation & Review`;
+    t("defaultSeoTitle", { name: api.name });
   const canonicalSlug = slugify(api.name);
   const ogImage = `/api/${api.id}/${canonicalSlug}/opengraph-image`;
 
@@ -587,32 +590,25 @@ export default async function ApiDetailPage(props: Props) {
         </div>
       </header>
 
-      {/* Screenshot section - uses database URL or falls back to local /screenshots/{slug}.webp */}
-      {(() => {
-        const localScreenshotUrl = `/screenshots/${canonicalSlug}.webp`;
-        const thumbnailUrl = api.screenshot?.thumbnailUrl || localScreenshotUrl;
-        const fullUrl = api.screenshot?.fullUrl || localScreenshotUrl;
-        const capturedAt = api.screenshot?.capturedAt || null;
-
-        return (
-          <section className="ui-surface mt-6 p-6">
-            <h2 className="text-sm font-semibold text-[var(--text-primary)]">
-              {t("livePreview")}
-            </h2>
-            <div className="mt-4">
-              <ApiScreenshot
-                thumbnailUrl={thumbnailUrl}
-                fullUrl={fullUrl}
-                apiName={api.name}
-                capturedAt={capturedAt}
-              />
-            </div>
-            <p className="mt-3 text-xs text-[var(--text-muted)]">
-              {t("screenshotNote")}
-            </p>
-          </section>
-        );
-      })()}
+      {/* Screenshot section - only show if database has screenshot URL */}
+      {api.screenshot?.thumbnailUrl ? (
+        <section className="ui-surface mt-6 p-6">
+          <h2 className="text-sm font-semibold text-[var(--text-primary)]">
+            {t("livePreview")}
+          </h2>
+          <div className="mt-4">
+            <ApiScreenshot
+              thumbnailUrl={api.screenshot.thumbnailUrl}
+              fullUrl={api.screenshot.fullUrl}
+              apiName={api.name}
+              capturedAt={api.screenshot.capturedAt}
+            />
+          </div>
+          <p className="mt-3 text-xs text-[var(--text-muted)]">
+            {t("screenshotNote")}
+          </p>
+        </section>
+      ) : null}
 
       {healthSummary &&
       healthSummary.series &&
@@ -693,7 +689,7 @@ export default async function ApiDetailPage(props: Props) {
       {/* Getting Started Section - PSEO Generated Content */}
       <section className="ui-surface mt-6 p-6">
         <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
-          Getting Started
+          {t("gettingStarted")}
         </h2>
         <ContentBlock nodes={gettingStartedContent} />
       </section>
@@ -702,13 +698,13 @@ export default async function ApiDetailPage(props: Props) {
       {api.auth && api.auth !== "No" && (
         <section className="ui-surface mt-6 p-6">
           <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
-            🔐 Authentication Guide
+            🔐 {t("authGuide")}
           </h2>
           <div className="space-y-4">
             <div className="rounded-lg bg-[var(--bg-secondary)] p-4 border border-[var(--border-dim)]">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-semibold text-[var(--text-primary)]">
-                  Auth Type:
+                  {t("authType")}
                 </span>
                 <span className="ui-chip bg-[var(--accent-cyan)]/10 text-[var(--accent-cyan)]">
                   {api.auth}
@@ -716,21 +712,21 @@ export default async function ApiDetailPage(props: Props) {
               </div>
               <p className="text-sm text-[var(--text-secondary)]">
                 {api.auth === "apiKey"
-                  ? "This API uses API Key authentication. You'll need to obtain an API key and include it in your requests."
+                  ? t("authDescApiKey")
                   : api.auth === "OAuth"
-                    ? "This API uses OAuth 2.0 for authentication. You'll need to implement the OAuth flow to obtain access tokens."
+                    ? t("authDescOAuth")
                     : api.auth === "X-Mashape-Key"
-                      ? "This API requires a Mashape/RapidAPI key header for authentication."
+                      ? t("authDescMashape")
                       : api.auth === "User-Agent"
-                        ? "This API requires a valid User-Agent header in requests."
-                        : "This API requires authentication. Please refer to the official documentation for details."}
+                        ? t("authDescUserAgent")
+                        : t("authDescOther")}
               </p>
             </div>
 
             {/* Common Authentication Patterns */}
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-                Common Implementation
+                {t("commonImplementation")}
               </h3>
               <div className="rounded-lg bg-[var(--bg-tertiary)] p-4 font-mono text-xs overflow-x-auto">
                 {api.auth === "apiKey" && (
@@ -813,16 +809,13 @@ export default async function ApiDetailPage(props: Props) {
                 </svg>
                 <div className="flex-1">
                   <div className="text-sm font-semibold text-[var(--accent-yellow)] mb-1">
-                    Security Best Practices
+                    {t("securityBestPractices")}
                   </div>
                   <ul className="text-xs text-[var(--text-secondary)] space-y-1 list-disc list-inside">
-                    <li>Never commit API keys to version control</li>
-                    <li>Use environment variables for credentials</li>
-                    <li>Rotate keys regularly and revoke unused ones</li>
-                    <li>
-                      Implement rate limiting on your end to avoid quota
-                      exhaustion
-                    </li>
+                    <li>{t("securityPractice1")}</li>
+                    <li>{t("securityPractice2")}</li>
+                    <li>{t("securityPractice3")}</li>
+                    <li>{t("securityPractice4")}</li>
                   </ul>
                 </div>
               </div>
@@ -835,29 +828,28 @@ export default async function ApiDetailPage(props: Props) {
       <section className="ui-surface mt-6 p-6 border-2 border-dashed border-[var(--border-dim)]">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-[var(--text-primary)]">
-            ⏱️ Rate Limits & Quotas
+            ⏱️ {t("rateLimitsTitle")}
           </h2>
           <span className="text-xs bg-[var(--accent-yellow)]/10 text-[var(--accent-yellow)] px-2 py-1 rounded-full font-semibold">
-            Coming Soon
+            {t("comingSoon")}
           </span>
         </div>
         <p className="text-sm text-[var(--text-muted)]">
-          Rate limiting information will be automatically extracted from API
-          documentation once SEO data enhancement is complete.
+          {t("rateLimitsDesc")}
         </p>
         <div className="mt-4 grid gap-2 opacity-50">
           <div className="flex items-center justify-between text-xs">
             <span className="text-[var(--text-muted)]">
-              Requests per minute
+              {t("requestsPerMinute")}
             </span>
             <span className="font-mono text-[var(--text-secondary)]">–</span>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="text-[var(--text-muted)]">Daily quota</span>
+            <span className="text-[var(--text-muted)]">{t("dailyQuota")}</span>
             <span className="font-mono text-[var(--text-secondary)]">–</span>
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="text-[var(--text-muted)]">Burst limit</span>
+            <span className="text-[var(--text-muted)]">{t("burstLimit")}</span>
             <span className="font-mono text-[var(--text-secondary)]">–</span>
           </div>
         </div>
@@ -867,16 +859,13 @@ export default async function ApiDetailPage(props: Props) {
       <section className="ui-surface mt-6 p-6 border-2 border-dashed border-[var(--border-dim)]">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-[var(--text-primary)]">
-            📦 Official SDKs & Community Libraries
+            📦 {t("sdksTitle")}
           </h2>
           <span className="text-xs bg-[var(--accent-yellow)]/10 text-[var(--accent-yellow)] px-2 py-1 rounded-full font-semibold">
-            Coming Soon
+            {t("comingSoon")}
           </span>
         </div>
-        <p className="text-sm text-[var(--text-muted)]">
-          SDK and library information will be extracted from documentation and
-          GitHub repositories.
-        </p>
+        <p className="text-sm text-[var(--text-muted)]">{t("sdksDesc")}</p>
         <div className="mt-4 flex flex-wrap gap-2 opacity-50">
           {["Python", "JavaScript", "Ruby", "Go", "Java", "PHP"].map((lang) => (
             <div
@@ -906,23 +895,20 @@ export default async function ApiDetailPage(props: Props) {
       <section className="ui-surface mt-6 p-6 border-2 border-dashed border-[var(--border-dim)]">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-[var(--text-primary)]">
-            💰 Pricing & Plans
+            💰 {t("pricingTitle")}
           </h2>
           <span className="text-xs bg-[var(--accent-yellow)]/10 text-[var(--accent-yellow)] px-2 py-1 rounded-full font-semibold">
-            Coming Soon
+            {t("comingSoon")}
           </span>
         </div>
-        <p className="text-sm text-[var(--text-muted)]">
-          Pricing tier information will be extracted from API documentation once
-          available.
-        </p>
+        <p className="text-sm text-[var(--text-muted)]">{t("pricingDesc")}</p>
         <div className="mt-4 grid md:grid-cols-3 gap-3 opacity-50">
           <div className="rounded-lg bg-[var(--bg-secondary)] p-4 border border-[var(--border-dim)]">
             <div className="text-sm font-semibold text-[var(--text-primary)]">
-              Free
+              {t("pricingFree")}
             </div>
             <div className="text-xs text-[var(--text-muted)] mt-1">
-              Basic access
+              {t("pricingBasic")}
             </div>
             <div className="mt-2 text-lg font-bold text-[var(--text-primary)]">
               $0
@@ -930,10 +916,10 @@ export default async function ApiDetailPage(props: Props) {
           </div>
           <div className="rounded-lg bg-[var(--bg-secondary)] p-4 border border-[var(--border-dim)]">
             <div className="text-sm font-semibold text-[var(--text-primary)]">
-              Pro
+              {t("pricingPro")}
             </div>
             <div className="text-xs text-[var(--text-muted)] mt-1">
-              Enhanced limits
+              {t("pricingEnhanced")}
             </div>
             <div className="mt-2 text-lg font-bold text-[var(--text-primary)]">
               –
@@ -941,10 +927,10 @@ export default async function ApiDetailPage(props: Props) {
           </div>
           <div className="rounded-lg bg-[var(--bg-secondary)] p-4 border border-[var(--border-dim)]">
             <div className="text-sm font-semibold text-[var(--text-primary)]">
-              Enterprise
+              {t("pricingEnterprise")}
             </div>
             <div className="text-xs text-[var(--text-muted)] mt-1">
-              Custom solutions
+              {t("pricingCustom")}
             </div>
             <div className="mt-2 text-lg font-bold text-[var(--text-primary)]">
               –
@@ -1282,13 +1268,13 @@ export default async function ApiDetailPage(props: Props) {
       {openapiSpec && (
         <section className="ui-surface mt-6 p-6">
           <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
-            ⚠️ Error Codes & Troubleshooting
+            {t("errorCodesTitle")}
           </h2>
           <div className="space-y-4">
             {/* Common HTTP Status Codes */}
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-                Common HTTP Status Codes
+                {t("commonHttpStatusCodes")}
               </h3>
               <div className="grid gap-3">
                 <div className="flex items-start gap-3 rounded-lg bg-[var(--bg-secondary)] p-3 border border-[var(--border-dim)]">
@@ -1297,10 +1283,10 @@ export default async function ApiDetailPage(props: Props) {
                   </span>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-[var(--text-primary)]">
-                      Success
+                      {t("status200")}
                     </div>
                     <div className="text-xs text-[var(--text-secondary)] mt-1">
-                      Request completed successfully
+                      {t("status200Desc")}
                     </div>
                   </div>
                 </div>
@@ -1310,10 +1296,10 @@ export default async function ApiDetailPage(props: Props) {
                   </span>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-[var(--text-primary)]">
-                      Bad Request
+                      {t("status400")}
                     </div>
                     <div className="text-xs text-[var(--text-secondary)] mt-1">
-                      Invalid request parameters or format
+                      {t("status400Desc")}
                     </div>
                   </div>
                 </div>
@@ -1323,10 +1309,10 @@ export default async function ApiDetailPage(props: Props) {
                   </span>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-[var(--text-primary)]">
-                      Unauthorized
+                      {t("status401")}
                     </div>
                     <div className="text-xs text-[var(--text-secondary)] mt-1">
-                      Authentication required or credentials invalid
+                      {t("status401Desc")}
                     </div>
                   </div>
                 </div>
@@ -1336,10 +1322,10 @@ export default async function ApiDetailPage(props: Props) {
                   </span>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-[var(--text-primary)]">
-                      Forbidden
+                      {t("status403")}
                     </div>
                     <div className="text-xs text-[var(--text-secondary)] mt-1">
-                      Insufficient permissions for this resource
+                      {t("status403Desc")}
                     </div>
                   </div>
                 </div>
@@ -1349,10 +1335,10 @@ export default async function ApiDetailPage(props: Props) {
                   </span>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-[var(--text-primary)]">
-                      Too Many Requests
+                      {t("status429")}
                     </div>
                     <div className="text-xs text-[var(--text-secondary)] mt-1">
-                      Rate limit exceeded, slow down requests
+                      {t("status429Desc")}
                     </div>
                   </div>
                 </div>
@@ -1362,10 +1348,10 @@ export default async function ApiDetailPage(props: Props) {
                   </span>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-[var(--text-primary)]">
-                      Internal Server Error
+                      {t("status500")}
                     </div>
                     <div className="text-xs text-[var(--text-secondary)] mt-1">
-                      API service error, try again later
+                      {t("status500Desc")}
                     </div>
                   </div>
                 </div>
@@ -1388,25 +1374,16 @@ export default async function ApiDetailPage(props: Props) {
                 </svg>
                 <div className="flex-1">
                   <div className="text-sm font-semibold text-[var(--accent-cyan)] mb-2">
-                    Debug Checklist
+                    {t("debugChecklist")}
                   </div>
                   <ul className="text-xs text-[var(--text-secondary)] space-y-1.5 list-disc list-inside">
-                    <li>
-                      Verify authentication credentials are correct and not
-                      expired
-                    </li>
-                    <li>Check request URL format and endpoint path</li>
-                    <li>Ensure all required parameters are provided</li>
-                    <li>
-                      Validate request body format (JSON, URL-encoded, etc.)
-                    </li>
-                    <li>
-                      Check if CORS is properly configured for browser requests
-                    </li>
-                    <li>
-                      Monitor rate limits and implement exponential backoff
-                    </li>
-                    <li>Review API documentation for breaking changes</li>
+                    <li>{t("debugCheckItem1")}</li>
+                    <li>{t("debugCheckItem2")}</li>
+                    <li>{t("debugCheckItem3")}</li>
+                    <li>{t("debugCheckItem4")}</li>
+                    <li>{t("debugCheckItem5")}</li>
+                    <li>{t("debugCheckItem6")}</li>
+                    <li>{t("debugCheckItem7")}</li>
                   </ul>
                 </div>
               </div>
@@ -1415,7 +1392,7 @@ export default async function ApiDetailPage(props: Props) {
             {api.lastError && (
               <div className="rounded-lg bg-[var(--accent-red)]/5 border border-[var(--accent-red)]/20 p-4">
                 <div className="text-sm font-semibold text-[var(--accent-red)] mb-2">
-                  Latest Error from Health Check
+                  {t("latestError")}
                 </div>
                 <pre className="text-xs text-[var(--text-secondary)] font-mono whitespace-pre-wrap break-words">
                   {api.lastError}
