@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { marked } from "marked";
-import DOMPurify from "isomorphic-dompurify";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 import { Link } from "@/i18n/navigation";
 import { ApiPlaygroundLazy } from "@/components/ApiPlaygroundLazy";
@@ -184,10 +184,19 @@ export default async function ApiDetailPage(props: Props) {
         .then((spec) => normalizeOpenApiSpec(spec, api.openapiUrl!))
         .catch(() => null)
     : null;
+
+  // Extract API version from OpenAPI spec
+  const apiVersion =
+    openapiSpec && typeof openapiSpec === "object" && "info" in openapiSpec
+      ? (openapiSpec as { info?: { version?: unknown } }).info?.version
+        ? String((openapiSpec as { info: { version: unknown } }).info.version)
+        : null
+      : null;
+
   const generatedHtml =
     api.generatedContent?.blogPost?.trim() &&
     typeof api.generatedContent.blogPost === "string"
-      ? DOMPurify.sanitize(await marked.parse(api.generatedContent.blogPost))
+      ? sanitizeHtml(await marked.parse(api.generatedContent.blogPost))
       : null;
 
   const related =
@@ -211,11 +220,16 @@ export default async function ApiDetailPage(props: Props) {
       description: api.description,
       link: api.link,
       openapiUrl: api.openapiUrl ?? undefined,
-      category: api.category ? {
-        id: typeof api.category.id === "string" ? parseInt(api.category.id, 10) : api.category.id,
-        name: api.category.name,
-        slug: api.category.slug,
-      } : undefined,
+      category: api.category
+        ? {
+            id:
+              typeof api.category.id === "string"
+                ? parseInt(api.category.id, 10)
+                : api.category.id,
+            name: api.category.name,
+            slug: api.category.slug,
+          }
+        : undefined,
       auth: api.auth,
       cors: api.cors,
       https: api.https,
@@ -223,39 +237,62 @@ export default async function ApiDetailPage(props: Props) {
       latencyMs: api.latencyMs ?? undefined,
       lastCheckedAt: api.lastCheckedAt ?? undefined,
       lastError: api.lastError ?? undefined,
-      seoMetadata: api.seoMetadata ? {
-        title: api.seoMetadata.title ?? undefined,
-        description: api.seoMetadata.description ?? undefined,
-        keywords: api.seoMetadata.keywords?.map(k => ({ keyword: k.keyword ?? "" })).filter(k => k.keyword) ?? undefined,
-        h1: api.seoMetadata.h1 ?? undefined,
-        h2s: api.seoMetadata.h2s?.map(h => ({ heading: h.heading ?? "" })).filter(h => h.heading) ?? undefined,
-        languages: api.seoMetadata.languages?.map(l => ({ language: l.language ?? "" })).filter(l => l.language) ?? undefined,
-        docQualityScore: api.seoMetadata.docQualityScore ?? undefined,
-        hasCodeExamples: api.seoMetadata.hasCodeExamples ?? undefined,
-        ogImage: api.seoMetadata.ogImage ?? undefined,
-        extractedAt: api.seoMetadata.extractedAt ?? undefined,
-      } : undefined,
-      aiAnalysis: api.aiAnalysis ? {
-        summary: api.aiAnalysis.summary ?? undefined,
-        useCases: api.aiAnalysis.useCases?.map(u => ({ tag: u.tag ?? "" })).filter(u => u.tag) ?? undefined,
-      } : undefined,
-      generatedContent: api.generatedContent ? {
-        seoTitle: api.generatedContent.seoTitle ?? undefined,
-        blogPost: api.generatedContent.blogPost ?? undefined,
-        model: api.generatedContent.model ?? undefined,
-        lastGeneratedAt: api.generatedContent.lastGeneratedAt ?? undefined,
-      } : undefined,
-      screenshot: api.screenshot?.thumbnailUrl && api.screenshot?.fullUrl && api.screenshot?.capturedAt ? {
-        thumbnailUrl: api.screenshot.thumbnailUrl,
-        fullUrl: api.screenshot.fullUrl,
-        capturedAt: api.screenshot.capturedAt,
-      } : undefined,
+      seoMetadata: api.seoMetadata
+        ? {
+            title: api.seoMetadata.title ?? undefined,
+            description: api.seoMetadata.description ?? undefined,
+            keywords:
+              api.seoMetadata.keywords
+                ?.map((k) => ({ keyword: k.keyword ?? "" }))
+                .filter((k) => k.keyword) ?? undefined,
+            h1: api.seoMetadata.h1 ?? undefined,
+            h2s:
+              api.seoMetadata.h2s
+                ?.map((h) => ({ heading: h.heading ?? "" }))
+                .filter((h) => h.heading) ?? undefined,
+            languages:
+              api.seoMetadata.languages
+                ?.map((l) => ({ language: l.language ?? "" }))
+                .filter((l) => l.language) ?? undefined,
+            docQualityScore: api.seoMetadata.docQualityScore ?? undefined,
+            hasCodeExamples: api.seoMetadata.hasCodeExamples ?? undefined,
+            ogImage: api.seoMetadata.ogImage ?? undefined,
+            extractedAt: api.seoMetadata.extractedAt ?? undefined,
+          }
+        : undefined,
+      aiAnalysis: api.aiAnalysis
+        ? {
+            summary: api.aiAnalysis.summary ?? undefined,
+            useCases:
+              api.aiAnalysis.useCases
+                ?.map((u) => ({ tag: u.tag ?? "" }))
+                .filter((u) => u.tag) ?? undefined,
+          }
+        : undefined,
+      generatedContent: api.generatedContent
+        ? {
+            seoTitle: api.generatedContent.seoTitle ?? undefined,
+            blogPost: api.generatedContent.blogPost ?? undefined,
+            model: api.generatedContent.model ?? undefined,
+            lastGeneratedAt: api.generatedContent.lastGeneratedAt ?? undefined,
+          }
+        : undefined,
+      screenshot:
+        api.screenshot?.thumbnailUrl &&
+        api.screenshot?.fullUrl &&
+        api.screenshot?.capturedAt
+          ? {
+              thumbnailUrl: api.screenshot.thumbnailUrl,
+              fullUrl: api.screenshot.fullUrl,
+              capturedAt: api.screenshot.capturedAt,
+            }
+          : undefined,
     },
     healthSummary: healthSummary
       ? {
           uptimePct: healthSummary.uptimePct ?? undefined,
           avgLatencyMs: healthSummary.avgLatencyMs ?? undefined,
-          series: healthSummary.series.map((s) => ({
+          series: (healthSummary.series ?? []).map((s) => ({
             date: s.checkedAt ?? "",
             status: s.healthStatus ?? "",
             latencyMs: s.latencyMs ?? undefined,
@@ -265,10 +302,12 @@ export default async function ApiDetailPage(props: Props) {
     relatedApis: related.map((r) => ({
       ...r,
       id: typeof r.id === "string" ? parseInt(r.id, 10) : r.id,
-      category: r.category ? {
-        name: r.category.name,
-        slug: r.category.slug,
-      } : undefined,
+      category: r.category
+        ? {
+            name: r.category.name,
+            slug: r.category.slug,
+          }
+        : undefined,
     })),
     locale,
   };
@@ -327,14 +366,16 @@ export default async function ApiDetailPage(props: Props) {
   };
 
   // Extract programming languages from SEO metadata
-  const programmingLanguages = api.seoMetadata?.languages
-    ?.map((l) => l?.language?.trim())
-    .filter((l): l is string => !!l) || [];
+  const programmingLanguages =
+    api.seoMetadata?.languages
+      ?.map((l) => l?.language?.trim())
+      .filter((l): l is string => !!l) || [];
 
   // Extract keywords from SEO metadata
-  const seoKeywords = api.seoMetadata?.keywords
-    ?.map((k) => k?.keyword?.trim())
-    .filter((k): k is string => !!k) || [];
+  const seoKeywords =
+    api.seoMetadata?.keywords
+      ?.map((k) => k?.keyword?.trim())
+      .filter((k): k is string => !!k) || [];
 
   // Combine all keywords
   const allKeywords = [...new Set([...(useCaseTags || []), ...seoKeywords])];
@@ -352,7 +393,8 @@ export default async function ApiDetailPage(props: Props) {
       url: api.link,
     },
     keywords: allKeywords.length > 0 ? allKeywords.join(", ") : undefined,
-    programmingLanguage: programmingLanguages.length > 0 ? programmingLanguages : undefined,
+    programmingLanguage:
+      programmingLanguages.length > 0 ? programmingLanguages : undefined,
     additionalProperty: [
       { "@type": "PropertyValue", name: "Auth", value: api.auth },
       { "@type": "PropertyValue", name: "CORS", value: api.cors },
@@ -468,6 +510,22 @@ export default async function ApiDetailPage(props: Props) {
                   {tCategories(api.category.name)}
                 </span>
               ) : null}
+              {apiVersion ? (
+                <span className="ui-chip inline-flex items-center gap-1 bg-[var(--accent-green)]/10 text-[var(--accent-green)]">
+                  <svg
+                    className="h-3 w-3"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  v{apiVersion}
+                </span>
+              ) : null}
               <span className="ui-chip">
                 {t("signalAuth")}: {api.auth}
               </span>
@@ -490,16 +548,37 @@ export default async function ApiDetailPage(props: Props) {
             </div>
 
             {healthSummary && healthSummary.uptimePct !== null ? (
-              <div className="text-right text-xs text-[var(--text-muted)]">
-                <div>
-                  {t("uptime30d")}{" "}
-                  <span className="font-medium text-[var(--text-primary)]">
-                    {healthSummary.uptimePct.toFixed(2)}%
-                  </span>
+              <div className="flex flex-col items-end gap-2">
+                <div
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
+                    healthSummary.uptimePct >= 99.9
+                      ? "bg-[var(--accent-green)]/10 text-[var(--accent-green)]"
+                      : healthSummary.uptimePct >= 99
+                        ? "bg-[var(--accent-cyan)]/10 text-[var(--accent-cyan)]"
+                        : healthSummary.uptimePct >= 95
+                          ? "bg-[var(--accent-yellow)]/10 text-[var(--accent-yellow)]"
+                          : "bg-[var(--accent-red)]/10 text-[var(--accent-red)]"
+                  }`}
+                >
+                  <svg
+                    className="h-3 w-3"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {healthSummary.uptimePct.toFixed(2)}% {t("uptime30d")}
                 </div>
                 {healthSummary.avgLatencyMs !== null ? (
-                  <div className="font-mono">
-                    {healthSummary.avgLatencyMs}ms {t("avgLatency")}
+                  <div className="text-xs text-[var(--text-muted)]">
+                    <span className="font-mono text-[var(--text-primary)]">
+                      {healthSummary.avgLatencyMs}ms
+                    </span>{" "}
+                    {t("avgLatency")}
                   </div>
                 ) : null}
               </div>
@@ -508,24 +587,32 @@ export default async function ApiDetailPage(props: Props) {
         </div>
       </header>
 
-      {api.screenshot?.thumbnailUrl ? (
-        <section className="ui-surface mt-6 p-6">
-          <h2 className="text-sm font-semibold text-[var(--text-primary)]">
-            {t("livePreview")}
-          </h2>
-          <div className="mt-4">
-            <ApiScreenshot
-              thumbnailUrl={api.screenshot.thumbnailUrl}
-              fullUrl={api.screenshot.fullUrl}
-              apiName={api.name}
-              capturedAt={api.screenshot.capturedAt}
-            />
-          </div>
-          <p className="mt-3 text-xs text-[var(--text-muted)]">
-            {t("screenshotNote")}
-          </p>
-        </section>
-      ) : null}
+      {/* Screenshot section - uses database URL or falls back to local /screenshots/{slug}.webp */}
+      {(() => {
+        const localScreenshotUrl = `/screenshots/${canonicalSlug}.webp`;
+        const thumbnailUrl = api.screenshot?.thumbnailUrl || localScreenshotUrl;
+        const fullUrl = api.screenshot?.fullUrl || localScreenshotUrl;
+        const capturedAt = api.screenshot?.capturedAt || null;
+
+        return (
+          <section className="ui-surface mt-6 p-6">
+            <h2 className="text-sm font-semibold text-[var(--text-primary)]">
+              {t("livePreview")}
+            </h2>
+            <div className="mt-4">
+              <ApiScreenshot
+                thumbnailUrl={thumbnailUrl}
+                fullUrl={fullUrl}
+                apiName={api.name}
+                capturedAt={capturedAt}
+              />
+            </div>
+            <p className="mt-3 text-xs text-[var(--text-muted)]">
+              {t("screenshotNote")}
+            </p>
+          </section>
+        );
+      })()}
 
       {healthSummary &&
       healthSummary.series &&
@@ -609,6 +696,261 @@ export default async function ApiDetailPage(props: Props) {
           Getting Started
         </h2>
         <ContentBlock nodes={gettingStartedContent} />
+      </section>
+
+      {/* Authentication Deep Dive Section */}
+      {api.auth && api.auth !== "No" && (
+        <section className="ui-surface mt-6 p-6">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
+            🔐 Authentication Guide
+          </h2>
+          <div className="space-y-4">
+            <div className="rounded-lg bg-[var(--bg-secondary)] p-4 border border-[var(--border-dim)]">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-semibold text-[var(--text-primary)]">
+                  Auth Type:
+                </span>
+                <span className="ui-chip bg-[var(--accent-cyan)]/10 text-[var(--accent-cyan)]">
+                  {api.auth}
+                </span>
+              </div>
+              <p className="text-sm text-[var(--text-secondary)]">
+                {api.auth === "apiKey"
+                  ? "This API uses API Key authentication. You'll need to obtain an API key and include it in your requests."
+                  : api.auth === "OAuth"
+                    ? "This API uses OAuth 2.0 for authentication. You'll need to implement the OAuth flow to obtain access tokens."
+                    : api.auth === "X-Mashape-Key"
+                      ? "This API requires a Mashape/RapidAPI key header for authentication."
+                      : api.auth === "User-Agent"
+                        ? "This API requires a valid User-Agent header in requests."
+                        : "This API requires authentication. Please refer to the official documentation for details."}
+              </p>
+            </div>
+
+            {/* Common Authentication Patterns */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
+                Common Implementation
+              </h3>
+              <div className="rounded-lg bg-[var(--bg-tertiary)] p-4 font-mono text-xs overflow-x-auto">
+                {api.auth === "apiKey" && (
+                  <div className="space-y-2">
+                    <div className="text-[var(--text-muted)]"># Using cURL</div>
+                    <div className="text-[var(--text-secondary)]">
+                      curl -H "Authorization: Bearer YOUR_API_KEY" {api.link}
+                    </div>
+                    <div className="mt-3 text-[var(--text-muted)]">
+                      # Using JavaScript
+                    </div>
+                    <div className="text-[var(--text-secondary)]">
+                      fetch('{api.link}', {"{"}
+                      <br />
+                      &nbsp;&nbsp;headers: {"{"} 'Authorization': 'Bearer
+                      YOUR_API_KEY' {"}"}
+                      <br />
+                      {"}"})
+                    </div>
+                  </div>
+                )}
+                {api.auth === "OAuth" && (
+                  <div className="space-y-2">
+                    <div className="text-[var(--text-muted)]">
+                      # Step 1: Obtain authorization code
+                    </div>
+                    <div className="text-[var(--text-secondary)]">
+                      GET
+                      /oauth/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=YOUR_CALLBACK
+                    </div>
+                    <div className="mt-3 text-[var(--text-muted)]">
+                      # Step 2: Exchange code for token
+                    </div>
+                    <div className="text-[var(--text-secondary)]">
+                      POST /oauth/token
+                      <br />
+                      client_id=YOUR_CLIENT_ID&client_secret=YOUR_SECRET&code=AUTH_CODE
+                    </div>
+                  </div>
+                )}
+                {api.auth === "X-Mashape-Key" && (
+                  <div className="space-y-2">
+                    <div className="text-[var(--text-muted)]"># Using cURL</div>
+                    <div className="text-[var(--text-secondary)]">
+                      curl -H "X-Mashape-Key: YOUR_KEY" {api.link}
+                    </div>
+                  </div>
+                )}
+                {api.auth === "User-Agent" && (
+                  <div className="space-y-2">
+                    <div className="text-[var(--text-muted)]"># Using cURL</div>
+                    <div className="text-[var(--text-secondary)]">
+                      curl -H "User-Agent: YourApp/1.0" {api.link}
+                    </div>
+                  </div>
+                )}
+                {!["apiKey", "OAuth", "X-Mashape-Key", "User-Agent"].includes(
+                  api.auth,
+                ) && (
+                  <div className="text-[var(--text-secondary)]">
+                    Refer to the official documentation for authentication
+                    details.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="rounded-lg bg-[var(--accent-yellow)]/5 border border-[var(--accent-yellow)]/20 p-4">
+              <div className="flex items-start gap-2">
+                <svg
+                  className="h-5 w-5 text-[var(--accent-yellow)] mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <div className="flex-1">
+                  <div className="text-sm font-semibold text-[var(--accent-yellow)] mb-1">
+                    Security Best Practices
+                  </div>
+                  <ul className="text-xs text-[var(--text-secondary)] space-y-1 list-disc list-inside">
+                    <li>Never commit API keys to version control</li>
+                    <li>Use environment variables for credentials</li>
+                    <li>Rotate keys regularly and revoke unused ones</li>
+                    <li>
+                      Implement rate limiting on your end to avoid quota
+                      exhaustion
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Rate Limits - Placeholder Section */}
+      <section className="ui-surface mt-6 p-6 border-2 border-dashed border-[var(--border-dim)]">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)]">
+            ⏱️ Rate Limits & Quotas
+          </h2>
+          <span className="text-xs bg-[var(--accent-yellow)]/10 text-[var(--accent-yellow)] px-2 py-1 rounded-full font-semibold">
+            Coming Soon
+          </span>
+        </div>
+        <p className="text-sm text-[var(--text-muted)]">
+          Rate limiting information will be automatically extracted from API
+          documentation once SEO data enhancement is complete.
+        </p>
+        <div className="mt-4 grid gap-2 opacity-50">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-[var(--text-muted)]">
+              Requests per minute
+            </span>
+            <span className="font-mono text-[var(--text-secondary)]">–</span>
+          </div>
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-[var(--text-muted)]">Daily quota</span>
+            <span className="font-mono text-[var(--text-secondary)]">–</span>
+          </div>
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-[var(--text-muted)]">Burst limit</span>
+            <span className="font-mono text-[var(--text-secondary)]">–</span>
+          </div>
+        </div>
+      </section>
+
+      {/* SDKs & Libraries - Placeholder Section */}
+      <section className="ui-surface mt-6 p-6 border-2 border-dashed border-[var(--border-dim)]">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)]">
+            📦 Official SDKs & Community Libraries
+          </h2>
+          <span className="text-xs bg-[var(--accent-yellow)]/10 text-[var(--accent-yellow)] px-2 py-1 rounded-full font-semibold">
+            Coming Soon
+          </span>
+        </div>
+        <p className="text-sm text-[var(--text-muted)]">
+          SDK and library information will be extracted from documentation and
+          GitHub repositories.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2 opacity-50">
+          {["Python", "JavaScript", "Ruby", "Go", "Java", "PHP"].map((lang) => (
+            <div
+              key={lang}
+              className="flex items-center gap-2 rounded-lg bg-[var(--bg-secondary)] px-3 py-2 border border-[var(--border-dim)]"
+            >
+              <svg
+                className="h-4 w-4 text-[var(--text-muted)]"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="text-xs text-[var(--text-secondary)]">
+                {lang}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Pricing - Placeholder Section */}
+      <section className="ui-surface mt-6 p-6 border-2 border-dashed border-[var(--border-dim)]">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)]">
+            💰 Pricing & Plans
+          </h2>
+          <span className="text-xs bg-[var(--accent-yellow)]/10 text-[var(--accent-yellow)] px-2 py-1 rounded-full font-semibold">
+            Coming Soon
+          </span>
+        </div>
+        <p className="text-sm text-[var(--text-muted)]">
+          Pricing tier information will be extracted from API documentation once
+          available.
+        </p>
+        <div className="mt-4 grid md:grid-cols-3 gap-3 opacity-50">
+          <div className="rounded-lg bg-[var(--bg-secondary)] p-4 border border-[var(--border-dim)]">
+            <div className="text-sm font-semibold text-[var(--text-primary)]">
+              Free
+            </div>
+            <div className="text-xs text-[var(--text-muted)] mt-1">
+              Basic access
+            </div>
+            <div className="mt-2 text-lg font-bold text-[var(--text-primary)]">
+              $0
+            </div>
+          </div>
+          <div className="rounded-lg bg-[var(--bg-secondary)] p-4 border border-[var(--border-dim)]">
+            <div className="text-sm font-semibold text-[var(--text-primary)]">
+              Pro
+            </div>
+            <div className="text-xs text-[var(--text-muted)] mt-1">
+              Enhanced limits
+            </div>
+            <div className="mt-2 text-lg font-bold text-[var(--text-primary)]">
+              –
+            </div>
+          </div>
+          <div className="rounded-lg bg-[var(--bg-secondary)] p-4 border border-[var(--border-dim)]">
+            <div className="text-sm font-semibold text-[var(--text-primary)]">
+              Enterprise
+            </div>
+            <div className="text-xs text-[var(--text-muted)] mt-1">
+              Custom solutions
+            </div>
+            <div className="mt-2 text-lg font-bold text-[var(--text-primary)]">
+              –
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Code Examples Section - PSEO Generated Content */}
@@ -936,8 +1278,159 @@ export default async function ApiDetailPage(props: Props) {
         </section>
       ) : null}
 
+      {/* Error Codes & Troubleshooting Section */}
+      {openapiSpec && (
+        <section className="ui-surface mt-6 p-6">
+          <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
+            ⚠️ Error Codes & Troubleshooting
+          </h2>
+          <div className="space-y-4">
+            {/* Common HTTP Status Codes */}
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
+                Common HTTP Status Codes
+              </h3>
+              <div className="grid gap-3">
+                <div className="flex items-start gap-3 rounded-lg bg-[var(--bg-secondary)] p-3 border border-[var(--border-dim)]">
+                  <span className="font-mono text-xs font-semibold text-[var(--accent-green)] bg-[var(--accent-green)]/10 px-2 py-1 rounded">
+                    200
+                  </span>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-[var(--text-primary)]">
+                      Success
+                    </div>
+                    <div className="text-xs text-[var(--text-secondary)] mt-1">
+                      Request completed successfully
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 rounded-lg bg-[var(--bg-secondary)] p-3 border border-[var(--border-dim)]">
+                  <span className="font-mono text-xs font-semibold text-[var(--accent-yellow)] bg-[var(--accent-yellow)]/10 px-2 py-1 rounded">
+                    400
+                  </span>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-[var(--text-primary)]">
+                      Bad Request
+                    </div>
+                    <div className="text-xs text-[var(--text-secondary)] mt-1">
+                      Invalid request parameters or format
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 rounded-lg bg-[var(--bg-secondary)] p-3 border border-[var(--border-dim)]">
+                  <span className="font-mono text-xs font-semibold text-[var(--accent-red)] bg-[var(--accent-red)]/10 px-2 py-1 rounded">
+                    401
+                  </span>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-[var(--text-primary)]">
+                      Unauthorized
+                    </div>
+                    <div className="text-xs text-[var(--text-secondary)] mt-1">
+                      Authentication required or credentials invalid
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 rounded-lg bg-[var(--bg-secondary)] p-3 border border-[var(--border-dim)]">
+                  <span className="font-mono text-xs font-semibold text-[var(--accent-red)] bg-[var(--accent-red)]/10 px-2 py-1 rounded">
+                    403
+                  </span>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-[var(--text-primary)]">
+                      Forbidden
+                    </div>
+                    <div className="text-xs text-[var(--text-secondary)] mt-1">
+                      Insufficient permissions for this resource
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 rounded-lg bg-[var(--bg-secondary)] p-3 border border-[var(--border-dim)]">
+                  <span className="font-mono text-xs font-semibold text-[var(--accent-red)] bg-[var(--accent-red)]/10 px-2 py-1 rounded">
+                    429
+                  </span>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-[var(--text-primary)]">
+                      Too Many Requests
+                    </div>
+                    <div className="text-xs text-[var(--text-secondary)] mt-1">
+                      Rate limit exceeded, slow down requests
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 rounded-lg bg-[var(--bg-secondary)] p-3 border border-[var(--border-dim)]">
+                  <span className="font-mono text-xs font-semibold text-[var(--accent-red)] bg-[var(--accent-red)]/10 px-2 py-1 rounded">
+                    500
+                  </span>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-[var(--text-primary)]">
+                      Internal Server Error
+                    </div>
+                    <div className="text-xs text-[var(--text-secondary)] mt-1">
+                      API service error, try again later
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Troubleshooting Checklist */}
+            <div className="rounded-lg bg-[var(--accent-cyan)]/5 border border-[var(--accent-cyan)]/20 p-4">
+              <div className="flex items-start gap-2">
+                <svg
+                  className="h-5 w-5 text-[var(--accent-cyan)] mt-0.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <div className="flex-1">
+                  <div className="text-sm font-semibold text-[var(--accent-cyan)] mb-2">
+                    Debug Checklist
+                  </div>
+                  <ul className="text-xs text-[var(--text-secondary)] space-y-1.5 list-disc list-inside">
+                    <li>
+                      Verify authentication credentials are correct and not
+                      expired
+                    </li>
+                    <li>Check request URL format and endpoint path</li>
+                    <li>Ensure all required parameters are provided</li>
+                    <li>
+                      Validate request body format (JSON, URL-encoded, etc.)
+                    </li>
+                    <li>
+                      Check if CORS is properly configured for browser requests
+                    </li>
+                    <li>
+                      Monitor rate limits and implement exponential backoff
+                    </li>
+                    <li>Review API documentation for breaking changes</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {api.lastError && (
+              <div className="rounded-lg bg-[var(--accent-red)]/5 border border-[var(--accent-red)]/20 p-4">
+                <div className="text-sm font-semibold text-[var(--accent-red)] mb-2">
+                  Latest Error from Health Check
+                </div>
+                <pre className="text-xs text-[var(--text-secondary)] font-mono whitespace-pre-wrap break-words">
+                  {api.lastError}
+                </pre>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* FAQ Section - PSEO Generated Content */}
-      <FAQSection items={faqItems} title={t("faq") || "Frequently Asked Questions"} />
+      <FAQSection
+        items={faqItems}
+        title={t("faq") || "Frequently Asked Questions"}
+      />
 
       <section className="ui-surface mt-6 p-6">
         <h2 className="text-sm font-semibold text-[var(--text-primary)]">
@@ -972,9 +1465,12 @@ export default async function ApiDetailPage(props: Props) {
 }
 
 // Helper function to extract FAQ items from ContentNode[]
-function extractFAQItems(nodes: import("@api-navigator/shared/pseo").ContentNode[]): FAQItem[] {
+function extractFAQItems(
+  nodes: import("@api-navigator/shared/pseo").ContentNode[],
+): FAQItem[] {
   const faqItems: FAQItem[] = [];
-  let currentCategory: import("@api-navigator/shared/pseo").FAQCategory = "general";
+  let currentCategory: import("@api-navigator/shared/pseo").FAQCategory =
+    "general";
   let currentQuestion = "";
   let currentAnswer = "";
 

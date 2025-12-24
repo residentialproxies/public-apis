@@ -54,9 +54,12 @@ const nextConfig: NextConfig = {
   // Compiler options for production optimization
   compiler: {
     // Remove console.log in production
-    removeConsole: process.env.NODE_ENV === "production" ? {
-      exclude: ["error", "warn"],
-    } : false,
+    removeConsole:
+      process.env.NODE_ENV === "production"
+        ? {
+            exclude: ["error", "warn"],
+          }
+        : false,
   },
 
   // Generate source maps only in development
@@ -126,17 +129,25 @@ const nextConfig: NextConfig = {
   },
 
   async rewrites() {
-    return [
-      {
-        source: "/screenshots/:path*",
-        destination: `${process.env.NEXT_PUBLIC_CMS_URL ?? "http://localhost:3001"}/screenshots/:path*`,
-      },
-      // Redirect /api/:id/:slug to /en/api/:id/:slug (default locale)
-      {
-        source: "/api/:id(\\d+)/:slug",
-        destination: "/en/api/:id/:slug",
-      },
-    ];
+    // Use phased rewrites: static files in /public are served first,
+    // fallback phase only triggers if file not found locally
+    return {
+      beforeFiles: [],
+      afterFiles: [
+        // Redirect /api/:id/:slug to /en/api/:id/:slug (default locale)
+        {
+          source: "/api/:id(\\d+)/:slug",
+          destination: "/en/api/:id/:slug",
+        },
+      ],
+      // Fallback: proxy to CMS only if local static file not found
+      fallback: [
+        {
+          source: "/screenshots/:path*",
+          destination: `${process.env.NEXT_PUBLIC_CMS_URL ?? "http://localhost:3001"}/screenshots/:path*`,
+        },
+      ],
+    };
   },
 };
 
