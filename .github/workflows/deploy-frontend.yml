@@ -53,11 +53,11 @@ jobs:
       - name: Create wrangler.toml from template
         working-directory: apps/frontend
         run: |
-          cp wrangler.toml.example wrangler.toml
+          cp wrangler.example.toml wrangler.toml
 
-          # Replace KV namespace IDs
-          sed -i "s/REPLACE_WITH_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}/g" wrangler.toml
-          sed -i "s/REPLACE_WITH_KV_PREVIEW_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}/g" wrangler.toml
+          # Replace KV namespace IDs (match placeholders in wrangler.example.toml)
+          sed -i "s/YOUR_PRODUCTION_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}/g" wrangler.toml
+          sed -i "s/YOUR_PREVIEW_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}/g" wrangler.toml
 
           # Update environment variables if provided
           if [ -n "${{ secrets.NEXT_PUBLIC_CMS_URL }}" ]; then
@@ -68,7 +68,15 @@ jobs:
           fi
 
       - name: Build frontend for Workers
-        run: pnpm --filter @api-navigator/frontend build:worker
+        working-directory: apps/frontend
+        run: |
+          # Create .env.production.local with production values
+          # This overrides .env.local and ensures correct URLs are baked into the build
+          cat > .env.production.local << EOF
+          NEXT_PUBLIC_CMS_URL=${{ secrets.NEXT_PUBLIC_CMS_URL || 'https://publicapi.expertbeacon.com' }}
+          NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://public-api.org' }}
+          EOF
+          pnpm build:worker
         env:
           NEXT_PUBLIC_CMS_URL: ${{ secrets.NEXT_PUBLIC_CMS_URL || 'https://publicapi.expertbeacon.com' }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://public-api.org' }}

@@ -129,7 +129,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     fetchApiDetail(id).catch(() => null),
     getTranslations({ locale, namespace: "api" }),
   ]);
-  if (!api) return { title: "API not found" };
+  if (!api) return { title: t("apiNotFound") };
   const fallbackDescription =
     api.aiAnalysis?.summary?.trim() || api.description;
   const generatedDescription =
@@ -303,8 +303,12 @@ export default async function ApiDetailPage(props: Props) {
         }
       : undefined,
     relatedApis: related.map((r) => ({
-      ...r,
       id: typeof r.id === "string" ? parseInt(r.id, 10) : r.id,
+      name: r.name,
+      description: r.description,
+      auth: r.auth,
+      cors: r.cors,
+      https: r.https,
       category: r.category
         ? {
             name: r.category.name,
