@@ -495,7 +495,7 @@ body::before {
   color: var(--accent-green);
 }
 
-/* Legacy ui- classes for backwards compatibility */
+/* UI Component Classes */
 .ui-surface {
   background: var(--bg-secondary);
   border: 1px solid var(--border-dim);
@@ -593,29 +593,18 @@ body::before {
 }
 
 .ui-btn-primary:hover {
+  background: var(--accent-green-bright);
+  border-color: var(--accent-green-bright);
   box-shadow: var(--glow-green);
-  transform: translateY(-1px);
 }
 
 .ui-btn-secondary {
   background: transparent;
-  color: var(--accent-green);
+  color: var(--text-primary);
   border: 1px solid var(--border-dim);
 }
 
 .ui-btn-secondary:hover {
   border-color: var(--accent-green);
-  box-shadow: var(--glow-green);
-}
-
-.ui-chip {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 0.25rem;
-  padding: 0.125rem 0.5rem;
-  font-size: 0.75rem;
-  font-family: var(--font-mono);
-  background: hsla(140, 100%, 50%, 0.1);
   color: var(--accent-green);
-  border: 1px solid var(--border-dim);
 }
