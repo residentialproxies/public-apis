@@ -2,7 +2,7 @@
 
 import type { ContentNode } from "@api-navigator/shared/pseo";
 import { marked } from "marked";
-import DOMPurify from "isomorphic-dompurify";
+import { sanitizeHtml } from "@/lib/sanitize";
 import React from "react";
 
 type ContentBlockProps = {
@@ -23,7 +23,13 @@ export function ContentBlock({ nodes, className = "" }: ContentBlockProps) {
 function ContentNodeRenderer({ node }: { node: ContentNode }) {
   switch (node.type) {
     case "heading": {
-      const HeadingTag = `h${node.level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+      const HeadingTag = `h${node.level}` as
+        | "h1"
+        | "h2"
+        | "h3"
+        | "h4"
+        | "h5"
+        | "h6";
       const sizeClasses = {
         1: "text-2xl",
         2: "text-xl",
@@ -44,7 +50,7 @@ function ContentNodeRenderer({ node }: { node: ContentNode }) {
 
     case "paragraph": {
       // Support markdown formatting in paragraphs (bold, italic, links)
-      const htmlContent = DOMPurify.sanitize(marked.parseInline(node.text) as string);
+      const htmlContent = sanitizeHtml(marked.parseInline(node.text) as string);
       return (
         <p
           className={`text-sm text-[var(--text-secondary)] leading-relaxed ${node.className || ""}`}
@@ -62,7 +68,9 @@ function ContentNodeRenderer({ node }: { node: ContentNode }) {
             </div>
           )}
           <pre className="ui-surface-muted p-4 rounded-lg overflow-x-auto">
-            <code className={`language-${node.language} text-xs font-mono text-[var(--text-primary)]`}>
+            <code
+              className={`language-${node.language} text-xs font-mono text-[var(--text-primary)]`}
+            >
               {node.code}
             </code>
           </pre>
@@ -74,13 +82,15 @@ function ContentNodeRenderer({ node }: { node: ContentNode }) {
       const ListTag = node.ordered ? "ol" : "ul";
       const listStyle = node.ordered ? "list-decimal" : "list-disc";
       return (
-        <ListTag className={`${listStyle} list-inside space-y-2 text-[var(--text-secondary)] text-sm`}>
+        <ListTag
+          className={`${listStyle} list-inside space-y-2 text-[var(--text-secondary)] text-sm`}
+        >
           {node.items.map((item, idx) => (
             <li key={idx} className="leading-relaxed">
               {typeof item === "string" ? (
                 <span
                   dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(marked.parseInline(item) as string),
+                    __html: sanitizeHtml(marked.parseInline(item) as string),
                   }}
                 />
               ) : (
@@ -97,7 +107,9 @@ function ContentNodeRenderer({ node }: { node: ContentNode }) {
     case "table": {
       return (
         <div className="overflow-x-auto rounded-lg border border-[var(--border-dim)]">
-          <table className={`min-w-full divide-y divide-[var(--border-dim)] ${node.className || ""}`}>
+          <table
+            className={`min-w-full divide-y divide-[var(--border-dim)] ${node.className || ""}`}
+          >
             <thead className="ui-surface-muted">
               <tr>
                 {node.headers.map((header, idx) => (
@@ -114,7 +126,10 @@ function ContentNodeRenderer({ node }: { node: ContentNode }) {
               {node.rows.map((row, rowIdx) => (
                 <tr key={rowIdx} className="hover:bg-[var(--bg-hover)]">
                   {row.map((cell, cellIdx) => (
-                    <td key={cellIdx} className="px-4 py-3 text-sm text-[var(--text-secondary)]">
+                    <td
+                      key={cellIdx}
+                      className="px-4 py-3 text-sm text-[var(--text-secondary)]"
+                    >
                       {cell}
                     </td>
                   ))}

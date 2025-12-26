@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Public API - Public API Directory with Live Health Monitoring",
-    "titleTemplate": "{title} | Public API",
+    "titleTemplate": "%s | Public API",
     "description": "Find the best public APIs faster: structured metadata, availability signals, and powerful filtering.",
     "keywords": "public APIs, API directory, API catalog, free APIs, REST API, API status, API health check, API uptime, OpenAPI, API playground, API search, developer tools, API documentation, web APIs, JSON API",
     "ogTitle": "Public API - Discover & Monitor Public APIs",
@@ -21,7 +21,15 @@
     "closeMenu": "Close navigation menu"
   },
   "footer": {
-    "githubRepo": "GitHub Repo"
+    "githubRepo": "GitHub Repo",
+    "description": "Browse and discover public APIs with real-time health monitoring and availability signals.",
+    "domain": "public-api.org",
+    "navigation": "Navigation",
+    "resources": "Resources",
+    "sitemap": "Sitemap",
+    "contact": "info@public-api.org",
+    "exitCode": "Exit code: 0",
+    "allSystemsOperational": "All systems operational"
   },
   "home": {
     "asciiLogo": "API Navigator ASCII art logo",
@@ -104,6 +112,12 @@
     "backendConnectionError": "Cannot connect to backend",
     "backendConnectionFailed": "Backend Connection Failed"
   },
+  "search": {
+    "metaTitle": "Search Public APIs - Find the Perfect API for Your Project",
+    "metaDescription": "Search and filter through 1800+ public APIs. Find APIs by category, authentication type, CORS support, and health status.",
+    "ogTitle": "Search Public APIs - API Directory",
+    "ogDescription": "Discover and compare public APIs with real-time health monitoring. Search by category, auth type, and more."
+  },
   "catalog": {
     "title": "Public API",
     "categoryTitle": "{category} APIs",
@@ -125,6 +139,7 @@
     "runSearch": "./run",
     "foundResults": "Found {count} results",
     "forQuery": "for \"{query}\"",
+    "foundResultsCount": "Found {count} results",
     "foundResultsText": "Found {count} results",
     "forQueryText": "for \"{query}\"",
     "clearFilters": "[clear filters]",
@@ -133,6 +148,8 @@
     "filterCors": "filter --cors",
     "filterStatus": "filter --status",
     "filterHttps": "filter --https",
+    "corsLabel": "CORS",
+    "httpsLabel": "HTTPS",
     "httpsAny": "ANY",
     "httpsYes": "YES",
     "httpsNo": "NO",
@@ -173,6 +190,7 @@
     "help": "help"
   },
   "api": {
+    "apiNotFound": "API not found",
     "defaultSeoTitle": "{name} API - Documentation, Review & Integration Guide",
     "breadcrumbHome": "Public API",
     "livePreview": "Live Preview",
@@ -368,6 +386,7 @@
     "backToCatalog": "back to catalog",
     "title": "./ApiNavigatorBot",
     "subtitle": "Health check bot powering status pills and latency metrics",
+    "breadcrumbLabel": "Breadcrumb",
     "infoTitle": "bot.info",
     "infoP1": "ApiNavigatorBot runs the health checks that power the status pills and latency numbers you see across the catalog. It is designed to be polite, transparent, and safe by default.",
     "infoP2": "The upstream source is the public-apis repository ({stars} stars, last updated {updated}). Checks are layered on top so you get fresh signals without stressing providers.",
@@ -491,7 +510,11 @@
   },
   "languageSwitcher": {
     "switchToEnglish": "Switch to English",
-    "switchToChinese": "Switch to Chinese"
+    "switchToChinese": "Switch to Chinese",
+    "switchToJapanese": "Switch to Japanese",
+    "switchToSpanish": "Switch to Spanish",
+    "switchToPortuguese": "Switch to Portuguese",
+    "switchToGerman": "Switch to German"
   },
   "categories": {
     "Development": "Development",
@@ -560,9 +583,6 @@
   "themeToggle": {
     "toggleTheme": "Toggle color theme"
   },
-  "header": {
-    "home": "Public API - Home"
-  },
   "screenshot": {
     "notAvailable": "Screenshot not available",
     "viewFull": "View full screenshot of {name}",
@@ -584,6 +604,59 @@
     "loadingData": "Loading data",
     "renderingPage": "Rendering page"
   },
+  "playground": {
+    "title": "API Playground",
+    "description": "Requests are sent via the built-in proxy (SSRF protected, per-API host allowlist).",
+    "method": "Method",
+    "targetUrl": "Target URL",
+    "headers": "Headers (JSON)",
+    "body": "Body (raw)",
+    "send": "Send",
+    "sending": "Sending...",
+    "copyCurl": "Copy curl",
+    "copyUrl": "Copy URL",
+    "copySnippet": "Copy snippet",
+    "copyResponse": "Copy response",
+    "status": "Status:",
+    "tabCurl": "cURL",
+    "tabFetch": "Fetch",
+    "tabPython": "Python",
+    "tabAxios": "Axios",
+    "errorTargetRequired": "Target URL is required.",
+    "errorInvalidHeaders": "Invalid headers JSON: {error}",
+    "labelMethod": "Method",
+    "labelTargetUrl": "Target URL",
+    "labelHeaders": "Headers (JSON)",
+    "labelBody": "Body (raw)",
+    "placeholderUrl": "https://api.example.com/v1/...",
+    "ariaLabelMethod": "Select HTTP method",
+    "ariaLabelTargetUrl": "Enter target API URL",
+    "ariaLabelHeaders": "Enter headers in JSON format",
+    "ariaLabelBody": "Enter request body content",
+    "ariaLabelTablist": "Code snippet language selection",
+    "ariaLabelTab": "Show {language} code snippet",
+    "ariaLabelSend": "Send API request",
+    "ariaLabelCopy": "Copy {label}"
+  },
+  "connectionError": {
+    "title": "Connection Error",
+    "defaultTitle": "Connection Error",
+    "cannotConnect": "Cannot connect to backend server",
+    "troubleshooting": "Troubleshooting",
+    "troubleshootingStep1": "Ensure backend is running:",
+    "troubleshootingStep2": "Check environment variables at",
+    "troubleshootingStep3": "Verify backend is listening on port",
+    "troubleshootingStep4": "Check browser console for detailed errors",
+    "retryRequest": "Retry Request",
+    "debugInfo": "Debug Info",
+    "backendUrl": "Backend URL:",
+    "environment": "Environment:",
+    "connectionType": "Connection type:",
+    "connectionTypeError": "Connection error",
+    "connectionTypeErrorOther": "Other error",
+    "errorName": "Error name:",
+    "errorLabel": "Error:"
+  },
   "statusPill": {
     "ariaLabel": "API health status: {status}. {description}",
     "labelOnline": "ONLINE",
@@ -596,5 +669,25 @@
     "descDown": "API is not responding",
     "descUnknown": "API status could not be determined",
     "descPending": "API has not been checked yet"
+  },
+  "faq": {
+    "defaultTitle": "Frequently Asked Questions",
+    "categoryTechnical": "Technical Questions",
+    "categorySecurity": "Security & Privacy",
+    "categorySupport": "Support & Documentation",
+    "categoryPricing": "Pricing & Plans",
+    "categoryGeneral": "General Questions"
+  },
+  "accessibility": {
+    "primaryNavAriaLabel": "Primary navigation",
+    "mobileNavAriaLabel": "Mobile navigation",
+    "footerNavAriaLabel": "Footer navigation",
+    "opensInNewTab": "opens in new tab"
+  },
+  "catalogPage": {
+    "terminalCommand": "ls -la /api/catalog",
+    "categoriesJson": "categories.json",
+    "popularCategoriesSh": "popular-categories.sh",
+    "topCategoriesDesc": "Top 10 categories by API count:"
   }
 }

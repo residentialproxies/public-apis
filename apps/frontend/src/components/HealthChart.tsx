@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useTranslations, useLocale } from "next-intl";
 
 type HealthPoint = {
   checkedAt: string | null;
@@ -18,49 +19,54 @@ type Props = {
 function statusColor(status: string | null): string {
   switch (status) {
     case "live":
-      return "bg-emerald-500";
+      return "bg-[var(--status-live)]";
     case "slow":
-      return "bg-amber-500";
+      return "bg-[var(--status-slow)]";
     case "down":
-      return "bg-rose-500";
+      return "bg-[var(--status-down)]";
     case "unknown":
-      return "bg-zinc-400";
+      return "bg-[var(--status-unknown)]";
     default:
-      return "bg-zinc-300";
+      return "bg-[var(--status-pending)]";
   }
 }
 
-function statusLabel(status: string | null): string {
+function statusLabel(
+  status: string | null,
+  t: (key: string) => string,
+): string {
   switch (status) {
     case "live":
-      return "Live";
+      return t("live");
     case "slow":
-      return "Slow";
+      return t("slow");
     case "down":
-      return "Down";
+      return t("down");
     case "unknown":
-      return "Unknown";
+      return t("unknown");
     default:
       return "Pending";
   }
 }
 
-function formatDate(dateStr: string | null): string {
+function formatDate(dateStr: string | null, locale: string): string {
   if (!dateStr) return "N/A";
   const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return date.toLocaleDateString(locale, { month: "short", day: "numeric" });
 }
 
-function formatTime(dateStr: string | null): string {
+function formatTime(dateStr: string | null, locale: string): string {
   if (!dateStr) return "";
   const date = new Date(dateStr);
-  return date.toLocaleTimeString("en-US", {
+  return date.toLocaleTimeString(locale, {
     hour: "2-digit",
     minute: "2-digit",
   });
 }
 
 export function HealthChart({ series, className }: Props) {
+  const t = useTranslations("healthChart");
+  const locale = useLocale();
   const recentChecks = useMemo(() => {
     // Take the last 30 checks, most recent first
     return [...series].slice(-30).reverse();
@@ -91,7 +97,7 @@ export function HealthChart({ series, className }: Props) {
     return (
       <div className={className}>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          No health check data available yet.
+          {t("noData")}
         </p>
       </div>
     );
@@ -103,45 +109,46 @@ export function HealthChart({ series, className }: Props) {
       <div className="mb-4 flex flex-wrap gap-4 text-sm">
         <div className="flex items-center gap-2">
           <span
-            className="h-3 w-3 rounded-full bg-emerald-500"
+            className="h-3 w-3 rounded-full bg-[var(--status-live)]"
             aria-hidden="true"
           />
-          <span className="text-zinc-700 dark:text-zinc-300">
-            Live: {stats.live}
+          <span className="text-[var(--text-secondary)]">
+            {t("live")}: {stats.live}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <span
-            className="h-3 w-3 rounded-full bg-amber-500"
+            className="h-3 w-3 rounded-full bg-[var(--status-slow)]"
             aria-hidden="true"
           />
-          <span className="text-zinc-700 dark:text-zinc-300">
-            Slow: {stats.slow}
+          <span className="text-[var(--text-secondary)]">
+            {t("slow")}: {stats.slow}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <span
-            className="h-3 w-3 rounded-full bg-rose-500"
+            className="h-3 w-3 rounded-full bg-[var(--status-down)]"
             aria-hidden="true"
           />
-          <span className="text-zinc-700 dark:text-zinc-300">
-            Down: {stats.down}
+          <span className="text-[var(--text-secondary)]">
+            {t("down")}: {stats.down}
           </span>
         </div>
         {stats.unknown > 0 && (
           <div className="flex items-center gap-2">
             <span
-              className="h-3 w-3 rounded-full bg-zinc-400"
+              className="h-3 w-3 rounded-full bg-[var(--status-unknown)]"
               aria-hidden="true"
             />
-            <span className="text-zinc-700 dark:text-zinc-300">
-              Unknown: {stats.unknown}
+            <span className="text-[var(--text-secondary)]">
+              {t("unknown")}: {stats.unknown}
             </span>
           </div>
         )}
         {stats.avgLatency !== null && (
-          <div className="ml-auto text-zinc-500 dark:text-zinc-400">
-            Avg latency: <span className="font-mono">{stats.avgLatency}ms</span>
+          <div className="ml-auto text-[var(--text-muted)]">
+            {t("avgLatency")}:{" "}
+            <span className="font-mono">{stats.avgLatency}ms</span>
           </div>
         )}
       </div>
@@ -151,24 +158,25 @@ export function HealthChart({ series, className }: Props) {
         <div
           className="flex gap-0.5 overflow-hidden rounded-lg"
           role="img"
-          aria-label={`Health check history: ${stats.live} live, ${stats.slow} slow, ${stats.down} down out of ${stats.total} checks`}
+          aria-label={`${t("healthHistory")}: ${stats.live} ${t("live").toLowerCase()}, ${stats.slow} ${t("slow").toLowerCase()}, ${stats.down} ${t("down").toLowerCase()} out of ${stats.total} checks`}
         >
           {recentChecks.map((check, idx) => (
             <div
               key={idx}
               className="group relative flex-1"
-              title={`${formatDate(check.checkedAt)} ${formatTime(check.checkedAt)}: ${statusLabel(check.healthStatus)}${check.latencyMs ? ` (${check.latencyMs}ms)` : ""}${check.statusCode ? ` - HTTP ${check.statusCode}` : ""}`}
+              title={`${formatDate(check.checkedAt, locale)} ${formatTime(check.checkedAt, locale)}: ${statusLabel(check.healthStatus, t)}${check.latencyMs ? ` (${check.latencyMs}ms)` : ""}${check.statusCode ? ` - HTTP ${check.statusCode}` : ""}`}
             >
               <div
                 className={`h-8 w-full transition-all duration-200 hover:opacity-80 ${statusColor(check.healthStatus)}`}
               />
               {/* Tooltip on hover */}
-              <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-zinc-900 px-2 py-1 text-xs text-white shadow-lg group-hover:block dark:bg-zinc-700">
+              <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-[var(--bg-elevated)] px-2 py-1 text-xs text-[var(--text-primary)] shadow-lg border border-[var(--border-dim)] group-hover:block">
                 <div className="font-medium">
-                  {statusLabel(check.healthStatus)}
+                  {statusLabel(check.healthStatus, t)}
                 </div>
-                <div className="text-zinc-300">
-                  {formatDate(check.checkedAt)} {formatTime(check.checkedAt)}
+                <div className="text-[var(--text-muted)]">
+                  {formatDate(check.checkedAt, locale)}{" "}
+                  {formatTime(check.checkedAt, locale)}
                 </div>
                 {check.latencyMs !== null && (
                   <div className="font-mono">{check.latencyMs}ms</div>
@@ -182,15 +190,18 @@ export function HealthChart({ series, className }: Props) {
         </div>
 
         {/* Time labels */}
-        <div className="mt-2 flex justify-between text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="mt-2 flex justify-between text-xs text-[var(--text-muted)]">
           <span>
             {recentChecks.length > 0
-              ? formatDate(recentChecks[recentChecks.length - 1]?.checkedAt)
+              ? formatDate(
+                  recentChecks[recentChecks.length - 1]?.checkedAt,
+                  locale,
+                )
               : ""}
           </span>
           <span>
             {recentChecks.length > 0
-              ? formatDate(recentChecks[0]?.checkedAt)
+              ? formatDate(recentChecks[0]?.checkedAt, locale)
               : ""}
           </span>
         </div>

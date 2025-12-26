@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { CatalogPage } from "@/app/_components/CatalogPage";
 import { fetchCategories } from "@/lib/backend";
+import { getSiteUrl } from "@/lib/site";
+import { generateHreflangUrls } from "@/lib/locales";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +15,7 @@ type Props = {
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { slug, locale } = await props.params;
+  const siteUrl = getSiteUrl();
 
   const categories = await fetchCategories().catch(() => []);
   const category = categories.find((c) => c.slug === slug);
@@ -38,10 +41,17 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       ? `${tCatalog("categorySubtitle", { category: translatedName })}`
       : tCatalog("subtitle");
 
+  // SEO: Generate locale-aware canonical and hreflang URLs
+  const basePath = `/category/${slug}`;
+  const hreflangUrls = generateHreflangUrls(basePath, siteUrl);
+
   return {
     title,
     description,
-    alternates: { canonical: `/category/${slug}` },
+    alternates: {
+      canonical: `${siteUrl}/${locale}${basePath}`,
+      languages: hreflangUrls,
+    },
   };
 }
 

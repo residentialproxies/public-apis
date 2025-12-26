@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Public API - Diretorio de APIs Publicas com Monitoramento de Saude em Tempo Real",
-    "titleTemplate": "{title} | Public API",
+    "titleTemplate": "%s | Public API",
     "description": "Encontre as melhores APIs publicas mais rapido: metadados estruturados, sinais de disponibilidade e filtros poderosos.",
     "keywords": "APIs publicas, diretorio de API, catalogo de API, APIs gratuitas, REST API, status de API, verificacao de saude de API, tempo de atividade de API, OpenAPI, playground de API, busca de API, ferramentas de desenvolvedor, documentacao de API, APIs web, API JSON",
     "ogTitle": "Public API - Descubra e Monitore APIs Publicas",
@@ -26,6 +26,7 @@
     "navigation": "Navegacao",
     "resources": "Recursos",
     "sitemap": "Mapa do site",
+    "contact": "info@public-api.org",
     "githubRepo": "Repositorio GitHub",
     "allSystemsOperational": "Todos os sistemas operacionais",
     "exitCode": "exit 0"
@@ -46,7 +47,7 @@
     "catFeatures": "cat features.json | jq",
     "feature1Title": "Descoberta de APIs",
     "feature1Desc": "Pesquise e filtre mais de 1800 APIs publicas. Encontre a API perfeita para seu projeto em segundos.",
-    "feature2Title": "Monitoramento de Sau",
+    "feature2Title": "Monitoramento de Saude",
     "feature2Desc": "Verificacoes de saude em tempo real e acompanhamento de tempo de atividade. Saiba se uma API esta ativa antes de integra-la.",
     "feature3Title": "Documentacao",
     "feature3Desc": "Especificacoes OpenAPI, documentacao interativa e exemplos de codigo. Tudo o que voce precisa para comecar rapidamente.",
@@ -106,7 +107,7 @@
     "githubDesc": "Codigo fonte, problemas e contribuicoes",
     "upstreamLabel": "Fonte Upstream",
     "upstreamDesc": "public-apis/public-apis - Catalogo da comunidade",
-    "botLabel": "Bot de Verificacao de Sau",
+    "botLabel": "Bot de Verificacao de Saude",
     "botDesc": "Saiba mais sobre o ApiNavigatorBot",
     "backendConnectionError": "Nao foi possivel conectar ao backend",
     "backendConnectionFailed": "Falha na Conexao com Backend"
@@ -146,6 +147,8 @@
     "filterCors": "filter --cors",
     "filterStatus": "filter --status",
     "filterHttps": "filter --https",
+    "corsLabel": "CORS",
+    "httpsLabel": "HTTPS",
     "httpsAny": "QUALQUER",
     "httpsYes": "SIM",
     "httpsNo": "NAO",
@@ -295,7 +298,7 @@
     "burstLimit": "Limite de burst",
     "sdksTitle": "SDKs e Bibliotecas",
     "sdksDesc": "SDKs oficiais e da comunidade serao listados aqui quando disponiveis.",
-    "pricingTitle": "Pre",
+    "pricingTitle": "Precos",
     "pricingDesc": "Os niveis de precos serao extraidos automaticamente em uma atualizacao futura.",
     "pricingFree": "Gratuito",
     "pricingBasic": "Uso basico",
@@ -325,7 +328,7 @@
     "debugCheckItem5": "Teste com curl para isolar problemas do cliente",
     "debugCheckItem6": "Verifique a pagina de status da API para interrupcoes",
     "debugCheckItem7": "Revise os cabecalhos de limite de taxa na resposta",
-    "latestError": "Ultimo Erro da Verificacao de Sau",
+    "latestError": "Ultimo Erro da Verificacao de Saude",
     "faq": "Perguntas Frequentes"
   },
   "about": {
@@ -505,13 +508,12 @@
     "copySpec": "Copiar URL da especificacao"
   },
   "languageSwitcher": {
-    "label": "Idioma",
-    "english": "Ingles",
-    "chinese": "Chines",
-    "portuguese": "Portugues",
     "switchToEnglish": "Mudar para ingles",
     "switchToChinese": "Mudar para chines",
-    "switchToPortuguese": "Mudar para portugues"
+    "switchToJapanese": "Mudar para japones",
+    "switchToSpanish": "Mudar para espanhol",
+    "switchToPortuguese": "Mudar para portugues",
+    "switchToGerman": "Mudar para alemao"
   },
   "categories": {
     "Development": "Desenvolvimento",

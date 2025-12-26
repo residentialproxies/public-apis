@@ -29,7 +29,10 @@ export abstract class SchemaGenerator {
   abstract generate(ctx: TemplateContext, ...args: unknown[]): SchemaContext;
 
   protected getSiteUrl(): string {
-    return (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_SITE_URL) || "https://api-navigator.com";
+    return (
+      (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_SITE_URL) ||
+      "https://api-navigator.com"
+    );
   }
 }
 
@@ -53,13 +56,21 @@ export class WebAPISchema extends SchemaGenerator {
       },
       termsOfService: api.link,
       ...(api.aiAnalysis?.useCases && {
-        applicationCategory: api.aiAnalysis.useCases.map((u) => u.tag).join(", "),
+        applicationCategory: api.aiAnalysis.useCases
+          .map((u) => u.tag)
+          .filter(Boolean)
+          .join(", "),
       }),
       ...(api.seoMetadata?.keywords && {
-        keywords: api.seoMetadata.keywords.map((k) => k.keyword).join(", "),
+        keywords: api.seoMetadata.keywords
+          .map((k) => k.keyword)
+          .filter(Boolean)
+          .join(", "),
       }),
       ...(api.seoMetadata?.languages && {
-        programmingLanguage: api.seoMetadata.languages.map((l) => l.language),
+        programmingLanguage: api.seoMetadata.languages
+          .map((l) => l.language)
+          .filter(Boolean),
       }),
       additionalProperty: this.getAdditionalProperties(ctx),
     };
@@ -71,12 +82,20 @@ export class WebAPISchema extends SchemaGenerator {
     value: string | number;
   }> {
     const { api, healthSummary } = ctx;
-    const properties: Array<{ "@type": string; name: string; value: string | number }> = [];
+    const properties: Array<{
+      "@type": string;
+      name: string;
+      value: string | number;
+    }> = [];
 
     properties.push(
       { "@type": "PropertyValue", name: "Authentication", value: api.auth },
       { "@type": "PropertyValue", name: "CORS", value: api.cors },
-      { "@type": "PropertyValue", name: "HTTPS", value: api.https ? "Yes" : "No" }
+      {
+        "@type": "PropertyValue",
+        name: "HTTPS",
+        value: api.https ? "Yes" : "No",
+      },
     );
 
     if (api.seoMetadata?.docQualityScore) {
@@ -95,7 +114,10 @@ export class WebAPISchema extends SchemaGenerator {
       });
     }
 
-    if (healthSummary?.uptimePct !== null && healthSummary?.uptimePct !== undefined) {
+    if (
+      healthSummary?.uptimePct !== null &&
+      healthSummary?.uptimePct !== undefined
+    ) {
       properties.push({
         "@type": "PropertyValue",
         name: "Uptime (30d)",
@@ -103,7 +125,10 @@ export class WebAPISchema extends SchemaGenerator {
       });
     }
 
-    if (healthSummary?.avgLatencyMs !== null && healthSummary?.avgLatencyMs !== undefined) {
+    if (
+      healthSummary?.avgLatencyMs !== null &&
+      healthSummary?.avgLatencyMs !== undefined
+    ) {
       properties.push({
         "@type": "PropertyValue",
         name: "Average Latency",
@@ -215,7 +240,10 @@ export class HowToSchema extends SchemaGenerator {
       tool: [
         {
           "@type": "HowToTool",
-          name: api.auth === "No" ? "No API Key Required" : `${api.auth} Authentication`,
+          name:
+            api.auth === "No"
+              ? "No API Key Required"
+              : `${api.auth} Authentication`,
         },
         ...(api.https
           ? [
@@ -236,7 +264,12 @@ export class HowToSchema extends SchemaGenerator {
     url?: string;
   }> {
     const { api } = ctx;
-    const steps: Array<{ "@type": string; name: string; text: string; url?: string }> = [];
+    const steps: Array<{
+      "@type": string;
+      name: string;
+      text: string;
+      url?: string;
+    }> = [];
 
     // Step 1: Registration (if auth required)
     if (api.auth !== "No") {
@@ -282,7 +315,10 @@ export class HowToSchema extends SchemaGenerator {
         name: "Integrate into Your Application",
         text: `Use the provided code examples${
           api.seoMetadata.languages
-            ? ` in ${api.seoMetadata.languages.map((l) => l.language).join(", ")}`
+            ? ` in ${api.seoMetadata.languages
+                .map((l) => l.language)
+                .filter(Boolean)
+                .join(", ")}`
             : ""
         } to integrate the API into your application.`,
       });
@@ -326,8 +362,10 @@ export class ArticleSchema extends SchemaGenerator {
           url: `${siteUrl}/logo.png`,
         },
       },
-      datePublished: api.generatedContent?.lastGeneratedAt || new Date().toISOString(),
-      dateModified: api.generatedContent?.lastGeneratedAt || new Date().toISOString(),
+      datePublished:
+        api.generatedContent?.lastGeneratedAt || new Date().toISOString(),
+      dateModified:
+        api.generatedContent?.lastGeneratedAt || new Date().toISOString(),
       mainEntityOfPage: {
         "@type": "WebPage",
         "@id": `${siteUrl}/api/${api.id}/${this.slugify(api.name)}`,
@@ -499,7 +537,11 @@ export class SchemaManager {
     ]);
   }
 
-  generate(type: SchemaType, ctx: TemplateContext, ...args: unknown[]): SchemaContext {
+  generate(
+    type: SchemaType,
+    ctx: TemplateContext,
+    ...args: unknown[]
+  ): SchemaContext {
     const generator = this.generators.get(type);
     if (!generator) {
       throw new Error(`Schema generator not found for type: ${type}`);

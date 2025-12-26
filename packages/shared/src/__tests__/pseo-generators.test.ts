@@ -77,7 +77,7 @@ describe("GettingStartedGenerator", () => {
     const content = generator.generate(mockContext);
 
     const authHeading = content.find(
-      (node) => node.type === "heading" && node.text === "Authentication"
+      (node) => node.type === "heading" && node.text === "Authentication",
     );
     expect(authHeading).toBeDefined();
   });
@@ -92,7 +92,7 @@ describe("GettingStartedGenerator", () => {
     const content = generator.generate(publicContext);
 
     const authHeading = content.find(
-      (node) => node.type === "heading" && node.text === "Authentication"
+      (node) => node.type === "heading" && node.text === "Authentication",
     );
     expect(authHeading).toBeUndefined();
   });
@@ -130,10 +130,10 @@ describe("CodeExamplesGenerator", () => {
     const content = generator.generate(mockContext);
 
     const jsHeading = content.find(
-      (node) => node.type === "heading" && node.text === "JavaScript"
+      (node) => node.type === "heading" && node.text === "JavaScript",
     );
     const pythonHeading = content.find(
-      (node) => node.type === "heading" && node.text === "Python"
+      (node) => node.type === "heading" && node.text === "Python",
     );
 
     expect(jsHeading).toBeDefined();
@@ -155,7 +155,9 @@ describe("CodeExamplesGenerator", () => {
     const codeBlocks = content.filter((node) => node.type === "code_block");
     const hasAuth = codeBlocks.some((block) => {
       if (block.type === "code_block") {
-        return block.code.includes("Authorization") || block.code.includes("apiKey");
+        return (
+          block.code.includes("Authorization") || block.code.includes("apiKey")
+        );
       }
       return false;
     });
@@ -332,7 +334,7 @@ describe("FAQGenerator", () => {
     const content = generator.generate(mockContext);
 
     const categoryHeadings = content.filter(
-      (node) => node.type === "heading" && node.level === 3
+      (node) => node.type === "heading" && node.level === 3,
     );
 
     expect(categoryHeadings.length).toBeGreaterThan(0);

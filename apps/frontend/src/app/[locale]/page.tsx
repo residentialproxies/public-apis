@@ -1,37 +1,20 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
-import { fetchCategories, fetchFacets } from "@/lib/backend";
+import {
+  fetchCategories,
+  fetchFacets,
+  checkBackendHealth,
+} from "@/lib/backend";
+import { isConnectionError } from "@/lib/errors";
+import { ConnectionError } from "@/components/ConnectionError";
+import { TerminalWindow } from "@/components/TerminalWindow";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300; // 5 minutes ISR
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
-
-const TerminalWindow = ({
-  title,
-  children,
-  className = "",
-}: {
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-}) => (
-  <div className={`terminal-surface overflow-hidden ${className}`}>
-    <div className="terminal-header rounded-t-lg">
-      <div className="flex items-center gap-1.5">
-        <span className="terminal-dot terminal-dot-red" />
-        <span className="terminal-dot terminal-dot-yellow" />
-        <span className="terminal-dot terminal-dot-green" />
-      </div>
-      <span className="ml-3 font-mono text-xs text-[var(--text-muted)]">
-        {title}
-      </span>
-    </div>
-    {children}
-  </div>
-);
 
 export default async function Home({ params }: Props) {
   const { locale } = await params;
@@ -40,16 +23,37 @@ export default async function Home({ params }: Props) {
   const t = await getTranslations("home");
   const tCategories = await getTranslations("categories");
 
+  // Check backend health first
+  const health = await checkBackendHealth();
+  if (!health.healthy) {
+    return (
+      <ConnectionError
+        error={new Error(health.error || t("backendConnectionError"))}
+        retryUrl="/"
+        title={t("backendConnectionFailed")}
+      />
+    );
+  }
+
   let categories: Awaited<ReturnType<typeof fetchCategories>> = [];
   let facets: Awaited<ReturnType<typeof fetchFacets>> | null = null;
+  let fetchError: Error | null = null;
 
   try {
     [categories, facets] = await Promise.all([
       fetchCategories(),
       fetchFacets({}),
     ]);
-  } catch {
-    // Fallback to empty data if fetch fails
+  } catch (error) {
+    console.error("[Home] Failed to load data:", error);
+    fetchError = error instanceof Error ? error : new Error(String(error));
+
+    // For connection errors, show the ConnectionError component
+    if (isConnectionError(fetchError)) {
+      return <ConnectionError error={fetchError} retryUrl="/" />;
+    }
+
+    // For other errors, continue with fallback data
   }
 
   const totalApis = facets?.total ?? 1800;
@@ -127,10 +131,10 @@ export default async function Home({ params }: Props) {
 
           {/* Subtitle */}
           <p className="mt-4 max-w-2xl font-mono text-base md:text-lg text-[var(--text-muted)]">
-            <span className="text-[var(--accent-purple)]">//</span>{" "}
+            <span className="text-[var(--accent-purple)]">{"//"}</span>{" "}
             {t("subtitle1")}
             <br />
-            <span className="text-[var(--accent-purple)]">//</span>{" "}
+            <span className="text-[var(--accent-purple)]">{"//"}</span>{" "}
             {t("subtitle2")}
           </p>
 

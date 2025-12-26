@@ -1,24 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
+import { slugify } from "@/lib/slugify";
 
 interface Props {
   apiId: string | number;
   apiName: string;
   thumbnailUrl?: string | null;
+  slug?: string;
 }
 
 // Base64 encoded blur placeholder
 const BLUR_DATA_URL =
   "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9Ijc1IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMyMDIwMjAiLz48L3N2Zz4=";
 
-export function ApiThumbnail({ apiId, apiName, thumbnailUrl }: Props) {
+export function ApiThumbnail({ apiId, apiName, thumbnailUrl, slug }: Props) {
+  const t = useTranslations("thumbnail");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Use provided URL or fallback to default path
-  const src = thumbnailUrl ?? `/screenshots/${apiId}.webp`;
+  // Use provided URL or fallback to slug-based path
+  // Prefer provided slug, otherwise generate from apiName
+  const apiSlug = slug || slugify(apiName);
+  const src = thumbnailUrl ?? `/screenshots/${apiSlug}.webp`;
 
   if (error) {
     // Return placeholder when image fails to load
@@ -46,7 +52,7 @@ export function ApiThumbnail({ apiId, apiName, thumbnailUrl }: Props) {
     <div className="relative h-18 w-full overflow-hidden rounded border border-[var(--border-dim)] sm:h-20">
       <Image
         src={src}
-        alt={`${apiName} screenshot`}
+        alt={t("alt", { name: apiName })}
         fill
         className={`object-cover transition-opacity duration-200 ${
           loading ? "opacity-0" : "opacity-100"

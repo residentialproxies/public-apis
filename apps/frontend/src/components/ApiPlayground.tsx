@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 
 import { CopyButton } from "@/components/CopyButton";
 
@@ -78,6 +79,7 @@ function buildAxios(args: {
 }
 
 export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
+  const t = useTranslations("playground");
   const proxyUrl = new URL("/api/v1/public/proxy", cmsUrl).toString();
 
   const [method, setMethod] = useState("GET");
@@ -140,12 +142,12 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
     setResponse(null);
 
     if (!targetUrl.trim()) {
-      setError("Target URL is required.");
+      setError(t("errorTargetRequired"));
       return;
     }
 
     if (!headersParsed.ok) {
-      setError(`Invalid headers JSON: ${headersParsed.error}`);
+      setError(t("errorInvalidHeaders", { error: headersParsed.error }));
       return;
     }
 
@@ -189,11 +191,8 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
   return (
     <section className="ui-surface mt-6 p-6">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <h2 className="text-sm font-semibold text-zinc-900">Playground</h2>
-        <p className="text-xs text-zinc-500">
-          Requests are sent via the built-in proxy (SSRF-guarded, host allowlist
-          per API).
-        </p>
+        <h2 className="text-sm font-semibold text-zinc-900">{t("title")}</h2>
+        <p className="text-xs text-zinc-500">{t("description")}</p>
       </div>
 
       <div className="mt-4 grid gap-4">
@@ -203,7 +202,7 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
               className="text-sm font-medium text-zinc-800"
               htmlFor="method"
             >
-              Method
+              {t("labelMethod")}
             </label>
             <select
               id="method"
@@ -224,13 +223,13 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
               className="text-sm font-medium text-zinc-800"
               htmlFor="targetUrl"
             >
-              Target URL
+              {t("labelTargetUrl")}
             </label>
             <input
               id="targetUrl"
               value={targetUrl}
               onChange={(e) => setTargetUrl(e.target.value)}
-              placeholder="https://api.example.com/v1/…"
+              placeholder={t("placeholderUrl")}
               className="ui-input mt-1"
             />
           </div>
@@ -242,7 +241,7 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
               className="text-sm font-medium text-zinc-800"
               htmlFor="headers"
             >
-              Headers (JSON)
+              {t("labelHeaders")}
             </label>
             <textarea
               id="headers"
@@ -255,7 +254,7 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
 
           <div>
             <label className="text-sm font-medium text-zinc-800" htmlFor="body">
-              Body (raw)
+              {t("labelBody")}
             </label>
             <textarea
               id="body"
@@ -275,13 +274,13 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
               disabled={isPending}
               className={`ui-btn ${isPending ? "ui-btn-secondary" : "ui-btn-primary"}`}
             >
-              {isPending ? "Sending…" : "Send"}
+              {isPending ? t("sending") : t("send")}
             </button>
           </div>
 
           <div className="flex items-center gap-2">
-            <CopyButton label="Copy curl" value={buildCurl(snippetInput)} />
-            <CopyButton label="Copy URL" value={targetUrl} />
+            <CopyButton label={t("copyCurl")} value={buildCurl(snippetInput)} />
+            <CopyButton label={t("copyUrl")} value={targetUrl} />
           </div>
         </div>
 
@@ -289,49 +288,53 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div
               role="tablist"
-              aria-label="Code snippet language"
+              aria-label={t("ariaLabelTablist")}
               className="flex flex-wrap gap-2"
             >
               <button
                 type="button"
                 role="tab"
                 aria-selected={tab === "curl"}
+                aria-label={t("ariaLabelTab", { language: "cURL" })}
                 className={tabClass("curl")}
                 onClick={() => setTab("curl")}
               >
-                cURL
+                {t("tabCurl")}
               </button>
               <button
                 type="button"
                 role="tab"
                 aria-selected={tab === "fetch"}
+                aria-label={t("ariaLabelTab", { language: "Fetch" })}
                 className={tabClass("fetch")}
                 onClick={() => setTab("fetch")}
               >
-                Fetch
+                {t("tabFetch")}
               </button>
               <button
                 type="button"
                 role="tab"
                 aria-selected={tab === "python"}
+                aria-label={t("ariaLabelTab", { language: "Python" })}
                 className={tabClass("python")}
                 onClick={() => setTab("python")}
               >
-                Python
+                {t("tabPython")}
               </button>
               <button
                 type="button"
                 role="tab"
                 aria-selected={tab === "axios"}
+                aria-label={t("ariaLabelTab", { language: "Axios" })}
                 className={tabClass("axios")}
                 onClick={() => setTab("axios")}
               >
-                Axios
+                {t("tabAxios")}
               </button>
             </div>
 
             <CopyButton
-              label="Copy snippet"
+              label={t("copySnippet")}
               value={snippet}
               className="ui-btn ui-btn-secondary px-3 py-1.5"
             />
@@ -339,7 +342,7 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
 
           <pre
             role="tabpanel"
-            aria-label={`${tab} code snippet`}
+            aria-label={t("ariaLabelTab", { language: tab })}
             className="mt-3 overflow-x-auto whitespace-pre-wrap break-words font-mono text-xs text-zinc-800"
           >
             {snippet}
@@ -360,7 +363,9 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
             <div className="ui-surface-muted p-4">
               <div className="flex flex-col gap-1 text-sm text-zinc-700 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <span className="font-semibold text-zinc-900">Status:</span>{" "}
+                  <span className="font-semibold text-zinc-900">
+                    {t("status")}{" "}
+                  </span>
                   {response.status}
                   {response.contentType ? (
                     <span className="ml-2 text-xs text-zinc-500">
@@ -369,7 +374,7 @@ export function ApiPlayground({ apiId, cmsUrl, defaultUrl }: Props) {
                   ) : null}
                 </div>
                 <CopyButton
-                  label="Copy response"
+                  label={t("copyResponse")}
                   value={response.body}
                   className="ui-btn ui-btn-secondary px-3 py-1.5"
                 />

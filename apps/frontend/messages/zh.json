@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Public API - 公共 API 目录与实时健康监控",
-    "titleTemplate": "{title} | Public API",
+    "titleTemplate": "%s | Public API",
     "description": "更快地找到最佳公共 API：结构化元数据、可用性信号和强大的过滤功能。",
     "keywords": "公共API, API目录, API目录, 免费API, REST API, API状态, API健康检查, API正常运行时间, OpenAPI, API游乐场, API搜索, 开发者工具, API文档, Web API, JSON API",
     "ogTitle": "Public API - 发现并监控公共 API",
@@ -21,11 +21,13 @@
     "closeMenu": "关闭导航菜单"
   },
   "footer": {
+    "githubRepo": "GitHub 仓库",
     "description": "通过实时健康监控和实时可用性信号，发现、评估和集成公共 API。",
     "domain": "public-api.org",
     "navigation": "导航",
     "resources": "资源",
     "sitemap": "网站地图",
+    "contact": "info@public-api.org",
     "allSystemsOperational": "所有系统运行正常",
     "exitCode": "exit 0"
   },
@@ -106,7 +108,15 @@
     "upstreamLabel": "上游来源",
     "upstreamDesc": "public-apis/public-apis - 社区目录",
     "botLabel": "健康检查机器人",
-    "botDesc": "了解 ApiNavigatorBot"
+    "botDesc": "了解 ApiNavigatorBot",
+    "backendConnectionError": "无法连接到后端",
+    "backendConnectionFailed": "后端连接失败"
+  },
+  "search": {
+    "metaTitle": "搜索公共 API - 为您的项目找到完美的 API",
+    "metaDescription": "搜索和筛选 1800+ 个公共 API。按分类、认证类型、CORS 支持和健康状态查找 API。",
+    "ogTitle": "搜索公共 API - API 目录",
+    "ogDescription": "通过实时健康监控发现和比较公共 API。按分类、认证类型等搜索。"
   },
   "catalog": {
     "title": "Public API",
@@ -118,6 +128,9 @@
     "forks": "分支",
     "searchTitle": "search.sh",
     "searchPlaceholder": "搜索 API...",
+    "searchLabel": "搜索",
+    "categoryLabel": "分类",
+    "sortLabel": "排序",
     "allCategories": "所有分类",
     "sortPopular": "热门",
     "sortRecent": "最新",
@@ -127,23 +140,49 @@
     "foundResults": "找到 {count} 个结果",
     "foundResultsCount": "找到 {count} 个结果",
     "forQuery": "搜索 \"{query}\"",
+    "foundResultsText": "找到 {count} 个结果",
+    "forQueryText": "搜索 \"{query}\"",
     "clearFilters": "[清除筛选]",
     "resetFilters": "[重置筛选]",
     "filterAuth": "filter --auth",
     "filterCors": "filter --cors",
     "filterStatus": "filter --status",
     "filterHttps": "filter --https",
+    "corsLabel": "CORS",
+    "httpsLabel": "HTTPS",
     "httpsAny": "全部",
     "httpsYes": "是",
     "httpsNo": "否",
+    "httpsLabelAny": "全部",
+    "httpsLabelYes": "是",
+    "httpsLabelNo": "否",
     "noResults": "没有 API 匹配 \"{query}\"。请尝试其他关键词。",
     "noResultsFilters": "没有 API 匹配您的筛选条件。",
     "noResultsSimple": "没有 API 匹配您的筛选条件。",
+    "noResultsQuery": "没有 API 匹配 \"{query}\"。请尝试其他关键词。",
+    "noResultsFiltersSimple": "没有 API 匹配您的筛选条件。",
+    "resultsTitle": "results.txt",
     "page": "第 {current}/{total} 页",
     "pageLabel": "第 {current}/{total} 页",
+    "pageText": "第 {current}/{total} 页",
     "prevPage": "<上一页",
     "nextPage": "下一页>",
+    "prevPageLabel": "<上一页",
+    "nextPageLabel": "下一页>",
     "change": "[更改]",
+    "searchAndFilterAriaLabel": "搜索和筛选 API",
+    "filterByAuthAriaLabel": "按认证类型筛选",
+    "filterByAuthItemAriaLabel": "按 {auth} 认证筛选 ({count} 个 API)",
+    "filterByCorsAriaLabel": "按 CORS 支持筛选",
+    "filterByCorsItemAriaLabel": "按 CORS {cors} 筛选 ({count} 个 API)",
+    "filterByStatusAriaLabel": "按健康状态筛选",
+    "filterByStatusItemAriaLabel": "按 {status} 状态筛选 ({count} 个 API)",
+    "filterByHttpsAriaLabel": "按 HTTPS 支持筛选",
+    "apiListAriaLabel": "API 列表",
+    "paginationAriaLabel": "分页",
+    "pageAriaLabel": "第 {page} 页",
+    "prevPageAriaLabel": "上一页",
+    "nextPageAriaLabel": "下一页",
     "errorTitle": "error.log",
     "errorMessage": "目录暂时不可用",
     "errorDesc": "无法连接到目录服务。请重试。",
@@ -151,6 +190,7 @@
     "help": "帮助"
   },
   "api": {
+    "apiNotFound": "API 未找到",
     "defaultSeoTitle": "{name} API - 文档、评测与集成指南",
     "breadcrumbHome": "Public API",
     "livePreview": "实时预览",
@@ -296,6 +336,9 @@
     "backToCatalog": "返回目录",
     "title": "cat README.md",
     "subtitle": "关于 Public API",
+    "metaDescription": "了解 Public API 如何通过实时健康检查、OpenAPI 文档和实时可用性信号帮助开发者发现、评估和集成公共 API。",
+    "ogDescription": "了解我们如何通过实时健康监控和结构化元数据帮助开发者找到最佳公共 API。",
+    "breadcrumbLabel": "面包屑导航",
     "missionTitle": "mission.txt",
     "missionP1": "Public API Navigator 是一个生产级的公共 API 目录。它与著名的 public-apis 列表保持同步，添加实时健康检查，规范化 OpenAPI 文档，并提供浏览器安全的游乐场，让团队可以无需猜测地评估提供商。",
     "missionP2": "目标是 E-E-A-T 设计：来自运行真实系统的经验，编码为过滤器和防护栏的专业知识，通过透明来源的权威性，以及通过时间戳、状态标志和您可以自己验证的 OpenAPI 链接的可信度。",
@@ -343,6 +386,7 @@
     "backToCatalog": "返回目录",
     "title": "./ApiNavigatorBot",
     "subtitle": "为状态标志和延迟指标提供动力的健康检查机器人",
+    "breadcrumbLabel": "面包屑导航",
     "infoTitle": "bot.info",
     "infoP1": "ApiNavigatorBot 运行健康检查，为您在整个目录中看到的状态标志和延迟数字提供动力。它被设计为默认礼貌、透明和安全。",
     "infoP2": "上游来源是 public-apis 仓库（{stars} 个收藏，最后更新 {updated}）。检查叠加在上面，因此您可以获得新鲜的信号而不给提供商压力。",
@@ -456,12 +500,21 @@
   "common": {
     "skipToMain": "跳到主要内容",
     "loading": "加载中...",
+    "loadingCatalog": "正在加载 API 目录...",
+    "connectingToBackend": "正在连接到后端...",
+    "fetchingDataFromBackend": "从后端获取数据，请稍候...",
+    "initializingConnection": "初始化连接",
+    "loadingData": "加载数据中",
+    "renderingPage": "渲染页面",
     "copySpec": "复制规范 URL"
   },
   "languageSwitcher": {
-    "label": "语言",
-    "english": "英文",
-    "chinese": "中文"
+    "switchToEnglish": "切换到英文",
+    "switchToChinese": "切换到中文",
+    "switchToJapanese": "切换到日语",
+    "switchToSpanish": "切换到西班牙语",
+    "switchToPortuguese": "切换到葡萄牙语",
+    "switchToGerman": "切换到德语"
   },
   "categories": {
     "Development": "开发",
@@ -578,5 +631,63 @@
     "descDown": "API 无响应",
     "descUnknown": "无法确定 API 状态",
     "descPending": "API 尚未检查"
+  },
+  "copyButton": {
+    "copy": "复制",
+    "copied": "已复制",
+    "failed": "失败"
+  },
+  "healthChart": {
+    "noData": "暂无健康检查数据。",
+    "live": "在线",
+    "slow": "缓慢",
+    "down": "离线",
+    "unknown": "未知",
+    "avgLatency": "平均延迟",
+    "healthHistory": "健康检查历史"
+  },
+  "themeToggle": {
+    "toggleTheme": "切换颜色主题"
+  },
+  "screenshot": {
+    "notAvailable": "截图不可用",
+    "viewFull": "查看 {name} 的完整截图",
+    "clickToEnlarge": "点击放大",
+    "close": "关闭截图",
+    "modalLabel": "截图模态框",
+    "captured": "捕获于"
+  },
+  "thumbnail": {
+    "alt": "{name} 截图"
+  },
+  "apiReference": {
+    "loadingDocs": "正在加载 API 文档..."
+  },
+  "backendLoading": {
+    "connecting": "正在连接后端...",
+    "fetchingData": "正在从后端获取数据，请稍候...",
+    "initializing": "初始化连接",
+    "loadingData": "加载数据",
+    "renderingPage": "渲染页面"
+  },
+  "faq": {
+    "defaultTitle": "常见问题",
+    "categoryTechnical": "技术问题",
+    "categorySecurity": "安全与隐私",
+    "categorySupport": "支持与文档",
+    "categoryPricing": "定价与方案",
+    "categoryGeneral": "常规问题"
+  },
+  "catalogPage": {
+    "terminalCommand": "ls -la /api/catalog",
+    "categoriesJson": "categories.json",
+    "popularCategoriesSh": "popular-categories.sh",
+    "topCategoriesDesc": "按 API 数量排名前 10 的分类："
+  },
+  "accessibility": {
+    "primaryNavAriaLabel": "主导航",
+    "mobileNavAriaLabel": "移动端导航",
+    "footerNavAriaLabel": "页脚导航",
+    "opensInNewTab": "在新标签页打开"
   }
 }

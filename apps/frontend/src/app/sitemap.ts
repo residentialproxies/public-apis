@@ -23,9 +23,16 @@ async function withTimeout<T>(
   }
 }
 
-async function fetchAllApis(): Promise<
-  Array<{ id: number | string; name: string; lastCheckedAt?: string | null }>
-> {
+// SEO: Extended type to include health status for dynamic priority calculation
+type ApiWithHealth = {
+  id: number | string;
+  name: string;
+  lastCheckedAt?: string | null;
+  healthStatus?: string;
+  https?: boolean;
+};
+
+async function fetchAllApis(): Promise<ApiWithHealth[]> {
   const pageSize = 100;
   const sort = "name";
 
@@ -35,9 +42,13 @@ async function fetchAllApis(): Promise<
     sort,
   });
 
-  const all: Array<{ id: number | string; name: string; lastCheckedAt?: string | null }> = first.docs.map(
-    (d) => ({ id: d.id, name: d.name, lastCheckedAt: d.lastCheckedAt }),
-  );
+  const all: ApiWithHealth[] = first.docs.map((d) => ({
+    id: d.id,
+    name: d.name,
+    lastCheckedAt: d.lastCheckedAt,
+    healthStatus: d.healthStatus,
+    https: d.https,
+  }));
   const totalPages = Math.min(first.totalPages, 500);
 
   if (totalPages <= 1) return all;
@@ -54,7 +65,15 @@ async function fetchAllApis(): Promise<
     );
 
     for (const res of results) {
-      all.push(...res.docs.map((d) => ({ id: d.id, name: d.name, lastCheckedAt: d.lastCheckedAt })));
+      all.push(
+        ...res.docs.map((d) => ({
+          id: d.id,
+          name: d.name,
+          lastCheckedAt: d.lastCheckedAt,
+          healthStatus: d.healthStatus,
+          https: d.https,
+        })),
+      );
     }
   }
 
@@ -71,6 +90,58 @@ function createAlternates(base: string, path: string): Record<string, string> {
   }
   alternates["x-default"] = `${base}${path}`;
   return alternates;
+}
+
+/**
+ * SEO: Calculate dynamic priority based on API health and quality signals.
+ * This helps search engines understand which pages are most valuable to users.
+ *
+ * Priority factors:
+ * - Health status: "online" gets highest priority, "unknown" lowest
+ * - HTTPS: APIs with HTTPS get a slight boost
+ * - Freshness: Recently checked APIs get a small boost
+ *
+ * @param api - The API with health metadata
+ * @returns Priority between 0.3 and 0.9
+ */
+function calculateApiPriority(api: ApiWithHealth): number {
+  let priority = 0.5; // Base priority
+
+  // Health status boost (most important factor)
+  switch (api.healthStatus) {
+    case "online":
+      priority += 0.3; // Healthy APIs are most valuable
+      break;
+    case "slow":
+      priority += 0.15; // Slow but working APIs
+      break;
+    case "down":
+      priority -= 0.1; // Broken APIs are less valuable
+      break;
+    case "unknown":
+    default:
+      // Unchecked APIs get base priority
+      break;
+  }
+
+  // HTTPS boost (security signal)
+  if (api.https) {
+    priority += 0.05;
+  }
+
+  // Freshness boost (recently checked data is more reliable)
+  if (api.lastCheckedAt) {
+    const daysSinceCheck = Math.floor(
+      (Date.now() - new Date(api.lastCheckedAt).getTime()) /
+        (1000 * 60 * 60 * 24),
+    );
+    if (daysSinceCheck < 7) {
+      priority += 0.05; // Checked within a week
+    }
+  }
+
+  // Clamp to valid sitemap priority range [0, 1]
+  return Math.max(0.3, Math.min(0.9, priority));
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -124,13 +195,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       alternates: { languages: createAlternates(base, `/category/${c.slug}`) },
     }));
 
-    // API detail routes with accurate lastModified from health checks
+    // SEO: API detail routes with dynamic priority based on health signals
     const apiRoutes: MetadataRoute.Sitemap = apis.map((a) => ({
       url: `${base}/api/${a.id}/${slugify(a.name)}`,
       lastModified: a.lastCheckedAt ? new Date(a.lastCheckedAt) : now,
       changeFrequency: "weekly" as const,
-      priority: 0.7, // Increased priority for API detail pages
-      alternates: { languages: createAlternates(base, `/api/${a.id}/${slugify(a.name)}`) },
+      priority: calculateApiPriority(a),
+      alternates: {
+        languages: createAlternates(base, `/api/${a.id}/${slugify(a.name)}`),
+      },
     }));
 
     return [...staticRoutes, ...categoryRoutes, ...apiRoutes];

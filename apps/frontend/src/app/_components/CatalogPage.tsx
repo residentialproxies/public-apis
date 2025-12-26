@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ApiThumbnail } from "@/components/ApiThumbnail";
 import { StatusPill } from "@/components/StatusPill";
+import { TerminalWindow } from "@/components/TerminalWindow";
 import { fetchApisList, fetchCategories, fetchFacets } from "@/lib/backend";
 import { fetchPublicApisRepoStats, fallbackRepoStats } from "@/lib/github";
 import { formatCompactNumber } from "@/lib/format";
@@ -22,28 +23,6 @@ type Props = {
     | Record<string, string | string[] | undefined>
     | Promise<Record<string, string | string[] | undefined>>;
 };
-
-const TerminalWindow = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) => (
-  <div className="terminal-surface overflow-hidden">
-    <div className="terminal-header rounded-t-lg">
-      <div className="flex items-center gap-1.5">
-        <span className="terminal-dot terminal-dot-red" />
-        <span className="terminal-dot terminal-dot-yellow" />
-        <span className="terminal-dot terminal-dot-green" />
-      </div>
-      <span className="ml-3 font-mono text-xs text-[var(--text-muted)]">
-        {title}
-      </span>
-    </div>
-    {children}
-  </div>
-);
 
 export async function CatalogPage({
   basePath,
@@ -129,7 +108,9 @@ export async function CatalogPage({
 
             {process.env.NODE_ENV !== "production" ? (
               <div className="mt-6 rounded border border-[var(--accent-red)]/30 bg-[var(--accent-red)]/5 p-4 font-mono text-xs">
-                <div className="text-[var(--accent-red)]">// Debug Output</div>
+                <div className="text-[var(--accent-red)]">
+                  {"//"} Debug Output
+                </div>
                 <pre className="mt-2 whitespace-pre-wrap break-words text-[var(--text-muted)]">
                   {errorMessage}
                 </pre>
@@ -237,7 +218,7 @@ export async function CatalogPage({
               <span className="ml-2 inline-block h-6 w-3 animate-[blink_1s_infinite] bg-[var(--accent-green)]" />
             </h1>
             <p className="mt-2 max-w-xl font-mono text-sm text-[var(--text-muted)]">
-              <span className="text-[var(--accent-purple)]">//</span>{" "}
+              <span className="text-[var(--accent-purple)]">{"//"}</span>{" "}
               {heroSubtitle.replace(/'/g, "'")}
             </p>
           </div>
@@ -285,12 +266,12 @@ export async function CatalogPage({
             action={basePath}
             method="get"
             role="search"
-            aria-label="Search and filter APIs"
+            aria-label={t("searchAndFilterAriaLabel")}
             className="flex flex-col gap-3 md:flex-row md:items-end"
           >
             <div className="flex-1">
               <label className="sr-only" htmlFor="q">
-                Search
+                {t("searchLabel")}
               </label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-[var(--accent-cyan)]">
@@ -309,7 +290,7 @@ export async function CatalogPage({
             {!fixedCategorySlug ? (
               <div className="w-full md:w-48">
                 <label className="sr-only" htmlFor="category">
-                  Category
+                  {t("categoryLabel")}
                 </label>
                 <select
                   id="category"
@@ -340,7 +321,7 @@ export async function CatalogPage({
 
             <div className="w-full md:w-40">
               <label className="sr-only" htmlFor="sort">
-                Sort
+                {t("sortLabel")}
               </label>
               <select
                 id="sort"
@@ -366,20 +347,11 @@ export async function CatalogPage({
               aria-atomic="true"
               className="text-[var(--text-muted)]"
             >
-              <span className="text-[var(--accent-green)]">&gt;</span> Found{" "}
-              <span className="text-[var(--accent-cyan)]">
-                {apis.totalDocs.toLocaleString()}
-              </span>{" "}
-              results
-              {q ? (
-                <>
-                  {" "}
-                  for{" "}
-                  <span className="text-[var(--accent-yellow)]">
-                    &quot;{q}&quot;
-                  </span>
-                </>
-              ) : null}
+              <span className="text-[var(--accent-green)]">&gt;</span>{" "}
+              {t("foundResultsText", {
+                count: apis.totalDocs.toLocaleString(),
+              })}
+              {q ? <> {t("forQueryText", { query: q })}</> : null}
             </p>
 
             {(q || auth || cors || healthStatus || https) && (
@@ -395,7 +367,7 @@ export async function CatalogPage({
                   page: "1",
                 })}
               >
-                [clear filters]
+                {t("clearFilters")}
               </Link>
             )}
           </div>
@@ -407,19 +379,22 @@ export async function CatalogPage({
         <aside className="md:col-span-4 lg:col-span-3">
           <div className="sticky top-32 space-y-3">
             {/* Auth Filter */}
-            <TerminalWindow title="filter --auth">
+            <TerminalWindow title={t("filterAuth")}>
               <div className="p-3">
                 <ul
                   className="space-y-1 font-mono text-sm"
                   role="list"
-                  aria-label="Filter by authentication type"
+                  aria-label={t("filterByAuthAriaLabel")}
                 >
                   {Object.entries(facets.auth).map(([key, count]) => (
                     <li key={key}>
                       <Link
                         href={toggle("auth", key)}
                         aria-pressed={selectedAuth.has(key)}
-                        aria-label={`Filter by ${key} authentication (${count} APIs)`}
+                        aria-label={t("filterByAuthItemAriaLabel", {
+                          auth: key,
+                          count,
+                        })}
                         className={`flex items-center justify-between rounded px-2 py-1.5 transition-all ${
                           selectedAuth.has(key)
                             ? "bg-[var(--accent-green)]/10 text-[var(--accent-green)] border border-[var(--accent-green)]/30"
@@ -443,19 +418,22 @@ export async function CatalogPage({
             </TerminalWindow>
 
             {/* CORS Filter */}
-            <TerminalWindow title="filter --cors">
+            <TerminalWindow title={t("filterCors")}>
               <div className="p-3">
                 <ul
                   className="space-y-1 font-mono text-sm"
                   role="list"
-                  aria-label="Filter by CORS support"
+                  aria-label={t("filterByCorsAriaLabel")}
                 >
                   {Object.entries(facets.cors).map(([key, count]) => (
                     <li key={key}>
                       <Link
                         href={toggle("cors", key)}
                         aria-pressed={selectedCors.has(key)}
-                        aria-label={`Filter by CORS ${key} (${count} APIs)`}
+                        aria-label={t("filterByCorsItemAriaLabel", {
+                          cors: key,
+                          count,
+                        })}
                         className={`flex items-center justify-between rounded px-2 py-1.5 transition-all ${
                           selectedCors.has(key)
                             ? "bg-[var(--accent-cyan)]/10 text-[var(--accent-cyan)] border border-[var(--accent-cyan)]/30"
@@ -479,19 +457,22 @@ export async function CatalogPage({
             </TerminalWindow>
 
             {/* Status Filter */}
-            <TerminalWindow title="filter --status">
+            <TerminalWindow title={t("filterStatus")}>
               <div className="p-3">
                 <ul
                   className="space-y-1 font-mono text-sm"
                   role="list"
-                  aria-label="Filter by health status"
+                  aria-label={t("filterByStatusAriaLabel")}
                 >
                   {Object.entries(facets.healthStatus).map(([key, count]) => (
                     <li key={key}>
                       <Link
                         href={toggle("healthStatus", key)}
                         aria-pressed={selectedHealth.has(key)}
-                        aria-label={`Filter by ${key} status (${count} APIs)`}
+                        aria-label={t("filterByStatusItemAriaLabel", {
+                          status: key,
+                          count,
+                        })}
                         className={`flex items-center justify-between rounded px-2 py-1.5 transition-all ${
                           selectedHealth.has(key)
                             ? "bg-[var(--accent-orange)]/10 text-[var(--accent-orange)] border border-[var(--accent-orange)]/30"
@@ -515,17 +496,17 @@ export async function CatalogPage({
             </TerminalWindow>
 
             {/* HTTPS Filter */}
-            <TerminalWindow title="filter --https">
+            <TerminalWindow title={t("filterHttps")}>
               <div className="p-3">
                 <div
                   className="flex gap-1 font-mono text-sm"
                   role="group"
-                  aria-label="Filter by HTTPS support"
+                  aria-label={t("filterByHttpsAriaLabel")}
                 >
                   {[
-                    { value: undefined, label: "ANY" },
-                    { value: "true", label: "YES" },
-                    { value: "false", label: "NO" },
+                    { value: undefined, label: t("httpsLabelAny") },
+                    { value: "true", label: t("httpsLabelYes") },
+                    { value: "false", label: t("httpsLabelNo") },
                   ].map((opt) => (
                     <Link
                       key={opt.label}
@@ -549,15 +530,13 @@ export async function CatalogPage({
         {/* API List */}
         <section className="md:col-span-8 lg:col-span-9">
           {apis.docs.length === 0 ? (
-            <TerminalWindow title="results.txt">
+            <TerminalWindow title={t("resultsTitle")}>
               <div className="p-6 text-center">
                 <div className="font-mono text-sm text-[var(--text-muted)]">
                   <span className="text-[var(--accent-yellow)]">WARN</span>:{" "}
-                  {q ? (
-                    <>No APIs match &quot;{q}&quot;. Try different keywords.</>
-                  ) : (
-                    <>No APIs match your filters.</>
-                  )}
+                  {q
+                    ? t("noResultsQuery", { query: q })
+                    : t("noResultsFiltersSimple")}
                 </div>
                 <Link
                   className="mt-3 inline-block font-mono text-sm text-[var(--accent-green)] hover:underline"
@@ -571,13 +550,13 @@ export async function CatalogPage({
                     page: "1",
                   })}
                 >
-                  [reset filters]
+                  {t("resetFilters")}
                 </Link>
               </div>
             </TerminalWindow>
           ) : (
             <>
-              <ul className="space-y-2" aria-label="API list">
+              <ul className="space-y-2" aria-label={t("apiListAriaLabel")}>
                 {apis.docs.map((api, index) => {
                   const href = `/api/${api.id}/${slugify(api.name)}`;
                   return (
@@ -624,10 +603,12 @@ export async function CatalogPage({
                                 {api.auth}
                               </span>
                               <span className="terminal-chip terminal-chip-orange">
-                                CORS:{api.cors}
+                                {t("corsLabel")}:{api.cors}
                               </span>
                               {api.https && (
-                                <span className="terminal-chip">HTTPS</span>
+                                <span className="terminal-chip">
+                                  {t("httpsLabel")}
+                                </span>
                               )}
                             </div>
                           </div>
@@ -653,13 +634,16 @@ export async function CatalogPage({
               {/* Pagination */}
               {apis.totalPages > 1 ? (
                 <nav
-                  aria-label="Pagination"
+                  aria-label={t("paginationAriaLabel")}
                   className="mt-4 terminal-surface p-4"
                 >
                   <div className="flex items-center justify-between font-mono text-sm">
                     <span className="text-[var(--text-muted)]">
                       <span className="text-[var(--accent-green)]">[</span>
-                      Page {apis.page}/{apis.totalPages}
+                      {t("pageText", {
+                        current: apis.page,
+                        total: apis.totalPages,
+                      })}
                       <span className="text-[var(--accent-green)]">]</span>
                     </span>
 
@@ -667,15 +651,15 @@ export async function CatalogPage({
                       {apis.hasPrevPage ? (
                         <Link
                           rel="prev"
-                          aria-label="Previous page"
+                          aria-label={t("prevPageAriaLabel")}
                           className="rounded px-3 py-1.5 text-[var(--text-secondary)] transition-all hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent-green)]"
                           href={makeHref({ page: String(apis.prevPage ?? 1) })}
                         >
-                          &lt;prev
+                          {t("prevPageLabel")}
                         </Link>
                       ) : (
                         <span className="rounded px-3 py-1.5 text-[var(--text-dim)]">
-                          &lt;prev
+                          {t("prevPageLabel")}
                         </span>
                       )}
 
@@ -712,7 +696,7 @@ export async function CatalogPage({
                             <Link
                               key={p}
                               href={makeHref({ page: String(p) })}
-                              aria-label={`Page ${p}`}
+                              aria-label={t("pageAriaLabel", { page: p })}
                               aria-current={p === current ? "page" : undefined}
                               className={`rounded px-3 py-1.5 transition-all ${
                                 p === current
@@ -729,17 +713,17 @@ export async function CatalogPage({
                       {apis.hasNextPage ? (
                         <Link
                           rel="next"
-                          aria-label="Next page"
+                          aria-label={t("nextPageAriaLabel")}
                           className="rounded px-3 py-1.5 text-[var(--text-secondary)] transition-all hover:bg-[var(--bg-tertiary)] hover:text-[var(--accent-green)]"
                           href={makeHref({
                             page: String(apis.nextPage ?? apis.page),
                           })}
                         >
-                          next&gt;
+                          {t("nextPageLabel")}
                         </Link>
                       ) : (
                         <span className="rounded px-3 py-1.5 text-[var(--text-dim)]">
-                          next&gt;
+                          {t("nextPageLabel")}
                         </span>
                       )}
                     </div>

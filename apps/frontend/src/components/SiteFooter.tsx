@@ -15,6 +15,7 @@ const ASCII_LOGO = `
 export function SiteFooter() {
   const t = useTranslations("footer");
   const tNav = useTranslations("nav");
+  const tA11y = useTranslations("accessibility");
   const currentYear = new Date().getFullYear();
 
   const footerLinks = [
@@ -26,7 +27,7 @@ export function SiteFooter() {
   const externalLinks = [
     {
       href: "https://github.com/public-apis/public-apis",
-      label: "GitHub Repo",
+      label: t("githubRepo"),
     },
   ];
 
@@ -50,13 +51,13 @@ export function SiteFooter() {
               {t("description")}
             </p>
             <p className="font-mono text-xs text-[var(--text-dim)]">
-              <span className="text-[var(--accent-purple)]">//</span>{" "}
+              <span className="text-[var(--accent-purple)]">{`//`}</span>{" "}
               {t("domain")}
             </p>
           </div>
 
           {/* Navigation Links */}
-          <nav aria-label="Footer navigation">
+          <nav aria-label={tA11y("footerNavAriaLabel")}>
             <h2 className="mb-4 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
               <span className="text-[var(--accent-purple)]">#</span>{" "}
               {t("navigation")}
@@ -117,7 +118,7 @@ export function SiteFooter() {
                         d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                       />
                     </svg>
-                    <span className="sr-only">(opens in new tab)</span>
+                    <span className="sr-only">{tA11y("opensInNewTab")}</span>
                   </a>
                 </li>
               ))}
@@ -133,6 +134,20 @@ export function SiteFooter() {
                     &gt;
                   </span>
                   {t("sitemap")}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:info@public-api.org"
+                  className="group flex items-center gap-2 font-mono text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--accent-green)]"
+                >
+                  <span
+                    className="text-[var(--text-dim)] transition-colors group-hover:text-[var(--accent-green)]"
+                    aria-hidden="true"
+                  >
+                    &gt;
+                  </span>
+                  {t("contact")}
                 </a>
               </li>
             </ul>

@@ -1,78 +1,98 @@
 "use client";
 
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 
 type Props = {
   status: string;
   className?: string;
 };
 
-const statusConfig: Record<
-  string,
-  {
-    label: string;
-    dotClass: string;
-    textClass: string;
-    bgClass: string;
-    ping?: boolean;
-  }
-> = {
-  live: {
-    label: "ONLINE",
-    dotClass: "bg-[var(--status-online)] status-ping",
-    textClass: "text-[var(--status-online)]",
-    bgClass: "bg-[var(--status-online)]/10 border-[var(--status-online)]/30",
-    ping: true,
-  },
-  slow: {
-    label: "SLOW",
-    dotClass: "bg-[var(--status-warning)]",
-    textClass: "text-[var(--status-warning)]",
-    bgClass: "bg-[var(--status-warning)]/10 border-[var(--status-warning)]/30",
-  },
-  down: {
-    label: "DOWN",
-    dotClass: "bg-[var(--status-error)]",
-    textClass: "text-[var(--status-error)]",
-    bgClass: "bg-[var(--status-error)]/10 border-[var(--status-error)]/30",
-  },
-  unknown: {
-    label: "???",
-    dotClass: "bg-[var(--status-offline)]",
-    textClass: "text-[var(--text-muted)]",
-    bgClass: "bg-[var(--bg-tertiary)] border-[var(--border-dim)]",
-  },
-  pending: {
-    label: "WAIT",
-    dotClass: "bg-[var(--text-dim)]",
-    textClass: "text-[var(--text-dim)]",
-    bgClass: "bg-[var(--bg-tertiary)] border-[var(--border-dim)]",
-  },
-};
-
-function statusDescription(status: string): string {
-  switch (status) {
-    case "live":
-      return "API is responding normally";
-    case "slow":
-      return "API is responding but with high latency";
-    case "down":
-      return "API is not responding";
-    case "unknown":
-      return "API status could not be determined";
-    case "pending":
-    default:
-      return "API has not been checked yet";
-  }
-}
-
 export function StatusPill({ status, className }: Props) {
-  const config = statusConfig[status] ?? statusConfig.pending;
+  const t = useTranslations("statusPill");
+
+  // Get translated label and description
+  const getLabel = (status: string): string => {
+    switch (status) {
+      case "live":
+        return t("labelOnline");
+      case "slow":
+        return t("labelSlow");
+      case "down":
+        return t("labelDown");
+      case "unknown":
+        return t("labelUnknown");
+      case "pending":
+      default:
+        return t("labelPending");
+    }
+  };
+
+  const getDescription = (status: string): string => {
+    switch (status) {
+      case "live":
+        return t("descOnline");
+      case "slow":
+        return t("descSlow");
+      case "down":
+        return t("descDown");
+      case "unknown":
+        return t("descUnknown");
+      case "pending":
+      default:
+        return t("descPending");
+    }
+  };
+
+  const getConfig = (status: string) => {
+    switch (status) {
+      case "live":
+        return {
+          dotClass: "bg-[var(--status-online)] status-ping",
+          textClass: "text-[var(--status-online)]",
+          bgClass:
+            "bg-[var(--status-online)]/10 border-[var(--status-online)]/30",
+        };
+      case "slow":
+        return {
+          dotClass: "bg-[var(--status-warning)]",
+          textClass: "text-[var(--status-warning)]",
+          bgClass:
+            "bg-[var(--status-warning)]/10 border-[var(--status-warning)]/30",
+        };
+      case "down":
+        return {
+          dotClass: "bg-[var(--status-error)]",
+          textClass: "text-[var(--status-error)]",
+          bgClass:
+            "bg-[var(--status-error)]/10 border-[var(--status-error)]/30",
+        };
+      case "unknown":
+        return {
+          dotClass: "bg-[var(--status-offline)]",
+          textClass: "text-[var(--text-muted)]",
+          bgClass: "bg-[var(--bg-tertiary)] border-[var(--border-dim)]",
+        };
+      case "pending":
+      default:
+        return {
+          dotClass: "bg-[var(--text-dim)]",
+          textClass: "text-[var(--text-dim)]",
+          bgClass: "bg-[var(--bg-tertiary)] border-[var(--border-dim)]",
+        };
+    }
+  };
+
+  const config = getConfig(status);
+  const label = getLabel(status);
 
   return (
     <span
       role="status"
-      aria-label={`API health status: ${status}. ${statusDescription(status)}`}
+      aria-label={t("ariaLabel", {
+        status: label,
+        description: getDescription(status),
+      })}
       className={clsx(
         "inline-flex items-center gap-2 rounded border px-2.5 py-1 font-mono text-xs transition-opacity",
         config.bgClass,
@@ -80,7 +100,7 @@ export function StatusPill({ status, className }: Props) {
       )}
     >
       <span className={clsx("size-2 rounded-full", config.dotClass)} />
-      <span className={config.textClass}>{config.label}</span>
+      <span className={config.textClass}>{label}</span>
     </span>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useTranslations } from "next-intl";
 
 type Props = {
   apiId: number;
@@ -9,6 +10,7 @@ type Props = {
 };
 
 function ApiReferenceSkeleton() {
+  const t = useTranslations("apiReference");
   return (
     <div className="ui-surface max-h-[800px] overflow-auto p-6">
       <div className="animate-pulse space-y-4">
@@ -28,7 +30,7 @@ function ApiReferenceSkeleton() {
         </div>
       </div>
       <p className="mt-4 text-center text-sm text-zinc-500">
-        Loading API documentation...
+        {t("loadingDocs")}
       </p>
     </div>
   );

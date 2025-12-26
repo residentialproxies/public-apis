@@ -77,7 +77,10 @@ describe("WebAPISchema", () => {
     expect(schema.additionalProperty).toBeDefined();
     expect(Array.isArray(schema.additionalProperty)).toBe(true);
 
-    const props = schema.additionalProperty as Array<{ name: string; value: unknown }>;
+    const props = schema.additionalProperty as Array<{
+      name: string;
+      value: unknown;
+    }>;
     const authProp = props.find((p) => p.name === "Authentication");
     expect(authProp).toBeDefined();
     expect(authProp?.value).toBe("apiKey");
@@ -192,7 +195,7 @@ describe("FAQSchema", () => {
     expect(firstItem.acceptedAnswer).toHaveProperty("@type", "Answer");
     expect(firstItem.acceptedAnswer).toHaveProperty(
       "text",
-      "You can start by visiting our documentation."
+      "You can start by visiting our documentation.",
     );
   });
 });
@@ -238,7 +241,7 @@ describe("HowToSchema", () => {
     const schema = generator.generate(mockContext);
 
     const registrationStep = schema.step.find((s: { name: string }) =>
-      s.name.toLowerCase().includes("register")
+      s.name.toLowerCase().includes("register"),
     );
     expect(registrationStep).toBeDefined();
   });
@@ -252,7 +255,7 @@ describe("HowToSchema", () => {
     const schema = generator.generate(publicContext);
 
     const registrationStep = schema.step.find((s: { name: string }) =>
-      s.name.toLowerCase().includes("register")
+      s.name.toLowerCase().includes("register"),
     );
     expect(registrationStep).toBeUndefined();
   });
@@ -339,7 +342,9 @@ describe("BreadcrumbListSchema", () => {
   it("should include home breadcrumb", () => {
     const schema = generator.generate(mockContext);
 
-    const homeItem = schema.itemListElement.find((item: { position: number }) => item.position === 1);
+    const homeItem = schema.itemListElement.find(
+      (item: { position: number }) => item.position === 1,
+    );
     expect(homeItem).toBeDefined();
     expect(homeItem.name).toBe("Home");
   });
@@ -348,7 +353,7 @@ describe("BreadcrumbListSchema", () => {
     const schema = generator.generate(mockContext);
 
     const categoryItem = schema.itemListElement.find(
-      (item: { name: string }) => item.name === "Development"
+      (item: { name: string }) => item.name === "Development",
     );
     expect(categoryItem).toBeDefined();
   });
@@ -357,7 +362,7 @@ describe("BreadcrumbListSchema", () => {
     const schema = generator.generate(mockContext);
 
     const apiItem = schema.itemListElement.find(
-      (item: { name: string }) => item.name === "Test API"
+      (item: { name: string }) => item.name === "Test API",
     );
     expect(apiItem).toBeDefined();
   });
@@ -405,7 +410,9 @@ describe("SchemaManager", () => {
   it("should include BreadcrumbList schema", () => {
     const schemas = schemaManager.generateAll(mockContext);
 
-    const breadcrumbSchema = schemas.find((s) => s["@type"] === "BreadcrumbList");
+    const breadcrumbSchema = schemas.find(
+      (s) => s["@type"] === "BreadcrumbList",
+    );
     expect(breadcrumbSchema).toBeDefined();
   });
 

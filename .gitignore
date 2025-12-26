@@ -23,3 +23,8 @@ pnpm-debug.log*
 # OS
 .DS_Store
 
+# Sensitive
+CLAUDE.md
+.claude/
+docs/
+

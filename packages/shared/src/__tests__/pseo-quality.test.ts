@@ -278,9 +278,30 @@ describe("SEOScoreCalculator", () => {
       },
     },
     relatedApis: [
-      { id: 2, name: "API 1", description: "1", auth: "No", cors: "Yes", https: true },
-      { id: 3, name: "API 2", description: "2", auth: "No", cors: "Yes", https: true },
-      { id: 4, name: "API 3", description: "3", auth: "No", cors: "Yes", https: true },
+      {
+        id: 2,
+        name: "API 1",
+        description: "1",
+        auth: "No",
+        cors: "Yes",
+        https: true,
+      },
+      {
+        id: 3,
+        name: "API 2",
+        description: "2",
+        auth: "No",
+        cors: "Yes",
+        https: true,
+      },
+      {
+        id: 4,
+        name: "API 3",
+        description: "3",
+        auth: "No",
+        cors: "Yes",
+        https: true,
+      },
     ],
     locale: "en",
   };

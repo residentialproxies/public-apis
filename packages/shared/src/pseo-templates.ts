@@ -41,7 +41,13 @@ export enum BlockType {
   CATEGORY_OVERVIEW = "category_overview",
 }
 
-export type RenderConditionOperator = "exists" | "equals" | "gt" | "lt" | "contains" | "in";
+export type RenderConditionOperator =
+  | "exists"
+  | "equals"
+  | "gt"
+  | "lt"
+  | "contains"
+  | "in";
 
 export type RenderCondition = {
   field: string;
@@ -153,7 +159,12 @@ export type CodeExample = {
 };
 
 // FAQ 条目
-export type FAQCategory = "pricing" | "technical" | "support" | "security" | "general";
+export type FAQCategory =
+  | "pricing"
+  | "technical"
+  | "support"
+  | "security"
+  | "general";
 
 export type FAQItem = {
   question: string;
@@ -201,7 +212,12 @@ export type ContentQualityScore = {
 };
 
 // 内部链接
-export type InternalLinkType = "category" | "related_api" | "comparison" | "guide" | "use_case";
+export type InternalLinkType =
+  | "category"
+  | "related_api"
+  | "comparison"
+  | "guide"
+  | "use_case";
 
 export type InternalLink = {
   text: string;
@@ -332,14 +348,19 @@ export class ConditionEvaluator {
         return false;
 
       case "in":
-        return Array.isArray(condition.value) && condition.value.includes(value);
+        return (
+          Array.isArray(condition.value) && condition.value.includes(value)
+        );
 
       default:
         return false;
     }
   }
 
-  static evaluateAll(conditions: RenderCondition[], ctx: TemplateContext): boolean {
+  static evaluateAll(
+    conditions: RenderCondition[],
+    ctx: TemplateContext,
+  ): boolean {
     return conditions.every((condition) => this.evaluate(condition, ctx));
   }
 
@@ -363,14 +384,17 @@ export class ConditionEvaluator {
 export abstract class ContentGenerator {
   abstract generate(ctx: TemplateContext): ContentNode[];
 
-  protected shouldGenerate(conditions: RenderCondition[], ctx: TemplateContext): boolean {
+  protected shouldGenerate(
+    conditions: RenderCondition[],
+    ctx: TemplateContext,
+  ): boolean {
     return ConditionEvaluator.evaluateAll(conditions, ctx);
   }
 
   protected wrapInSection(
     title: string,
     content: ContentNode[],
-    id?: string
+    id?: string,
   ): ContentNode[] {
     return [
       {

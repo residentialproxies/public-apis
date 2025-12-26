@@ -98,7 +98,11 @@ function ContentNodeRenderer({ node }: { node: ContentNode }) {
           {node.items.map((item, idx) => (
             <li key={idx}>
               {typeof item === "string" ? (
-                <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(marked.parseInline(item)) }} />
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(marked.parseInline(item)),
+                  }}
+                />
               ) : (
                 <ContentNodeRenderer node={item} />
               )}
@@ -153,7 +157,10 @@ type FAQSectionProps = {
   title?: string;
 };
 
-export function FAQSection({ items, title = "Frequently Asked Questions" }: FAQSectionProps) {
+export function FAQSection({
+  items,
+  title = "Frequently Asked Questions",
+}: FAQSectionProps) {
   const grouped = groupByCategory(items);
 
   return (
@@ -217,7 +224,7 @@ function getCategoryDisplayName(category: string): string {
 import {
   GettingStartedGenerator,
   CodeExamplesGenerator,
-  FAQGenerator
+  FAQGenerator,
 } from "@api-navigator/shared/pseo/generators";
 import { schemaManager } from "@api-navigator/shared/pseo/schemas";
 import { qualityScorer } from "@api-navigator/shared/pseo/quality";
@@ -242,9 +249,10 @@ export default async function ApiDetailPage(props: Props) {
   const faqGen = new FAQGenerator();
 
   const gettingStartedContent = gettingStartedGen.generate(templateContext);
-  const codeExamplesContent = api.seoMetadata?.hasCodeExamples || api.seoMetadata?.languages?.length
-    ? codeExamplesGen.generate(templateContext)
-    : null;
+  const codeExamplesContent =
+    api.seoMetadata?.hasCodeExamples || api.seoMetadata?.languages?.length
+      ? codeExamplesGen.generate(templateContext)
+      : null;
   const faqContent = faqGen.generate(templateContext);
 
   // 生成 FAQ 项用于结构化数据
@@ -300,10 +308,15 @@ export default async function ApiDetailPage(props: Props) {
       {process.env.NODE_ENV === "development" && (
         <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
           <h3 className="font-semibold">Content Quality Score</h3>
-          <p>Overall: {qualityScore.overall}/100 ({qualityScorer.getGrade(qualityScore.overall)})</p>
+          <p>
+            Overall: {qualityScore.overall}/100 (
+            {qualityScorer.getGrade(qualityScore.overall)})
+          </p>
           <details className="mt-2">
             <summary className="cursor-pointer">Breakdown</summary>
-            <pre className="text-xs mt-2">{JSON.stringify(qualityScore.breakdown, null, 2)}</pre>
+            <pre className="text-xs mt-2">
+              {JSON.stringify(qualityScore.breakdown, null, 2)}
+            </pre>
           </details>
           {qualityScore.recommendations.length > 0 && (
             <div className="mt-2">
@@ -340,11 +353,15 @@ function extractFAQItems(nodes: ContentNode[]): FAQItem[] {
 import { NextRequest, NextResponse } from "next/server";
 import { getPayload } from "payload";
 import config from "@/payload.config";
-import { qualityScorer, completenessAnalyzer, seoScoreCalculator } from "@api-navigator/shared/pseo/quality";
+import {
+  qualityScorer,
+  completenessAnalyzer,
+  seoScoreCalculator,
+} from "@api-navigator/shared/pseo/quality";
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
 
@@ -426,7 +443,9 @@ export async function runQualityAssessment() {
 
   console.log(`Quality Assessment Summary:`);
   console.log(`Total APIs: ${results.length}`);
-  console.log(`Average Score: ${(results.reduce((sum, r) => sum + r.overall, 0) / results.length).toFixed(2)}`);
+  console.log(
+    `Average Score: ${(results.reduce((sum, r) => sum + r.overall, 0) / results.length).toFixed(2)}`,
+  );
   console.log(`Needs Improvement (< 60): ${needsImprovement.length}`);
 
   if (needsImprovement.length > 0) {
@@ -454,7 +473,10 @@ export async function runQualityAssessment() {
 
 ```typescript
 import { describe, it, expect } from "vitest";
-import { GettingStartedGenerator, CodeExamplesGenerator } from "../pseo-generators";
+import {
+  GettingStartedGenerator,
+  CodeExamplesGenerator,
+} from "../pseo-generators";
 
 describe("GettingStartedGenerator", () => {
   it("should generate getting started content", () => {
@@ -524,7 +546,9 @@ test("API detail page shows getting started section", async ({ page }) => {
   await expect(page.locator("text=Frequently Asked Questions")).toBeVisible();
 
   // 检查结构化数据存在
-  const schemas = await page.locator('script[type="application/ld+json"]').count();
+  const schemas = await page
+    .locator('script[type="application/ld+json"]')
+    .count();
   expect(schemas).toBeGreaterThan(3);
 });
 ```
@@ -546,7 +570,7 @@ export const getCachedContent = unstable_cache(
   {
     revalidate: 3600, // 1小时
     tags: [`api-${apiId}`],
-  }
+  },
 );
 ```
 
@@ -582,16 +606,13 @@ export default async function QualityDashboard() {
         />
         <MetricCard
           title="Excellent (>80)"
-          value={results.filter(r => r.overall > 80).length}
+          value={results.filter((r) => r.overall > 80).length}
         />
         <MetricCard
           title="Needs Work (<60)"
-          value={results.filter(r => r.overall < 60).length}
+          value={results.filter((r) => r.overall < 60).length}
         />
-        <MetricCard
-          title="Total APIs"
-          value={results.length}
-        />
+        <MetricCard title="Total APIs" value={results.length} />
       </div>
 
       <QualityTable results={results} />
@@ -653,6 +674,7 @@ A: 检查评分权重配置,确保数据完整性。
 ## 支持
 
 如有问题,请查阅:
+
 - 完整设计文档: `docs-new/pseo-template-system.md`
 - 类型定义: `packages/shared/src/pseo-*.ts`
 - 示例实现: `apps/frontend/src/app/[locale]/api/[id]/[slug]/page.tsx`

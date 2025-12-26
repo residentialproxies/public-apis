@@ -2,14 +2,14 @@
 
 ## 📋 文件索引
 
-| 文件 | 说明 | 用途 |
-|------|------|------|
-| `docs-new/pseo-template-system.md` | 完整设计文档 | 了解系统架构和设计理念 |
-| `docs-new/pseo-implementation-guide.md` | 实施指南 | 详细的集成步骤和代码示例 |
-| `packages/shared/src/pseo-templates.ts` | 类型定义 | TypeScript 类型和基础类 |
-| `packages/shared/src/pseo-generators.ts` | 内容生成器 | 动态内容生成实现 |
-| `packages/shared/src/pseo-schemas.ts` | 结构化数据 | Schema.org JSON-LD 生成 |
-| `packages/shared/src/pseo-quality.ts` | 质量评分 | 内容质量评估系统 |
+| 文件                                     | 说明         | 用途                     |
+| ---------------------------------------- | ------------ | ------------------------ |
+| `docs-new/pseo-template-system.md`       | 完整设计文档 | 了解系统架构和设计理念   |
+| `docs-new/pseo-implementation-guide.md`  | 实施指南     | 详细的集成步骤和代码示例 |
+| `packages/shared/src/pseo-templates.ts`  | 类型定义     | TypeScript 类型和基础类  |
+| `packages/shared/src/pseo-generators.ts` | 内容生成器   | 动态内容生成实现         |
+| `packages/shared/src/pseo-schemas.ts`    | 结构化数据   | Schema.org JSON-LD 生成  |
+| `packages/shared/src/pseo-quality.ts`    | 质量评分     | 内容质量评估系统         |
 
 ## 🎯 核心概念
 
@@ -19,11 +19,11 @@
 
 ```typescript
 enum BlockType {
-  GETTING_STARTED = "getting_started",    // 快速开始
-  CODE_EXAMPLES = "code_examples",        // 代码示例
-  FAQ = "faq",                            // 常见问题
-  API_REFERENCE = "api_reference",        // API 参考
-  ALTERNATIVES = "alternatives",          // 替代方案
+  GETTING_STARTED = "getting_started", // 快速开始
+  CODE_EXAMPLES = "code_examples", // 代码示例
+  FAQ = "faq", // 常见问题
+  API_REFERENCE = "api_reference", // API 参考
+  ALTERNATIVES = "alternatives", // 替代方案
   // ... 更多类型
 }
 ```
@@ -49,12 +49,12 @@ enum BlockType {
 
 ```typescript
 type ContentNode =
-  | HeadingNode      // 标题
-  | ParagraphNode    // 段落
-  | CodeBlockNode    // 代码块
-  | ListNode         // 列表
-  | TableNode        // 表格
-  // ... 更多类型
+  | HeadingNode // 标题
+  | ParagraphNode // 段落
+  | CodeBlockNode // 代码块
+  | ListNode // 列表
+  | TableNode; // 表格
+// ... 更多类型
 ```
 
 ## 🚀 快速集成
@@ -65,7 +65,7 @@ type ContentNode =
 import {
   GettingStartedGenerator,
   CodeExamplesGenerator,
-  FAQGenerator
+  FAQGenerator,
 } from "@api-navigator/shared/pseo/generators";
 ```
 
@@ -116,13 +116,13 @@ console.log(`Recommendations:`, score.recommendations);
 
 ### 评分维度
 
-| 维度 | 权重 | 满分 | 说明 |
-|------|------|------|------|
-| 基础信息 | 20% | 20分 | 名称、描述、分类 |
-| 技术文档 | 25% | 25分 | OpenAPI、文档质量 |
-| 代码示例 | 20% | 20分 | 示例完整度、语言覆盖 |
-| SEO 优化 | 20% | 20分 | 标题、关键词、结构 |
-| 用户指导 | 15% | 15分 | AI 总结、使用场景 |
+| 维度     | 权重 | 满分 | 说明                 |
+| -------- | ---- | ---- | -------------------- |
+| 基础信息 | 20%  | 20分 | 名称、描述、分类     |
+| 技术文档 | 25%  | 25分 | OpenAPI、文档质量    |
+| 代码示例 | 20%  | 20分 | 示例完整度、语言覆盖 |
+| SEO 优化 | 20%  | 20分 | 标题、关键词、结构   |
+| 用户指导 | 15%  | 15分 | AI 总结、使用场景    |
 
 ## 🏗️ 结构化数据
 
@@ -250,12 +250,12 @@ export function FAQSection({ items }: { items: FAQItem[] }) {
 
 ```typescript
 type RenderConditionOperator =
-  | "exists"    // 字段存在
-  | "equals"    // 等于
-  | "gt"        // 大于
-  | "lt"        // 小于
-  | "contains"  // 包含
-  | "in";       // 在数组中
+  | "exists" // 字段存在
+  | "equals" // 等于
+  | "gt" // 大于
+  | "lt" // 小于
+  | "contains" // 包含
+  | "in"; // 在数组中
 ```
 
 ## 📈 性能优化
@@ -268,7 +268,7 @@ import { unstable_cache } from "next/cache";
 export const getCachedContent = unstable_cache(
   async (apiId: string) => generateContent(apiId),
   ["api-content"],
-  { revalidate: 3600 }
+  { revalidate: 3600 },
 );
 ```
 
@@ -308,12 +308,14 @@ const codeExamples = api.seoMetadata?.hasCodeExamples
 ### 1. 开发环境显示质量评分
 
 ```tsx
-{process.env.NODE_ENV === "development" && (
-  <div className="p-4 bg-yellow-100">
-    <h3>Content Quality: {score.overall}/100</h3>
-    <pre>{JSON.stringify(score.breakdown, null, 2)}</pre>
-  </div>
-)}
+{
+  process.env.NODE_ENV === "development" && (
+    <div className="p-4 bg-yellow-100">
+      <h3>Content Quality: {score.overall}/100</h3>
+      <pre>{JSON.stringify(score.breakdown, null, 2)}</pre>
+    </div>
+  );
+}
 ```
 
 ### 2. 验证结构化数据
@@ -348,6 +350,7 @@ console.log(`Should render: ${shouldRender}`);
 ## 🆘 获取帮助
 
 遇到问题?
+
 1. 查看实施指南了解详细步骤
 2. 检查类型定义确认数据结构
 3. 查看示例代码参考实现

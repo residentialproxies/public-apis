@@ -80,7 +80,7 @@ pnpm install
 import {
   GettingStartedGenerator,
   CodeExamplesGenerator,
-  FAQGenerator
+  FAQGenerator,
 } from "@api-navigator/shared/pseo/generators";
 import { schemaManager } from "@api-navigator/shared/pseo/schemas";
 import { qualityScorer } from "@api-navigator/shared/pseo/quality";
@@ -91,10 +91,16 @@ import { qualityScorer } from "@api-navigator/shared/pseo/quality";
 ```typescript
 // 创建上下文
 const ctx = {
-  api: { /* API 数据 */ },
-  healthSummary: { /* 健康数据 */ },
-  relatedApis: [ /* 相关 API */ ],
-  locale: "en"
+  api: {
+    /* API 数据 */
+  },
+  healthSummary: {
+    /* 健康数据 */
+  },
+  relatedApis: [
+    /* 相关 API */
+  ],
+  locale: "en",
 };
 
 // 生成 Getting Started 内容
@@ -142,14 +148,14 @@ export default function ApiDetailPage() {
 
 ## 📈 预期效果
 
-| 指标 | 当前 | 目标 | 提升 |
-|------|------|------|------|
-| 平均页面字数 | ~800 | 1500+ | +87% |
-| 结构化数据类型 | 3 | 7 | +133% |
-| 内部链接密度 | 2-3/页 | 5-8/页 | +150% |
-| FAQ 覆盖率 | 0% | 80%+ | +80% |
-| 用户停留时间 | baseline | +30% | +30% |
-| 跳出率 | baseline | -20% | -20% |
+| 指标           | 当前     | 目标   | 提升  |
+| -------------- | -------- | ------ | ----- |
+| 平均页面字数   | ~800     | 1500+  | +87%  |
+| 结构化数据类型 | 3        | 7      | +133% |
+| 内部链接密度   | 2-3/页   | 5-8/页 | +150% |
+| FAQ 覆盖率     | 0%       | 80%+   | +80%  |
+| 用户停留时间   | baseline | +30%   | +30%  |
+| 跳出率         | baseline | -20%   | -20%  |
 
 ## 🎯 支持的内容区块
 
@@ -172,13 +178,13 @@ export default function ApiDetailPage() {
 
 内容质量评分系统从 5 个维度评估页面质量:
 
-| 维度 | 权重 | 满分 | 评分标准 |
-|------|------|------|---------|
-| **基础信息** | 20% | 20 | 名称、描述、分类、链接 |
-| **技术文档** | 25% | 25 | OpenAPI 规范、文档质量 |
-| **代码示例** | 20% | 20 | 示例完整度、语言覆盖 |
-| **SEO 优化** | 20% | 20 | 标题、关键词、结构 |
-| **用户指导** | 15% | 15 | AI 总结、使用场景 |
+| 维度         | 权重 | 满分 | 评分标准               |
+| ------------ | ---- | ---- | ---------------------- |
+| **基础信息** | 20%  | 20   | 名称、描述、分类、链接 |
+| **技术文档** | 25%  | 25   | OpenAPI 规范、文档质量 |
+| **代码示例** | 20%  | 20   | 示例完整度、语言覆盖   |
+| **SEO 优化** | 20%  | 20   | 标题、关键词、结构     |
+| **用户指导** | 15%  | 15   | AI 总结、使用场景      |
 
 **总分**: 100 分
 **等级**: A+ (90+), A (85-89), B (70-84), C (50-69), D/F (<50)
@@ -264,8 +270,8 @@ pnpm --filter @api-navigator/frontend test:e2e
 
 ```tsx
 const quality = qualityScorer.calculateScore(ctx);
-console.log('Quality:', quality.overall, quality.breakdown);
-console.log('Recommendations:', quality.recommendations);
+console.log("Quality:", quality.overall, quality.breakdown);
+console.log("Recommendations:", quality.recommendations);
 ```
 
 ### 2. 验证结构化数据

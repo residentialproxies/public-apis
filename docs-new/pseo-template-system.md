@@ -3,6 +3,7 @@
 ## 目标
 
 为 API 详情页设计一套可扩展、数据驱动的内容模版系统,实现:
+
 - ✅ 丰富的程序化内容生成
 - ✅ SEO 友好的结构化数据
 - ✅ 高质量的用户体验
@@ -35,10 +36,10 @@
 type ContentBlock = {
   id: string;
   type: BlockType;
-  priority: number;  // 渲染优先级
-  conditions: RenderCondition[];  // 显示条件
+  priority: number; // 渲染优先级
+  conditions: RenderCondition[]; // 显示条件
   template: BlockTemplate;
-  seoWeight: number;  // SEO 权重 (0-10)
+  seoWeight: number; // SEO 权重 (0-10)
 };
 
 enum BlockType {
@@ -122,7 +123,7 @@ type RenderCondition = {
 type BlockTemplate = {
   title: (data: ApiData) => string;
   content: (data: ApiData) => ContentNode[];
-  schema?: (data: ApiData) => Record<string, unknown>;  // Schema.org 结构化数据
+  schema?: (data: ApiData) => Record<string, unknown>; // Schema.org 结构化数据
 };
 
 // 示例:Getting Started 模版
@@ -133,7 +134,7 @@ const GETTING_STARTED_TEMPLATE: BlockTemplate = {
     {
       type: "heading",
       level: 2,
-      text: "Quick Start Guide"
+      text: "Quick Start Guide",
     },
     {
       type: "paragraph",
@@ -141,12 +142,12 @@ const GETTING_STARTED_TEMPLATE: BlockTemplate = {
         api.auth === "No"
           ? "No authentication required - start using it immediately!"
           : `Authentication via ${api.auth} is required.`
-      }`
+      }`,
     },
     {
       type: "code_block",
       language: "bash",
-      code: generateQuickStartCode(api)
+      code: generateQuickStartCode(api),
     },
     {
       type: "list",
@@ -154,18 +155,18 @@ const GETTING_STARTED_TEMPLATE: BlockTemplate = {
         `Base URL: ${extractBaseUrl(api.link)}`,
         `Protocol: ${api.https ? "HTTPS" : "HTTP"}`,
         `CORS: ${api.cors}`,
-        ...(api.seoMetadata?.languages?.map(l =>
-          `SDK available for: ${l.language}`
-        ) || [])
-      ]
-    }
+        ...(api.seoMetadata?.languages?.map(
+          (l) => `SDK available for: ${l.language}`,
+        ) || []),
+      ],
+    },
   ],
 
   schema: (api) => ({
     "@type": "HowTo",
-    "name": `How to use ${api.name} API`,
-    "step": generateHowToSteps(api)
-  })
+    name: `How to use ${api.name} API`,
+    step: generateHowToSteps(api),
+  }),
 };
 ```
 
@@ -178,13 +179,15 @@ function generateCodeExamples(api: ApiData): CodeExample[] {
   const examples: CodeExample[] = [];
 
   // 基于 seoMetadata.languages 生成对应语言的示例
-  const languages = api.seoMetadata?.languages?.map(l => l.language) || ["curl"];
+  const languages = api.seoMetadata?.languages?.map((l) => l.language) || [
+    "curl",
+  ];
 
   for (const lang of languages) {
     examples.push({
       language: lang,
       code: generateCodeForLanguage(api, lang),
-      description: `Example ${lang} code to call ${api.name} API`
+      description: `Example ${lang} code to call ${api.name} API`,
     });
   }
 
@@ -249,16 +252,16 @@ function generateDynamicFAQ(api: ApiData): FAQItem[] {
   if (api.auth !== "No") {
     faq.push({
       question: `How do I authenticate with ${api.name} API?`,
-      answer: `The ${api.name} API uses ${api.auth} authentication. ${
-        getAuthGuideText(api.auth)
-      }`,
-      category: "technical"
+      answer: `The ${api.name} API uses ${api.auth} authentication. ${getAuthGuideText(
+        api.auth,
+      )}`,
+      category: "technical",
     });
   } else {
     faq.push({
       question: `Does ${api.name} API require authentication?`,
       answer: `No, the ${api.name} API is publicly accessible without authentication. You can start making requests immediately.`,
-      category: "technical"
+      category: "technical",
     });
   }
 
@@ -267,7 +270,7 @@ function generateDynamicFAQ(api: ApiData): FAQItem[] {
     faq.push({
       question: `Can I use ${api.name} API from a web browser?`,
       answer: `Yes! The ${api.name} API supports CORS, allowing you to make requests directly from web browsers.`,
-      category: "technical"
+      category: "technical",
     });
   }
 
@@ -276,11 +279,13 @@ function generateDynamicFAQ(api: ApiData): FAQItem[] {
     faq.push({
       question: `What is the typical response time for ${api.name} API?`,
       answer: `Based on our monitoring, ${api.name} API typically responds in ${api.latencyMs}ms. ${
-        api.latencyMs < 500 ? "This is excellent performance!" :
-        api.latencyMs < 1000 ? "This is good performance for most use cases." :
-        "Consider implementing caching for better user experience."
+        api.latencyMs < 500
+          ? "This is excellent performance!"
+          : api.latencyMs < 1000
+            ? "This is good performance for most use cases."
+            : "Consider implementing caching for better user experience."
       }`,
-      category: "technical"
+      category: "technical",
     });
   }
 
@@ -289,24 +294,29 @@ function generateDynamicFAQ(api: ApiData): FAQItem[] {
     faq.push({
       question: `Is ${api.name} API reliable?`,
       answer: `Yes, our latest health check shows ${api.name} API is operational. ${
-        api.lastCheckedAt ? `Last verified: ${formatRelativeTime(api.lastCheckedAt)}.` : ""
+        api.lastCheckedAt
+          ? `Last verified: ${formatRelativeTime(api.lastCheckedAt)}.`
+          : ""
       }`,
-      category: "support"
+      category: "support",
     });
   }
 
   // 5. 基于文档质量的 FAQ
-  if (api.seoMetadata?.docQualityScore && api.seoMetadata.docQualityScore >= 7) {
+  if (
+    api.seoMetadata?.docQualityScore &&
+    api.seoMetadata.docQualityScore >= 7
+  ) {
     faq.push({
       question: `Where can I find ${api.name} API documentation?`,
       answer: `${api.name} has comprehensive documentation available at ${api.link}. ${
         api.seoMetadata.hasCodeExamples ? "It includes code examples " : ""
       }${
         api.seoMetadata.languages?.length
-          ? `in ${api.seoMetadata.languages.map(l => l.language).join(", ")}.`
+          ? `in ${api.seoMetadata.languages.map((l) => l.language).join(", ")}.`
           : "."
       }`,
-      category: "support"
+      category: "support",
     });
   }
 
@@ -315,19 +325,22 @@ function generateDynamicFAQ(api: ApiData): FAQItem[] {
     faq.push({
       question: `Does ${api.name} API have an OpenAPI specification?`,
       answer: `Yes, you can find the OpenAPI/Swagger specification at ${api.openapiUrl}. This allows you to auto-generate client SDKs.`,
-      category: "technical"
+      category: "technical",
     });
   }
 
   // 7. 使用场景 FAQ (基于 AI 分析)
   if (api.aiAnalysis?.useCases?.length) {
-    const topUseCases = api.aiAnalysis.useCases.slice(0, 3).map(u => u.tag).join(", ");
+    const topUseCases = api.aiAnalysis.useCases
+      .slice(0, 3)
+      .map((u) => u.tag)
+      .join(", ");
     faq.push({
       question: `What can I build with ${api.name} API?`,
       answer: `Common use cases for ${api.name} include: ${topUseCases}. ${
         api.aiAnalysis.summary || ""
       }`,
-      category: "technical"
+      category: "technical",
     });
   }
 
@@ -342,14 +355,14 @@ function generateFAQSchema(faqItems: FAQItem[]): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": faqItems.map(item => ({
+    mainEntity: faqItems.map((item) => ({
       "@type": "Question",
-      "name": item.question,
-      "acceptedAnswer": {
+      name: item.question,
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": item.answer
-      }
-    }))
+        text: item.answer,
+      },
+    })),
   };
 }
 ```
@@ -368,83 +381,87 @@ type ComparisonMatrix = {
 type ComparisonApi = {
   id: number;
   name: string;
-  score: number;  // 综合评分
+  score: number; // 综合评分
 };
 
 type ComparisonFeature = {
   name: string;
   description: string;
-  values: Record<number, string | boolean>;  // apiId -> value
+  values: Record<number, string | boolean>; // apiId -> value
 };
 
 function generateComparisonMatrix(
   currentApi: ApiData,
-  category: Category
+  category: Category,
 ): ComparisonMatrix {
   // 从同类别中选取 top 3-5 个 API
-  const competitors = getTopApisInCategory(category.slug, 5)
-    .filter(api => api.id !== currentApi.id);
+  const competitors = getTopApisInCategory(category.slug, 5).filter(
+    (api) => api.id !== currentApi.id,
+  );
 
   return {
-    title: `${currentApi.name} vs ${competitors.map(c => c.name).join(" vs ")}`,
-    apis: [currentApi, ...competitors].map(api => ({
+    title: `${currentApi.name} vs ${competitors.map((c) => c.name).join(" vs ")}`,
+    apis: [currentApi, ...competitors].map((api) => ({
       id: api.id,
       name: api.name,
-      score: calculateApiScore(api)
+      score: calculateApiScore(api),
     })),
     features: [
       {
         name: "Authentication",
         description: "Required auth method",
         values: Object.fromEntries(
-          [currentApi, ...competitors].map(api => [api.id, api.auth])
-        )
+          [currentApi, ...competitors].map((api) => [api.id, api.auth]),
+        ),
       },
       {
         name: "HTTPS Support",
         description: "Secure connection",
         values: Object.fromEntries(
-          [currentApi, ...competitors].map(api => [api.id, api.https])
-        )
+          [currentApi, ...competitors].map((api) => [api.id, api.https]),
+        ),
       },
       {
         name: "CORS Enabled",
         description: "Browser support",
         values: Object.fromEntries(
-          [currentApi, ...competitors].map(api => [api.id, api.cors === "Yes"])
-        )
+          [currentApi, ...competitors].map((api) => [
+            api.id,
+            api.cors === "Yes",
+          ]),
+        ),
       },
       {
         name: "Documentation Quality",
         description: "Doc completeness (1-10)",
         values: Object.fromEntries(
-          [currentApi, ...competitors].map(api => [
+          [currentApi, ...competitors].map((api) => [
             api.id,
-            api.seoMetadata?.docQualityScore || "N/A"
-          ])
-        )
+            api.seoMetadata?.docQualityScore || "N/A",
+          ]),
+        ),
       },
       {
         name: "Code Examples",
         description: "Available examples",
         values: Object.fromEntries(
-          [currentApi, ...competitors].map(api => [
+          [currentApi, ...competitors].map((api) => [
             api.id,
-            api.seoMetadata?.hasCodeExamples || false
-          ])
-        )
+            api.seoMetadata?.hasCodeExamples || false,
+          ]),
+        ),
       },
       {
         name: "Avg Latency",
         description: "Response time (ms)",
         values: Object.fromEntries(
-          [currentApi, ...competitors].map(api => [
+          [currentApi, ...competitors].map((api) => [
             api.id,
-            api.latencyMs !== null ? `${api.latencyMs}ms` : "N/A"
-          ])
-        )
-      }
-    ]
+            api.latencyMs !== null ? `${api.latencyMs}ms` : "N/A",
+          ]),
+        ),
+      },
+    ],
   };
 }
 ```
@@ -455,15 +472,15 @@ function generateComparisonMatrix(
 
 ```typescript
 type ContentQualityScore = {
-  overall: number;  // 0-100
+  overall: number; // 0-100
   breakdown: {
-    basicInfo: number;      // 基础信息完整度
-    technicalDocs: number;  // 技术文档完整度
-    codeExamples: number;   // 代码示例丰富度
+    basicInfo: number; // 基础信息完整度
+    technicalDocs: number; // 技术文档完整度
+    codeExamples: number; // 代码示例丰富度
     seoOptimization: number; // SEO 优化程度
-    userGuidance: number;   // 用户指导质量
+    userGuidance: number; // 用户指导质量
   };
-  recommendations: string[];  // 改进建议
+  recommendations: string[]; // 改进建议
 };
 
 function calculateContentQuality(api: ApiData): ContentQualityScore {
@@ -472,7 +489,7 @@ function calculateContentQuality(api: ApiData): ContentQualityScore {
     technicalDocs: 0,
     codeExamples: 0,
     seoOptimization: 0,
-    userGuidance: 0
+    userGuidance: 0,
   };
 
   const recommendations: string[] = [];
@@ -535,7 +552,7 @@ function calculateContentQuality(api: ApiData): ContentQualityScore {
   return {
     overall,
     breakdown: scores,
-    recommendations
+    recommendations,
   };
 }
 ```
@@ -560,7 +577,7 @@ function calculateContentQuality(api: ApiData): ContentQualityScore {
 type InternalLink = {
   text: string;
   url: string;
-  relevance: number;  // 相关度评分
+  relevance: number; // 相关度评分
   type: "category" | "related_api" | "comparison" | "guide";
 };
 
@@ -573,7 +590,7 @@ function generateInternalLinks(api: ApiData): InternalLink[] {
       text: `Explore all ${api.category.name} APIs`,
       url: `/category/${api.category.slug}`,
       relevance: 10,
-      type: "category"
+      type: "category",
     });
   }
 
@@ -584,7 +601,7 @@ function generateInternalLinks(api: ApiData): InternalLink[] {
       text: `${relatedApi.name} - ${relatedApi.description.slice(0, 50)}...`,
       url: `/api/${relatedApi.id}/${slugify(relatedApi.name)}`,
       relevance: 8 - idx,
-      type: "related_api"
+      type: "related_api",
     });
   });
 
@@ -592,20 +609,23 @@ function generateInternalLinks(api: ApiData): InternalLink[] {
   if (relatedApis.length > 0) {
     links.push({
       text: `Compare ${api.name} with alternatives`,
-      url: `/compare?apis=${api.id},${relatedApis.slice(0, 2).map(a => a.id).join(",")}`,
+      url: `/compare?apis=${api.id},${relatedApis
+        .slice(0, 2)
+        .map((a) => a.id)
+        .join(",")}`,
       relevance: 7,
-      type: "comparison"
+      type: "comparison",
     });
   }
 
   // 4. 基于使用场景的链接
   if (api.aiAnalysis?.useCases?.length) {
-    api.aiAnalysis.useCases.slice(0, 3).forEach(useCase => {
+    api.aiAnalysis.useCases.slice(0, 3).forEach((useCase) => {
       links.push({
         text: `Best APIs for ${useCase.tag}`,
         url: `/use-case/${slugify(useCase.tag)}`,
         relevance: 6,
-        type: "guide"
+        type: "guide",
       });
     });
   }
@@ -617,6 +637,7 @@ function generateInternalLinks(api: ApiData): InternalLink[] {
 ## 七、实施计划
 
 ### Phase 1: 基础模版系统 (Week 1-2)
+
 - [ ] 创建 `ContentBlock` 类型定义
 - [ ] 实现条件渲染引擎
 - [ ] 开发核心内容块组件:
@@ -626,18 +647,21 @@ function generateInternalLinks(api: ApiData): InternalLink[] {
   - Alternatives Comparison
 
 ### Phase 2: 动态内容生成 (Week 3-4)
+
 - [ ] 实现多语言代码生成器
 - [ ] 开发 FAQ 自动生成逻辑
 - [ ] 创建内容质量评分系统
 - [ ] 实现同类 API 比较矩阵
 
 ### Phase 3: SEO 优化 (Week 5-6)
+
 - [ ] 增强 Schema.org 结构化数据
 - [ ] 实现智能内部链接生成
 - [ ] 开发内容完整度监控面板
 - [ ] A/B 测试框架搭建
 
 ### Phase 4: 质量监控与优化 (Week 7-8)
+
 - [ ] 部署内容质量监控
 - [ ] 收集用户行为数据
 - [ ] 优化模版参数
@@ -646,6 +670,7 @@ function generateInternalLinks(api: ApiData): InternalLink[] {
 ## 八、成功指标
 
 ### SEO 指标
+
 - 平均页面字数: 1500+ words
 - 内容唯一性: 90%+
 - 结构化数据覆盖: 100%
@@ -653,12 +678,14 @@ function generateInternalLinks(api: ApiData): InternalLink[] {
 - FAQ 覆盖率: 80%+ pages
 
 ### 用户体验指标
+
 - 页面加载时间: < 2s
 - 代码示例可用性: 90%+
 - 用户停留时间: +30%
 - 跳出率: -20%
 
 ### 技术指标
+
 - 内容生成成功率: 95%+
 - 模版渲染时间: < 100ms
 - 缓存命中率: 80%+
@@ -666,12 +693,14 @@ function generateInternalLinks(api: ApiData): InternalLink[] {
 ## 九、维护与扩展
 
 ### 9.1 内容更新策略
+
 - 每日: 健康状态、延迟数据更新
 - 每周: FAQ 内容刷新、相关 API 推荐更新
 - 每月: 比较矩阵数据重新计算、内容质量审计
 - 按需: 新内容块模版添加、SEO 策略调整
 
 ### 9.2 质量保障
+
 - 自动化测试覆盖所有内容块
 - 人工审核新模版内容
 - A/B 测试验证新策略效果

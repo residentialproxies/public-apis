@@ -76,7 +76,7 @@ export default async function BotPage({ params }: Props) {
   return (
     <main className="mx-auto max-w-3xl px-6 py-12 space-y-6">
       {/* Breadcrumb navigation */}
-      <nav aria-label="Breadcrumb">
+      <nav aria-label={t("breadcrumbLabel")}>
         <Link
           href="/"
           className="group flex items-center gap-2 font-mono text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--accent-green)]"
@@ -94,7 +94,7 @@ export default async function BotPage({ params }: Props) {
           <span className="ml-2 inline-block h-6 w-3 animate-[blink_1s_infinite] bg-[var(--accent-green)]" />
         </h1>
         <p className="mt-3 font-mono text-sm text-[var(--text-muted)]">
-          <span className="text-[var(--accent-purple)]">//</span>{" "}
+          <span className="text-[var(--accent-purple)]">{"//"}</span>{" "}
           {t("subtitle")}
         </p>
       </header>

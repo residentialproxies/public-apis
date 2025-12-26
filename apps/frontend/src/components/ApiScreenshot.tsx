@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
+import { Modal } from "./ui/Modal";
 
 type ApiScreenshotProps = {
   thumbnailUrl?: string | null;
@@ -20,12 +22,13 @@ const BLUR_DATA_URL =
  *
  * Features:
  * - Thumbnail display with hover effects
- * - Full-screen modal on click
+ * - Full-screen modal on click with focus trap
  * - Graceful error handling with fallback UI
- * - Accessibility support
+ * - Accessibility support (keyboard navigation, ARIA)
  * - Performance optimized with Next.js Image
  * - Blur placeholder for smooth loading
- * - Keyboard navigation support
+ * - ESC key to close modal
+ * - Body scroll lock when modal is open
  */
 export function ApiScreenshot({
   thumbnailUrl,
@@ -33,15 +36,34 @@ export function ApiScreenshot({
   apiName,
   capturedAt,
 }: ApiScreenshotProps) {
+  const t = useTranslations("screenshot");
+  const locale = useLocale();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      setIsModalOpen(false);
-    }
+  // Handle modal open/close
+  const openModal = useCallback(() => {
+    setIsModalOpen(true);
   }, []);
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isModalOpen) {
+        closeModal();
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener("keydown", handleEscape);
+      return () => document.removeEventListener("keydown", handleEscape);
+    }
+  }, [isModalOpen, closeModal]);
 
   // If no screenshot or error occurred, show fallback UI
   if (!thumbnailUrl || imageError) {
@@ -61,10 +83,26 @@ export function ApiScreenshot({
             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
         </svg>
-        Screenshot not available
+        {t("notAvailable")}
       </div>
     );
   }
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString(locale, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const formatLongDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString(locale, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <>
@@ -72,9 +110,9 @@ export function ApiScreenshot({
       <div className="relative">
         <button
           type="button"
-          onClick={() => setIsModalOpen(true)}
-          className="group relative block w-full cursor-pointer overflow-hidden rounded-xl border border-[var(--border-dim)] transition-all hover:shadow-[var(--glow-green)]"
-          aria-label={`View full screenshot of ${apiName}`}
+          onClick={openModal}
+          className="group relative block w-full cursor-pointer overflow-hidden rounded-xl border border-[var(--border-dim)] transition-all hover:shadow-[var(--glow-green)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-green)] focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]"
+          aria-label={t("viewFull", { name: apiName })}
         >
           <Image
             src={thumbnailUrl}
@@ -100,6 +138,7 @@ export function ApiScreenshot({
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -108,7 +147,7 @@ export function ApiScreenshot({
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
                 />
               </svg>
-              Click to enlarge
+              {t("clickToEnlarge")}
             </div>
           </div>
         </button>
@@ -116,83 +155,45 @@ export function ApiScreenshot({
         {/* Screenshot metadata */}
         {capturedAt && (
           <p className="mt-2 text-xs text-[var(--text-muted)]">
-            Captured{" "}
-            {new Date(capturedAt).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
+            {t("captured")} {formatDate(capturedAt)}
           </p>
         )}
       </div>
 
-      {/* Full-screen modal */}
-      {isModalOpen && fullUrl && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-          onClick={() => setIsModalOpen(false)}
-          onKeyDown={handleKeyDown}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Screenshot modal"
-          tabIndex={0}
-        >
-          <div className="relative max-h-[90vh] max-w-[90vw] animate-in fade-in zoom-in-95 duration-200">
-            {/* Close button */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsModalOpen(false);
-              }}
-              className="absolute -right-2 -top-2 z-10 rounded-full bg-[var(--bg-elevated)] p-2 shadow-lg border border-[var(--border-active)] transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--accent-green)]"
-              aria-label="Close screenshot"
-            >
-              <svg
-                className="h-6 w-6 text-[var(--accent-green)]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+      {/* Full-screen modal with focus trap */}
+      <Modal
+        isOpen={isModalOpen && fullUrl !== null}
+        onClose={closeModal}
+        title={apiName}
+        closeOnEscape={true}
+        closeOnOverlayClick={true}
+        showCloseButton={true}
+        className="max-h-[95vh] max-w-[95vw] bg-transparent shadow-none"
+        contentClassName="p-0"
+      >
+        <div className="relative">
+          <Image
+            src={fullUrl!}
+            alt={`${apiName} full documentation screenshot`}
+            width={1280}
+            height={720}
+            className="rounded-lg shadow-2xl max-h-[90vh] w-auto"
+            priority
+            sizes="95vw"
+            quality={90}
+          />
 
-            {/* Full-size image */}
-            <Image
-              src={fullUrl}
-              alt={`${apiName} full documentation screenshot`}
-              width={1280}
-              height={720}
-              className="rounded-lg shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-              priority
-              sizes="90vw"
-              quality={90}
-            />
-
-            {/* Screenshot info */}
-            <div className="absolute bottom-0 left-0 right-0 rounded-b-lg bg-gradient-to-t from-black/60 to-transparent p-4">
-              <p className="text-sm font-medium text-white">{apiName}</p>
-              {capturedAt && (
-                <p className="text-xs text-white/80">
-                  Captured{" "}
-                  {new Date(capturedAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-              )}
-            </div>
+          {/* Screenshot info overlay */}
+          <div className="absolute bottom-0 left-0 right-0 rounded-b-lg bg-gradient-to-t from-black/80 to-transparent p-4">
+            <p className="text-sm font-medium text-white">{apiName}</p>
+            {capturedAt && (
+              <p className="text-xs text-white/90">
+                {t("captured")} {formatLongDate(capturedAt)}
+              </p>
+            )}
           </div>
         </div>
-      )}
+      </Modal>
     </>
   );
 }

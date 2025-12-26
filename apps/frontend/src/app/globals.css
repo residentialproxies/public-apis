@@ -39,6 +39,13 @@
   --status-error: hsl(0, 90%, 60%);
   --status-offline: hsl(220, 10%, 40%);
 
+  /* Health status colors (for HealthChart consistency) */
+  --status-live: hsl(140, 100%, 50%);
+  --status-slow: hsl(45, 100%, 50%);
+  --status-down: hsl(0, 90%, 60%);
+  --status-unknown: hsl(220, 10%, 50%);
+  --status-pending: hsl(220, 10%, 35%);
+
   /* Legacy variables for compatibility */
   --background: var(--bg-primary);
   --foreground: var(--text-primary);

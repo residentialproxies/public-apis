@@ -3,7 +3,11 @@
  * Evaluates and scores API detail page content completeness
  */
 
-import { TemplateContext, ContentQualityScore, ContentQualityBreakdown } from "./pseo-templates";
+import {
+  TemplateContext,
+  ContentQualityScore,
+  ContentQualityBreakdown,
+} from "./pseo-templates";
 
 export type QualityDimension = keyof ContentQualityBreakdown;
 
@@ -34,7 +38,10 @@ export class ContentQualityScorer {
       userGuidance: this.scoreUserGuidance(ctx),
     };
 
-    const overall = Object.values(breakdown).reduce((sum, score) => sum + score, 0);
+    const overall = Object.values(breakdown).reduce(
+      (sum, score) => sum + score,
+      0,
+    );
 
     const recommendations = this.generateRecommendations(ctx, breakdown);
 
@@ -78,7 +85,10 @@ export class ContentQualityScorer {
     }
 
     // Documentation quality score - 15 points (scaled)
-    if (api.seoMetadata?.docQualityScore !== null && api.seoMetadata?.docQualityScore !== undefined) {
+    if (
+      api.seoMetadata?.docQualityScore !== null &&
+      api.seoMetadata?.docQualityScore !== undefined
+    ) {
       score += Math.min(15, api.seoMetadata.docQualityScore * 1.5);
     }
 
@@ -156,7 +166,7 @@ export class ContentQualityScorer {
    */
   private generateRecommendations(
     ctx: TemplateContext,
-    breakdown: ContentQualityBreakdown
+    breakdown: ContentQualityBreakdown,
   ): string[] {
     const { api } = ctx;
     const recommendations: string[] = [];
@@ -172,7 +182,7 @@ export class ContentQualityScorer {
     if (breakdown.technicalDocs < 20) {
       if (!api.openapiUrl) {
         recommendations.push(
-          "Add OpenAPI specification URL to enable API reference documentation"
+          "Add OpenAPI specification URL to enable API reference documentation",
         );
       }
       if (
@@ -180,7 +190,7 @@ export class ContentQualityScorer {
         api.seoMetadata.docQualityScore < 7
       ) {
         recommendations.push(
-          "Run SEO extraction job to analyze documentation quality"
+          "Run SEO extraction job to analyze documentation quality",
         );
       }
     }
@@ -188,12 +198,14 @@ export class ContentQualityScorer {
     // Code Examples recommendations
     if (breakdown.codeExamples < 15) {
       if (!api.seoMetadata?.hasCodeExamples) {
-        recommendations.push("Add code examples to documentation to improve developer experience");
+        recommendations.push(
+          "Add code examples to documentation to improve developer experience",
+        );
       }
       const langCount = api.seoMetadata?.languages?.length || 0;
       if (langCount < 3) {
         recommendations.push(
-          `Increase language coverage (currently ${langCount}) - add examples for JavaScript, Python, cURL`
+          `Increase language coverage (currently ${langCount}) - add examples for JavaScript, Python, cURL`,
         );
       }
     }
@@ -201,17 +213,19 @@ export class ContentQualityScorer {
     // SEO Optimization recommendations
     if (breakdown.seoOptimization < 15) {
       if (!api.generatedContent?.seoTitle) {
-        recommendations.push("Generate SEO-optimized title for better search visibility");
+        recommendations.push(
+          "Generate SEO-optimized title for better search visibility",
+        );
       }
       if (!api.generatedContent?.blogPost) {
         recommendations.push(
-          "Generate long-form content (blog post) to increase page depth and SEO value"
+          "Generate long-form content (blog post) to increase page depth and SEO value",
         );
       }
       const keywordCount = api.seoMetadata?.keywords?.length || 0;
       if (keywordCount < 5) {
         recommendations.push(
-          `Add more relevant keywords (currently ${keywordCount}) for better search coverage`
+          `Add more relevant keywords (currently ${keywordCount}) for better search coverage`,
         );
       }
     }
@@ -219,12 +233,14 @@ export class ContentQualityScorer {
     // User Guidance recommendations
     if (breakdown.userGuidance < 10) {
       if (!api.aiAnalysis?.summary) {
-        recommendations.push("Add AI-generated summary to help users understand API value");
+        recommendations.push(
+          "Add AI-generated summary to help users understand API value",
+        );
       }
       const useCaseCount = api.aiAnalysis?.useCases?.length || 0;
       if (useCaseCount < 3) {
         recommendations.push(
-          `Add more use cases (currently ${useCaseCount}) to demonstrate API applications`
+          `Add more use cases (currently ${useCaseCount}) to demonstrate API applications`,
         );
       }
     }
@@ -401,7 +417,7 @@ export class SEOScoreCalculator {
 
     const overall = Object.entries(factors).reduce(
       (sum, [key, score]) => sum + score * weights[key as keyof typeof weights],
-      0
+      0,
     );
 
     return { overall, factors };

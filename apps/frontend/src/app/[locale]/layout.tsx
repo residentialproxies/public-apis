@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+// Temporarily disabled due to build-time font fetching issues
+// import { Noto_Sans_JP } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -13,17 +16,38 @@ import { SITE_NAME, SITE_DESCRIPTION, getSiteUrl } from "@/lib/site";
 import { locales, type Locale } from "@/i18n/config";
 import { routing } from "@/i18n/routing";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
+// Locale to OpenGraph locale mapping
+const localeToOgLocale: Record<string, string> = {
+  zh: "zh_CN",
+  ja: "ja_JP",
+  es: "es_ES",
+  "pt-BR": "pt_BR",
+  de: "de_DE",
+  en: "en_US",
+};
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
+// Locale to HTML lang attribute mapping
+const localeToLang: Record<string, string> = {
+  zh: "zh-CN",
+  ja: "ja-JP",
+  es: "es-ES",
+  "pt-BR": "pt-BR",
+  de: "de-DE",
+  en: "en-US",
+};
+
+// Skip to content translations
+const skipToContentText: Record<string, string> = {
+  zh: "跳到主要内容",
+  ja: "メインコンテンツへスキップ",
+  es: "Saltar al contenido principal",
+  "pt-BR": "Pular para o conteudo principal",
+  de: "Zum Hauptinhalt springen",
+  en: "Skip to main content",
+};
+
+// CMS URL for preconnect
+const cmsUrl = process.env.NEXT_PUBLIC_CMS_URL || "";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -59,6 +83,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       languages: {
         en: "/",
         zh: "/zh",
+        ja: "/ja",
+        es: "/es",
+        "pt-BR": "/pt-BR",
+        de: "/de",
       },
     },
     robots: {
@@ -74,8 +102,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     openGraph: {
       type: "website",
-      locale: locale === "zh" ? "zh_CN" : "en_US",
-      alternateLocale: locale === "zh" ? "en_US" : "zh_CN",
+      locale: localeToOgLocale[locale] || "en_US",
+      alternateLocale: locale === "en" ? "zh_CN" : "en_US",
       url: "/",
       siteName: SITE_NAME,
       title: t.ogTitle,
@@ -102,6 +130,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     category: "technology",
   };
 }
+
+// Noto Sans JP font for Japanese text - temporarily disabled
+// const notoSansJP = Noto_Sans_JP({
+//   weight: ["400", "500", "700"],
+//   subsets: ["latin"],
+//   display: "swap",
+//   variable: "--font-noto-sans-jp",
+// });
 
 // Viewport configuration - exported separately per Next.js 16 best practices
 export const viewport = {
@@ -135,7 +171,7 @@ export default async function RootLayout({ children, params }: Props) {
     name: SITE_NAME,
     url: siteUrl,
     description: SITE_DESCRIPTION,
-    inLanguage: locale === "zh" ? "zh-CN" : "en-US",
+    inLanguage: localeToLang[locale] || "en-US",
     publisher: {
       "@type": "Organization",
       name: SITE_NAME,
@@ -149,7 +185,9 @@ export default async function RootLayout({ children, params }: Props) {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${siteUrl}${locale === "zh" ? "/zh" : ""}/?q={search_term_string}`,
+        urlTemplate: `${siteUrl}${
+          locale === "en" ? "" : `/${locale}`
+        }/?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
@@ -168,8 +206,10 @@ export default async function RootLayout({ children, params }: Props) {
   return (
     <html lang={locale} className="h-full scroll-smooth theme-dark">
       <head>
-        {/* Favicon - Complete package */}
+        {/* Favicon - Complete package with fallbacks */}
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-icon" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#3b82f6" />
         {/* Preconnect to external domains for performance */}
@@ -179,11 +219,18 @@ export default async function RootLayout({ children, params }: Props) {
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        {/* DNS prefetch for API backend */}
+        {/* Preconnect and DNS prefetch for CMS backend */}
+        {cmsUrl && <link rel="preconnect" href={cmsUrl} />}
+        {cmsUrl && <link rel="dns-prefetch" href={cmsUrl} />}
+        {/* DNS prefetch for API backend (fallback) */}
         <link rel="dns-prefetch" href="//api.public-api.org" />
         {/* hreflang tags for SEO */}
         <link rel="alternate" hrefLang="en" href={siteUrl} />
         <link rel="alternate" hrefLang="zh" href={`${siteUrl}/zh`} />
+        <link rel="alternate" hrefLang="ja" href={`${siteUrl}/ja`} />
+        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es`} />
+        <link rel="alternate" hrefLang="pt-BR" href={`${siteUrl}/pt-BR`} />
+        <link rel="alternate" hrefLang="de" href={`${siteUrl}/de`} />
         <link rel="alternate" hrefLang="x-default" href={siteUrl} />
         {/* No-flash theme bootstrap */}
         <script
@@ -212,7 +259,7 @@ export default async function RootLayout({ children, params }: Props) {
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
       >
         <NextIntlClientProvider messages={messages}>
           {/* Skip to main content link - accessibility enhancement */}
@@ -220,7 +267,7 @@ export default async function RootLayout({ children, params }: Props) {
             href="#main-content"
             className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-4 focus:rounded focus:bg-[var(--bg-elevated)] focus:px-4 focus:py-2 focus:text-sm focus:text-[var(--accent-green)] focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-green)]"
           >
-            {locale === "zh" ? "跳到主要内容" : "Skip to main content"}
+            {skipToContentText[locale] || skipToContentText.en}
           </a>
           <div className="flex min-h-screen flex-col bg-[var(--bg-primary)] text-[var(--text-primary)]">
             <SiteHeader />

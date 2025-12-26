@@ -2,6 +2,7 @@
 
 import type { FAQItem } from "@api-navigator/shared/pseo";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type FAQSectionProps = {
   items: FAQItem[];
@@ -9,24 +10,26 @@ type FAQSectionProps = {
   className?: string;
 };
 
-export function FAQSection({
-  items,
-  title = "Frequently Asked Questions",
-  className = "",
-}: FAQSectionProps) {
+export function FAQSection({ items, title, className = "" }: FAQSectionProps) {
+  const t = useTranslations("faq");
+  const displayTitle = title ?? t("defaultTitle");
   if (items.length === 0) return null;
 
   const grouped = groupByCategory(items);
-  const categories = Object.keys(grouped).filter((cat) => grouped[cat].length > 0);
+  const categories = Object.keys(grouped).filter(
+    (cat) => grouped[cat].length > 0,
+  );
 
   return (
     <section className={`ui-surface mt-6 p-6 ${className}`}>
-      <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">{title}</h2>
+      <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">
+        {displayTitle}
+      </h2>
 
       {categories.map((category) => (
         <div key={category} className="mt-6 first:mt-0">
           <h3 className="text-sm font-semibold text-[var(--text-muted)] uppercase mb-3">
-            {getCategoryDisplayName(category)}
+            {getCategoryDisplayName(category, t)}
           </h3>
           <div className="space-y-3">
             {grouped[category].map((item, idx) => (
@@ -56,7 +59,12 @@ function FAQItem({ item }: { item: FAQItem }) {
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </summary>
       <div className="mt-3 text-sm text-[var(--text-secondary)] leading-relaxed pl-1">
@@ -65,7 +73,10 @@ function FAQItem({ item }: { item: FAQItem }) {
       {item.keywords && item.keywords.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2">
           {item.keywords.map((keyword, idx) => (
-            <span key={idx} className="text-xs text-[var(--text-muted)] ui-chip">
+            <span
+              key={idx}
+              className="text-xs text-[var(--text-muted)] ui-chip"
+            >
               {keyword}
             </span>
           ))}
@@ -94,13 +105,18 @@ function groupByCategory(items: FAQItem[]): Record<string, FAQItem[]> {
   return grouped;
 }
 
-function getCategoryDisplayName(category: string): string {
+function getCategoryDisplayName(
+  category: string,
+  t: (key: string) => string,
+): string {
   const names: Record<string, string> = {
-    technical: "Technical Questions",
-    security: "Security & Privacy",
-    support: "Support & Documentation",
-    pricing: "Pricing & Plans",
-    general: "General Questions",
+    technical: t("categoryTechnical"),
+    security: t("categorySecurity"),
+    support: t("categorySupport"),
+    pricing: t("categoryPricing"),
+    general: t("categoryGeneral"),
   };
-  return names[category] || category.charAt(0).toUpperCase() + category.slice(1);
+  return (
+    names[category] || category.charAt(0).toUpperCase() + category.slice(1)
+  );
 }

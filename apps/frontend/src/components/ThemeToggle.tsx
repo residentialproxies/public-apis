@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+import { useTranslations } from "next-intl";
 
 type Theme = "dark" | "light";
 const STORAGE_KEY = "api-nav-theme";
@@ -11,29 +12,45 @@ function applyTheme(theme: Theme) {
   root.classList.toggle("theme-dark", theme === "dark");
 }
 
-export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("dark");
+function getStoredTheme(): Theme {
+  if (typeof window === "undefined") return "dark";
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored === "light" ? "light" : "dark";
+}
 
+function subscribeToStorage(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+export function ThemeToggle() {
+  const t = useTranslations("themeToggle");
+  // Use useSyncExternalStore to properly sync with localStorage
+  const theme = useSyncExternalStore(
+    subscribeToStorage,
+    getStoredTheme,
+    () => "dark" as Theme, // Server snapshot
+  );
+  // Apply theme class on mount and when theme changes
   useEffect(() => {
-    const stored = (typeof window !== "undefined" &&
-      localStorage.getItem(STORAGE_KEY)) as Theme | null;
-    const initial = stored === "light" ? "light" : "dark";
-    setTheme(initial);
-    applyTheme(initial);
-  }, []);
+    applyTheme(theme);
+  }, [theme]);
 
   const toggle = () => {
     const next: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(next);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(STORAGE_KEY, next);
+      // Dispatch storage event to trigger useSyncExternalStore update
+      window.dispatchEvent(new Event("storage"));
+    }
     applyTheme(next);
-    if (typeof window !== "undefined") localStorage.setItem(STORAGE_KEY, next);
   };
 
   return (
     <button
       onClick={toggle}
       className="flex items-center gap-2 rounded border border-[var(--border-dim)] bg-[var(--bg-primary)] px-3 py-2 font-mono text-xs text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-green)] hover:text-[var(--accent-green)]"
-      aria-label="Toggle color theme"
+      aria-label={t("toggleTheme")}
       type="button"
     >
       <span className="text-[var(--accent-cyan)]">theme</span>

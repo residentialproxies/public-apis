@@ -92,7 +92,14 @@ export default async function OpenGraphImage() {
               background: "#28c840",
             }}
           />
-          <div style={{ marginLeft: 16, fontSize: 14, color: "#6b7280", display: "flex" }}>
+          <div
+            style={{
+              marginLeft: 16,
+              fontSize: 14,
+              color: "#6b7280",
+              display: "flex",
+            }}
+          >
             public-api.org ~ /apis
           </div>
         </div>
@@ -173,8 +180,17 @@ export default async function OpenGraphImage() {
                 border: "1px solid rgba(0, 255, 136, 0.3)",
               }}
             >
-              <div style={{ fontSize: 14, color: "#6b7280", display: "flex" }}>APIs Indexed</div>
-              <div style={{ fontSize: 32, fontWeight: 800, color: "#00ff88", display: "flex" }}>
+              <div style={{ fontSize: 14, color: "#6b7280", display: "flex" }}>
+                APIs Indexed
+              </div>
+              <div
+                style={{
+                  fontSize: 32,
+                  fontWeight: 800,
+                  color: "#00ff88",
+                  display: "flex",
+                }}
+              >
                 {apiCount}
               </div>
             </div>
@@ -190,8 +206,17 @@ export default async function OpenGraphImage() {
                 border: "1px solid rgba(0, 217, 255, 0.3)",
               }}
             >
-              <div style={{ fontSize: 14, color: "#6b7280", display: "flex" }}>GitHub Stars</div>
-              <div style={{ fontSize: 32, fontWeight: 800, color: "#00d9ff", display: "flex" }}>
+              <div style={{ fontSize: 14, color: "#6b7280", display: "flex" }}>
+                GitHub Stars
+              </div>
+              <div
+                style={{
+                  fontSize: 32,
+                  fontWeight: 800,
+                  color: "#00d9ff",
+                  display: "flex",
+                }}
+              >
                 {stars}
               </div>
             </div>
@@ -210,7 +235,14 @@ export default async function OpenGraphImage() {
               <div style={{ fontSize: 14, color: "#6b7280", display: "flex" }}>
                 Health Checks
               </div>
-              <div style={{ fontSize: 32, fontWeight: 800, color: "#ffaa00", display: "flex" }}>
+              <div
+                style={{
+                  fontSize: 32,
+                  fontWeight: 800,
+                  color: "#ffaa00",
+                  display: "flex",
+                }}
+              >
                 Hourly
               </div>
             </div>
@@ -232,7 +264,14 @@ export default async function OpenGraphImage() {
               <span style={{ color: "#00ff88" }}>https</span> |{" "}
               <span style={{ color: "#ffaa00" }}>latency</span> | categories
             </div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: "#e0e8e4", display: "flex" }}>
+            <div
+              style={{
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#e0e8e4",
+                display: "flex",
+              }}
+            >
               public-api.org
             </div>
           </div>

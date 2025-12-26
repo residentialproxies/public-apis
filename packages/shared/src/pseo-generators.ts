@@ -157,7 +157,10 @@ export class CodeExamplesGenerator extends ContentGenerator {
   }
 
   private getAvailableLanguages(api: TemplateContext["api"]): string[] {
-    const documented = api.seoMetadata?.languages?.map((l) => l.language.toLowerCase()) || [];
+    const documented =
+      api.seoMetadata?.languages
+        ?.map((l) => l.language?.toLowerCase())
+        .filter((l): l is string => !!l) || [];
     const common = ["curl", "javascript", "python"];
 
     // Merge and deduplicate
@@ -165,7 +168,10 @@ export class CodeExamplesGenerator extends ContentGenerator {
     return all.slice(0, 5); // Limit to 5 examples
   }
 
-  private generateCodeExample(api: TemplateContext["api"], lang: string): CodeExample {
+  private generateCodeExample(
+    api: TemplateContext["api"],
+    lang: string,
+  ): CodeExample {
     const baseUrl = TemplateUtils.extractBaseUrl(api.link);
     const hasAuth = api.auth !== "No";
 
@@ -311,7 +317,9 @@ ${hasAuth ? `  -H 'Authorization: Bearer YOUR_API_KEY' \\\n` : ""}  -H 'Content-
       ruby: "Ruby",
     };
 
-    return names[lang.toLowerCase()] || lang.charAt(0).toUpperCase() + lang.slice(1);
+    return (
+      names[lang.toLowerCase()] || lang.charAt(0).toUpperCase() + lang.slice(1)
+    );
   }
 }
 
@@ -360,7 +368,7 @@ export class FAQGenerator extends ContentGenerator {
 
   private generateFAQItems(
     api: TemplateContext["api"],
-    healthSummary?: TemplateContext["healthSummary"]
+    healthSummary?: TemplateContext["healthSummary"],
   ): FAQItem[] {
     const items: FAQItem[] = [];
 
@@ -369,7 +377,7 @@ export class FAQGenerator extends ContentGenerator {
       items.push({
         question: `How do I authenticate with the ${api.name} API?`,
         answer: `The ${api.name} API uses ${api.auth} authentication. ${this.getAuthDetail(
-          api.auth
+          api.auth,
         )}`,
         category: "technical",
         keywords: ["authentication", "auth", api.auth.toLowerCase()],
@@ -422,8 +430,8 @@ export class FAQGenerator extends ContentGenerator {
           api.latencyMs < 500
             ? "This is excellent performance, suitable for real-time applications."
             : api.latencyMs < 1000
-            ? "This is good performance for most use cases."
-            : "Consider implementing caching or CDN for better user experience."
+              ? "This is good performance for most use cases."
+              : "Consider implementing caching or CDN for better user experience."
         }`,
         category: "technical",
         keywords: ["performance", "latency", "speed"],
@@ -431,17 +439,20 @@ export class FAQGenerator extends ContentGenerator {
     }
 
     // 5. Reliability FAQ
-    if (healthSummary?.uptimePct !== null && healthSummary?.uptimePct !== undefined) {
+    if (
+      healthSummary?.uptimePct !== null &&
+      healthSummary?.uptimePct !== undefined
+    ) {
       items.push({
         question: `How reliable is the ${api.name} API?`,
         answer: `Over the last 30 days, the ${api.name} API has maintained ${healthSummary.uptimePct.toFixed(
-          2
+          2,
         )}% uptime. ${
           healthSummary.uptimePct >= 99
             ? "This is excellent reliability."
             : healthSummary.uptimePct >= 95
-            ? "This is good reliability for most use cases."
-            : "You may want to implement retry logic and error handling."
+              ? "This is good reliability for most use cases."
+              : "You may want to implement retry logic and error handling."
         }`,
         category: "support",
         keywords: ["uptime", "reliability", "sla"],
@@ -449,7 +460,10 @@ export class FAQGenerator extends ContentGenerator {
     }
 
     // 6. Documentation FAQ
-    if (api.seoMetadata?.docQualityScore && api.seoMetadata.docQualityScore >= 6) {
+    if (
+      api.seoMetadata?.docQualityScore &&
+      api.seoMetadata.docQualityScore >= 6
+    ) {
       items.push({
         question: `Where can I find the ${api.name} API documentation?`,
         answer: `The ${api.name} API has ${
@@ -460,7 +474,10 @@ export class FAQGenerator extends ContentGenerator {
             : "The documentation covers all endpoints"
         }${
           api.seoMetadata.languages && api.seoMetadata.languages.length > 0
-            ? ` with examples in ${api.seoMetadata.languages.map((l) => l.language).join(", ")}.`
+            ? ` with examples in ${api.seoMetadata.languages
+                .map((l) => l.language)
+                .filter(Boolean)
+                .join(", ")}.`
             : "."
         }`,
         category: "support",
@@ -483,6 +500,7 @@ export class FAQGenerator extends ContentGenerator {
       const topUseCases = api.aiAnalysis.useCases
         .slice(0, 3)
         .map((u) => u.tag)
+        .filter(Boolean)
         .join(", ");
       items.push({
         question: `What can I build with the ${api.name} API?`,
@@ -530,7 +548,8 @@ export class FAQGenerator extends ContentGenerator {
     };
 
     return (
-      details[authType] || "Please refer to the official documentation for authentication details."
+      details[authType] ||
+      "Please refer to the official documentation for authentication details."
     );
   }
 

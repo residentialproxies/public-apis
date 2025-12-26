@@ -9,8 +9,8 @@ export const config = {
   matcher: [
     // Homepage
     "/",
-    // Pages with locale prefix
-    "/(en|zh)/:path*",
+    // Pages with locale prefix (all supported languages)
+    "/(en|zh|ja|es|pt-BR|de)/:path*",
     // Pages without prefix (for default locale with localePrefix: 'as-needed')
     // Exclude Next.js internals, API routes, and static files
     "/((?!api|_next|_vercel|.*\\..*).*)",

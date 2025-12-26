@@ -6,3 +6,6 @@ export const routing = defineRouting({
   defaultLocale,
   localePrefix: "as-needed",
 });
+
+// Re-export localeNames for use in components
+export { localeNames } from "./config";

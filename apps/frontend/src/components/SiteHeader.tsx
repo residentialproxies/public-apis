@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 
@@ -19,6 +19,8 @@ export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const tA11y = useTranslations("accessibility");
+  const prevPathname = useRef(pathname);
 
   const navLinks = [
     { href: "/search", label: t("search"), cmd: "grep", exact: false },
@@ -27,9 +29,15 @@ export function SiteHeader() {
     { href: "/bot", label: t("bot"), cmd: "run", exact: false },
   ] as const;
 
-  // Close mobile menu on route change
+  // Close mobile menu on route change using ref to track previous pathname
+  // This is a valid pattern: closing menu in response to external navigation state
   useEffect(() => {
-    setIsOpen(false);
+    if (prevPathname.current !== pathname) {
+      prevPathname.current = pathname;
+      // Use functional update to only close if currently open
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsOpen((prev) => (prev ? false : prev));
+    }
   }, [pathname]);
 
   // Close mobile menu on escape key
@@ -63,7 +71,7 @@ export function SiteHeader() {
           <Link
             href="/"
             className="group flex items-center gap-3"
-            aria-label="Public API - Home"
+            aria-label={t("home")}
           >
             <div className="relative flex size-10 items-center justify-center rounded-lg border border-[var(--accent-green)] bg-[var(--bg-primary)] transition-all duration-150 group-hover:scale-105 group-hover:shadow-[var(--glow-green)] group-active:scale-95">
               <span className="font-mono text-lg font-bold text-[var(--accent-green)] glow-text">
@@ -84,7 +92,7 @@ export function SiteHeader() {
           {/* Desktop nav */}
           <nav
             className="hidden items-center gap-1 md:flex"
-            aria-label="Primary navigation"
+            aria-label={tA11y("primaryNavAriaLabel")}
           >
             {navLinks.map((link) => {
               const active = isActive(link.href, link.exact);
@@ -134,7 +142,7 @@ export function SiteHeader() {
                   d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                 />
               </svg>
-              <span className="sr-only">(opens in new tab)</span>
+              <span className="sr-only">{tA11y("opensInNewTab")}</span>
             </a>
           </nav>
 
@@ -164,7 +172,7 @@ export function SiteHeader() {
         <nav
           id="mobile-nav"
           className={`overflow-hidden border-t border-[var(--border-dim)]/50 transition-[max-height] duration-200 md:hidden ${isOpen ? "max-h-96" : "max-h-0"}`}
-          aria-label="Mobile navigation"
+          aria-label={tA11y("mobileNavAriaLabel")}
         >
           <div className="space-y-1 p-4">
             {navLinks.map((link) => {

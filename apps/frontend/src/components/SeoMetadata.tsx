@@ -39,6 +39,7 @@ export function SeoMetadata({ apiLink }: Props) {
       try {
         const res = await fetch("/all-apis.json");
         const allData = await res.json();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const api = allData.apis.find((a: any) => a.link === apiLink);
 
         if (api) {

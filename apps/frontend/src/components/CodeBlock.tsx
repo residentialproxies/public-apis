@@ -35,9 +35,13 @@ export function CodeBlock({
       {/* Header with filename and copy button */}
       <div className="flex items-center justify-between px-4 py-2 ui-surface-muted border-b border-[var(--border-dim)]">
         {filename ? (
-          <span className="text-xs font-mono text-[var(--text-muted)]">{filename}</span>
+          <span className="text-xs font-mono text-[var(--text-muted)]">
+            {filename}
+          </span>
         ) : (
-          <span className="text-xs text-[var(--text-muted)] capitalize">{language}</span>
+          <span className="text-xs text-[var(--text-muted)] capitalize">
+            {language}
+          </span>
         )}
         <CopyButton label={copied ? "Copied!" : "Copy"} value={code} />
       </div>
@@ -48,25 +52,23 @@ export function CodeBlock({
           <code
             className={`language-${language} text-xs font-mono text-[var(--text-primary)] block`}
           >
-            {showLineNumbers ? (
-              lines.map((line, idx) => {
-                const lineNumber = idx + 1;
-                const isHighlighted = highlightLines.includes(lineNumber);
-                return (
-                  <div
-                    key={idx}
-                    className={`flex ${isHighlighted ? "bg-[var(--accent-yellow)]/10 border-l-2 border-[var(--accent-yellow)]" : ""}`}
-                  >
-                    <span className="inline-block w-12 text-right pr-4 text-[var(--text-muted)] select-none">
-                      {lineNumber}
-                    </span>
-                    <span className="flex-1">{line || "\n"}</span>
-                  </div>
-                );
-              })
-            ) : (
-              code
-            )}
+            {showLineNumbers
+              ? lines.map((line, idx) => {
+                  const lineNumber = idx + 1;
+                  const isHighlighted = highlightLines.includes(lineNumber);
+                  return (
+                    <div
+                      key={idx}
+                      className={`flex ${isHighlighted ? "bg-[var(--accent-yellow)]/10 border-l-2 border-[var(--accent-yellow)]" : ""}`}
+                    >
+                      <span className="inline-block w-12 text-right pr-4 text-[var(--text-muted)] select-none">
+                        {lineNumber}
+                      </span>
+                      <span className="flex-1">{line || "\n"}</span>
+                    </div>
+                  );
+                })
+              : code}
           </code>
         </pre>
       </div>
