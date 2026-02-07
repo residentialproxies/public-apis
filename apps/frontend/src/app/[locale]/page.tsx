@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 
 import {
@@ -9,12 +10,117 @@ import {
 import { isConnectionError } from "@/lib/errors";
 import { ConnectionError } from "@/components/ConnectionError";
 import { TerminalWindow } from "@/components/TerminalWindow";
+import { getSiteUrl } from "@/lib/site";
+import {
+  generateHreflangUrls,
+  toLocalizedPath,
+  toLocalizedUrl,
+  toOpenGraphLocale,
+} from "@/lib/locales";
+import type { Locale } from "@/i18n/config";
 
 export const revalidate = 300; // 5 minutes ISR
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
+
+/**
+ * SEO: Generate metadata for home page with proper OpenGraph and Twitter Card
+ */
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const siteUrl = getSiteUrl();
+  const t = await getTranslations({ locale, namespace: "metadata" });
+
+  const title = t("title");
+  const description = t("description");
+  const localizedHomeUrl = toLocalizedUrl(siteUrl, "/", locale as Locale);
+
+  // SEO: Generate hreflang URLs for all language versions
+  const hreflangUrls = generateHreflangUrls("/", siteUrl);
+  const ogLocale = toOpenGraphLocale(locale as Locale);
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: localizedHomeUrl,
+      languages: hreflangUrls,
+    },
+    openGraph: {
+      title: t("ogTitle"),
+      description: t("ogDescription"),
+      type: "website",
+      url: localizedHomeUrl,
+      siteName: "API Navigator",
+      locale: ogLocale,
+      images: [
+        {
+          url: `${siteUrl}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("twitterTitle"),
+      description: t("twitterDescription"),
+      site: "@api_navigator",
+      images: [`${siteUrl}/opengraph-image`],
+    },
+  };
+}
+
+/**
+ * SEO: Generate WebSite and Organization Schema.org structured data
+ */
+function generateHomePageSchemas(siteUrl: string, locale: string) {
+  const schemas = [];
+
+  // WebSite schema with SearchAction for sitelinks search box
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "API Navigator",
+    alternateName: "Public APIs Directory",
+    url: siteUrl,
+    inLanguage: locale === "zh" ? "zh-CN" : locale === "ja" ? "ja-JP" : locale === "es" ? "es-ES" : locale === "pt-BR" ? "pt-BR" : locale === "de" ? "de-DE" : "en-US",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}${toLocalizedPath(
+          "/search",
+          locale as Locale,
+        )}?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  });
+
+  // Organization schema
+  schemas.push({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "API Navigator",
+    url: siteUrl,
+    logo: `${siteUrl}/logo.png`,
+    sameAs: [
+      "https://github.com/zhaoyao91/public-api",
+      "https://github.com/public-apis/public-apis",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "technical support",
+      url: `${siteUrl}${toLocalizedPath("/about", locale as Locale)}`,
+    },
+  });
+
+  return schemas;
+}
 
 export default async function Home({ params }: Props) {
   const { locale } = await params;
@@ -570,6 +676,15 @@ export default async function Home({ params }: Props) {
           </div>
         </div>
       </section>
+
+      {/* SEO: Schema.org structured data for home page */}
+      {generateHomePageSchemas(getSiteUrl(), locale).map((schema, idx) => (
+        <script
+          key={idx}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
     </main>
   );
 }

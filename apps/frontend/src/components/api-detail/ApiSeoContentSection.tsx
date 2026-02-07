@@ -1,3 +1,7 @@
+import { DocQualityScore } from "@/components/DocQualityScore";
+import { LanguageTags } from "@/components/LanguageTags";
+import { KeywordTags } from "@/components/KeywordTags";
+import { DocumentStructure } from "@/components/DocumentStructure";
 import type { SeoContentSectionProps } from "./types";
 
 export function ApiSeoContentSection({ api, t }: SeoContentSectionProps) {
@@ -5,48 +9,61 @@ export function ApiSeoContentSection({ api, t }: SeoContentSectionProps) {
     return null;
   }
 
+  const hasQualityScore =
+    api.seoMetadata.docQualityScore !== null &&
+    api.seoMetadata.docQualityScore !== undefined;
+
+  const hasLanguages =
+    api.seoMetadata.languages && api.seoMetadata.languages.length > 0;
+
+  const hasKeywords =
+    api.seoMetadata.keywords && api.seoMetadata.keywords.length > 0;
+
+  const hasHeadings = api.seoMetadata.h2s && api.seoMetadata.h2s.length > 0;
+
+  const hasMetadata = api.seoMetadata.title || api.seoMetadata.description;
+
   return (
     <section className="ui-surface mt-6 p-6">
-      <h2 className="text-sm font-semibold text-[var(--text-primary)]">
-        {t("seoTitle")}
-      </h2>
+      {/* Header */}
+      <div className="flex items-center gap-2">
+        <svg
+          className="h-5 w-5 text-[var(--accent-cyan)]"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z"
+            clipRule="evenodd"
+          />
+        </svg>
+        <h2 className="text-sm font-semibold text-[var(--text-primary)]">
+          {t("seoTitle")}
+        </h2>
+      </div>
 
       {/* Documentation Quality Score */}
-      {api.seoMetadata.docQualityScore !== null &&
-      api.seoMetadata.docQualityScore !== undefined ? (
-        <div className="mt-4 flex items-center justify-between">
+      {hasQualityScore && (
+        <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <span className="text-xs text-[var(--text-muted)]">
             {t("docQuality")}
           </span>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center">
-              {[...Array(10)].map((_, i) => (
-                <svg
-                  key={i}
-                  className={`h-4 w-4 ${
-                    i < (api.seoMetadata?.docQualityScore || 0)
-                      ? "text-[var(--accent-yellow)]"
-                      : "text-[var(--border-dim)]"
-                  }`}
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </div>
-            <span className="font-mono text-sm text-[var(--text-primary)]">
-              {api.seoMetadata.docQualityScore}/10
-            </span>
-          </div>
+          <DocQualityScore
+            score={api.seoMetadata.docQualityScore!}
+            maxScore={10}
+            size="md"
+            showLabel={true}
+          />
         </div>
-      ) : null}
+      )}
 
       {/* Quality Indicators */}
-      <div className="mt-3 flex flex-wrap gap-2 text-xs">
-        {api.seoMetadata.hasCodeExamples ? (
-          <span className="ui-chip inline-flex items-center gap-1">
-            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+      <div className="mt-4 flex flex-wrap gap-2 text-xs">
+        {api.seoMetadata.hasCodeExamples && (
+          <span className="ui-chip inline-flex items-center gap-1 bg-[var(--accent-green)]/10 text-[var(--accent-green)] border-[var(--accent-green)]/30">
+            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
               <path
                 fillRule="evenodd"
                 d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z"
@@ -55,114 +72,107 @@ export function ApiSeoContentSection({ api, t }: SeoContentSectionProps) {
             </svg>
             {t("codeExamples")}
           </span>
-        ) : null}
-        {api.seoMetadata.h1 ? (
-          <span className="ui-chip">{t("mainHeading")}</span>
-        ) : null}
-        {api.seoMetadata.ogImage ? (
-          <span className="ui-chip">{t("openGraph")}</span>
-        ) : null}
+        )}
+        {api.seoMetadata.h1 && (
+          <span className="ui-chip inline-flex items-center gap-1">
+            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clipRule="evenodd"
+              />
+            </svg>
+            {t("mainHeading")}
+          </span>
+        )}
+        {api.seoMetadata.ogImage && (
+          <span className="ui-chip inline-flex items-center gap-1">
+            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path
+                fillRule="evenodd"
+                d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                clipRule="evenodd"
+              />
+            </svg>
+            {t("openGraph")}
+          </span>
+        )}
       </div>
 
-      {/* Programming Languages */}
-      {api.seoMetadata.languages && api.seoMetadata.languages.length > 0 ? (
-        <div className="mt-4">
-          <h3 className="text-xs font-semibold text-[var(--text-muted)]">
-            {t("programmingLanguages")}
-          </h3>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {api.seoMetadata.languages
-              .map((l) => l?.language?.trim())
-              .filter((l): l is string => !!l)
-              .map((lang) => (
-                <span
-                  key={lang}
-                  className="ui-chip inline-flex items-center gap-1 capitalize"
-                >
-                  <svg
-                    className="h-3 w-3"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  {lang}
-                </span>
-              ))}
-          </div>
-        </div>
-      ) : null}
+      {/* Programming Languages - Using reusable component */}
+      {hasLanguages && (
+        <LanguageTags
+          languages={api.seoMetadata.languages!}
+          title={t("programmingLanguages")}
+          maxDisplay={10}
+          className="mt-4"
+        />
+      )}
 
-      {/* Keywords */}
-      {api.seoMetadata.keywords && api.seoMetadata.keywords.length > 0 ? (
-        <div className="mt-4">
-          <h3 className="text-xs font-semibold text-[var(--text-muted)]">
-            {t("keywords")}
-          </h3>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {api.seoMetadata.keywords
-              .map((k) => k?.keyword?.trim())
-              .filter((k): k is string => !!k)
-              .slice(0, 15)
-              .map((keyword, idx) => (
-                <span key={idx} className="ui-chip text-xs">
-                  {keyword}
-                </span>
-              ))}
-          </div>
-        </div>
-      ) : null}
+      {/* Keywords - Using reusable component */}
+      {hasKeywords && (
+        <KeywordTags
+          keywords={api.seoMetadata.keywords!}
+          title={t("keywords")}
+          maxDisplay={15}
+          expandable={true}
+          className="mt-4"
+        />
+      )}
 
-      {/* Document Structure - H2s */}
-      {api.seoMetadata.h2s && api.seoMetadata.h2s.length > 0 ? (
-        <details className="mt-4">
-          <summary className="cursor-pointer text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)]">
-            {t("sectionHeadings")} ({api.seoMetadata.h2s.length})
-          </summary>
-          <ul className="mt-2 space-y-1 pl-4">
-            {api.seoMetadata.h2s
-              .map((h) => h?.heading?.trim())
-              .filter((h): h is string => !!h)
-              .map((heading, idx) => (
-                <li key={idx} className="text-xs text-[var(--text-secondary)]">
-                  <span className="text-[var(--accent-cyan)]">-</span> {heading}
-                </li>
-              ))}
-          </ul>
-        </details>
-      ) : null}
+      {/* Document Structure - Using reusable component */}
+      {hasHeadings && (
+        <DocumentStructure
+          headings={api.seoMetadata.h2s!}
+          title={t("sectionHeadings")}
+          collapsible={true}
+          defaultExpanded={false}
+          className="mt-4"
+        />
+      )}
 
       {/* Page Title & Description */}
-      {(api.seoMetadata.title || api.seoMetadata.description) && (
-        <div className="ui-surface-muted mt-4 rounded-lg p-4 text-xs">
-          {api.seoMetadata.title ? (
-            <div className="mb-2">
-              <span className="font-semibold text-[var(--text-muted)]">
-                {t("pageTitle")}:{" "}
+      {hasMetadata && (
+        <div className="ui-surface-muted mt-4 rounded-lg p-4 text-xs space-y-2">
+          {api.seoMetadata.title && (
+            <div className="flex flex-col sm:flex-row sm:gap-2">
+              <span className="font-semibold text-[var(--text-muted)] shrink-0">
+                {t("pageTitle")}:
               </span>
-              <span className="text-[var(--text-secondary)]">
+              <span className="text-[var(--text-secondary)] break-words">
                 {api.seoMetadata.title}
               </span>
             </div>
-          ) : null}
-          {api.seoMetadata.description ? (
-            <div>
-              <span className="font-semibold text-[var(--text-muted)]">
-                {t("metaDescription")}:{" "}
+          )}
+          {api.seoMetadata.description && (
+            <div className="flex flex-col sm:flex-row sm:gap-2">
+              <span className="font-semibold text-[var(--text-muted)] shrink-0">
+                {t("metaDescription")}:
               </span>
-              <span className="text-[var(--text-secondary)]">
+              <span className="text-[var(--text-secondary)] break-words">
                 {api.seoMetadata.description}
               </span>
             </div>
-          ) : null}
+          )}
         </div>
       )}
 
-      <p className="mt-4 text-xs text-[var(--text-muted)]">{t("seoNote")}</p>
+      {/* Note */}
+      <p className="mt-4 text-xs text-[var(--text-muted)] flex items-center gap-1.5">
+        <svg
+          className="h-3 w-3 shrink-0"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clipRule="evenodd"
+          />
+        </svg>
+        {t("seoNote")}
+      </p>
     </section>
   );
 }

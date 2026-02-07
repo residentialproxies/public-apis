@@ -4,7 +4,9 @@ import { Link } from "@/i18n/navigation";
 
 import { fetchPublicApisRepoStats, fallbackRepoStats } from "@/lib/github";
 import { formatCompactNumber, formatDate } from "@/lib/format";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, getSiteUrl } from "@/lib/site";
+import { generateHreflangUrls, toLocalizedUrl } from "@/lib/locales";
+import type { Locale } from "@/i18n/config";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -12,15 +14,22 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  const typedLocale = locale as Locale;
   const t = await getTranslations({ locale, namespace: "about" });
+  const siteUrl = getSiteUrl();
+  const localizedAboutUrl = toLocalizedUrl(siteUrl, "/about", typedLocale);
 
   return {
     title: `${t("subtitle")} | ${SITE_NAME}`,
     description: t("metaDescription"),
-    alternates: { canonical: "/about" },
+    alternates: {
+      canonical: localizedAboutUrl,
+      languages: generateHreflangUrls("/about", siteUrl),
+    },
     openGraph: {
       title: `${t("subtitle")} | ${SITE_NAME}`,
       description: t("ogDescription"),
+      url: localizedAboutUrl,
       type: "website",
     },
   };

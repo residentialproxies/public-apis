@@ -3,7 +3,8 @@ import type { MetadataRoute } from "next";
 import { fetchApisList, fetchCategories } from "@/lib/backend";
 import { slugify } from "@/lib/slugify";
 import { getSiteUrl } from "@/lib/site";
-import { locales } from "@/i18n/config";
+import { locales, type Locale } from "@/i18n/config";
+import { toLocalizedUrl } from "@/lib/locales";
 
 async function withTimeout<T>(
   promise: Promise<T>,
@@ -86,9 +87,9 @@ async function fetchAllApis(): Promise<ApiWithHealth[]> {
 function createAlternates(base: string, path: string): Record<string, string> {
   const alternates: Record<string, string> = {};
   for (const locale of locales) {
-    alternates[locale] = `${base}${locale === "en" ? "" : `/${locale}`}${path}`;
+    alternates[locale] = toLocalizedUrl(base, path, locale as Locale);
   }
-  alternates["x-default"] = `${base}${path}`;
+  alternates["x-default"] = toLocalizedUrl(base, path, "en");
   return alternates;
 }
 
@@ -178,6 +179,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
       alternates: { languages: createAlternates(base, "/catalog") },
     },
+    {
+      url: `${base}/privacy`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.4,
+      alternates: { languages: createAlternates(base, "/privacy") },
+    },
+    {
+      url: `${base}/terms`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.4,
+      alternates: { languages: createAlternates(base, "/terms") },
+    },
+    {
+      url: `${base}/trust`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.6,
+      alternates: { languages: createAlternates(base, "/trust") },
+    },
   ];
 
   try {
@@ -188,7 +210,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Category routes with proper lastModified and alternates
     const categoryRoutes: MetadataRoute.Sitemap = categories.map((c) => ({
-      url: `${base}/category/${c.slug}`,
+      url: toLocalizedUrl(base, `/category/${c.slug}`, "en"),
       lastModified: c.lastSyncedAt ? new Date(c.lastSyncedAt) : now,
       changeFrequency: "weekly" as const,
       priority: 0.8,
@@ -197,7 +219,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // SEO: API detail routes with dynamic priority based on health signals
     const apiRoutes: MetadataRoute.Sitemap = apis.map((a) => ({
-      url: `${base}/api/${a.id}/${slugify(a.name)}`,
+      url: toLocalizedUrl(base, `/api/${a.id}/${slugify(a.name)}`, "en"),
       lastModified: a.lastCheckedAt ? new Date(a.lastCheckedAt) : now,
       changeFrequency: "weekly" as const,
       priority: calculateApiPriority(a),

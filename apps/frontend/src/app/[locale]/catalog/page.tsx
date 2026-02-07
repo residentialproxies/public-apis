@@ -4,7 +4,12 @@ import type { Metadata } from "next";
 import { fetchCategories } from "@/lib/backend";
 import { fetchPublicApisRepoStats, fallbackRepoStats } from "@/lib/github";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
-import { generateHreflangUrls } from "@/lib/locales";
+import {
+  generateHreflangUrls,
+  toLocalizedPath,
+  toLocalizedUrl,
+} from "@/lib/locales";
+import type { Locale } from "@/i18n/config";
 import {
   CatalogHero,
   CatalogFilters,
@@ -22,6 +27,11 @@ const siteUrl = getSiteUrl();
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "catalog" });
+  const localizedCatalogUrl = toLocalizedUrl(
+    siteUrl,
+    "/catalog",
+    locale as Locale,
+  );
 
   // SEO: Generate locale-aware canonical and hreflang URLs
   const hreflangUrls = generateHreflangUrls("/catalog", siteUrl);
@@ -30,13 +40,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t("title"),
     description: t("subtitle"),
     alternates: {
-      canonical: `${siteUrl}/${locale}/catalog`,
+      canonical: localizedCatalogUrl,
       languages: hreflangUrls,
     },
     openGraph: {
       title: `${t("title")} | ${SITE_NAME}`,
       description: t("subtitle"),
-      url: `${siteUrl}/${locale}/catalog`,
+      url: localizedCatalogUrl,
       siteName: SITE_NAME,
       type: "website",
     },
@@ -79,7 +89,7 @@ export default async function Catalog({ params }: Props) {
     "@type": "CollectionPage",
     name: t("title"),
     description: t("subtitle"),
-    url: `${siteUrl}/catalog`,
+    url: `${siteUrl}${toLocalizedPath("/catalog", locale as Locale)}`,
     isPartOf: { "@type": "WebSite", name: SITE_NAME, url: siteUrl },
     numberOfItems: categories.length,
     mainEntity: {
@@ -92,7 +102,10 @@ export default async function Catalog({ params }: Props) {
         item: {
           "@type": "CollectionPage",
           name: cat.name,
-          url: `${siteUrl}/category/${cat.slug}`,
+          url: `${siteUrl}${toLocalizedPath(
+            `/category/${cat.slug}`,
+            locale as Locale,
+          )}`,
           numberOfItems: cat.apiCount,
         },
       })),

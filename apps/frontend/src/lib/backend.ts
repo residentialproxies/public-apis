@@ -478,10 +478,9 @@ async function fetchJson<T>(
   if (deduplicate) {
     pendingRequestsSet(url, promise);
     promise.finally(() => {
-      // Clean up after request completes using LRU-aware deleter
-      setTimeout(() => {
-        pendingRequestsDelete(url);
-      }, 1000); // Keep for 1s for potential rapid re-requests
+      // Keep this map strictly for in-flight deduplication.
+      // Once settled, remove immediately to avoid returning stale results.
+      pendingRequestsDelete(url);
     });
   }
 

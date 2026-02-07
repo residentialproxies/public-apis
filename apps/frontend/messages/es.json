@@ -202,7 +202,10 @@
     "lastError": "Último error",
     "availabilityNote": "Las verificaciones de disponibilidad solo prueban la URL de la página de inicio (no un endpoint real de API) y están protegidas por un guardia SSRF.",
     "aiAnalysis": "Análisis con IA",
+    "aiAnalysisNote": "Análisis generado por IA basado en la documentación y metadatos de la API.",
+    "useCases": "Casos de Uso",
     "notAvailable": "No disponible aún.",
+    "canonical": "URL Canónica",
     "lastEnrichError": "Último error de enriquecimiento",
     "seoTitle": "Análisis SEO y de Contenido",
     "pageTitle": "Título de Página",
@@ -286,6 +289,7 @@
     "authDescMashape": "Esta API usa RapidAPI (anteriormente Mashape) para autenticación. Regístrate en RapidAPI para obtener tu clave de API.",
     "authDescUserAgent": "Esta API requiere un encabezado User-Agent personalizado. Configúralo para identificar tu aplicación.",
     "authDescOther": "Consulta la documentación oficial para requisitos específicos de autenticación.",
+    "authCodeExampleFallback": "Consulta la documentación oficial para detalles de autenticación.",
     "commonImplementation": "Implementación Común",
     "securityBestPractices": "Mejores Prácticas de Seguridad",
     "securityPractice1": "Nunca expongas claves de API en código del lado del cliente",
@@ -582,9 +586,6 @@
   },
   "themeToggle": {
     "toggleTheme": "Alternar tema de color"
-  },
-  "header": {
-    "home": "Public API - Inicio"
   },
   "screenshot": {
     "notAvailable": "Captura de pantalla no disponible",

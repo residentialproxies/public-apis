@@ -15,6 +15,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SITE_NAME, SITE_DESCRIPTION, getSiteUrl } from "@/lib/site";
 import { locales, type Locale } from "@/i18n/config";
 import { routing } from "@/i18n/routing";
+import { generateHreflangUrls, toLocalizedPath } from "@/lib/locales";
 
 // Locale to OpenGraph locale mapping
 const localeToOgLocale: Record<string, string> = {
@@ -65,6 +66,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // Get localized metadata
   const messages = (await import(`../../../messages/${locale}.json`)).default;
   const t = messages.metadata;
+  const hreflangUrls = generateHreflangUrls("/", siteUrl);
+  const localizedHomePath = toLocalizedPath("/", locale as Locale);
 
   return {
     metadataBase: new URL(siteUrl),
@@ -79,15 +82,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     creator: SITE_NAME,
     publisher: SITE_NAME,
     alternates: {
-      canonical: "/",
-      languages: {
-        en: "/",
-        zh: "/zh",
-        ja: "/ja",
-        es: "/es",
-        "pt-BR": "/pt-BR",
-        de: "/de",
-      },
+      canonical: `${siteUrl}${localizedHomePath}`,
+      languages: hreflangUrls,
     },
     robots: {
       index: true,
@@ -164,6 +160,7 @@ export default async function RootLayout({ children, params }: Props) {
 
   const messages = await getMessages();
   const siteUrl = getSiteUrl();
+  const localizedHomePath = toLocalizedPath("/", locale as Locale);
 
   const websiteJsonLd = {
     "@context": "https://schema.org",
@@ -185,9 +182,7 @@ export default async function RootLayout({ children, params }: Props) {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${siteUrl}${
-          locale === "en" ? "" : `/${locale}`
-        }/?q={search_term_string}`,
+        urlTemplate: `${siteUrl}${localizedHomePath === "/" ? "" : localizedHomePath}/?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
@@ -211,6 +206,28 @@ export default async function RootLayout({ children, params }: Props) {
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-icon" />
         <link rel="manifest" href="/site.webmanifest" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`${SITE_NAME} RSS Feed`}
+          href={`${siteUrl}/feed.xml`}
+        />
+        <link
+          rel="alternate"
+          type="application/atom+xml"
+          title={`${SITE_NAME} Atom Feed`}
+          href={`${siteUrl}/feed.atom`}
+        />
+        <link
+          rel="sitemap"
+          type="application/xml"
+          href={`${siteUrl}/sitemap-index.xml`}
+        />
+        <link
+          rel="sitemap"
+          type="application/xml"
+          href={`${siteUrl}/sitemap-images.xml`}
+        />
         <meta name="theme-color" content="#3b82f6" />
         {/* Preconnect to external domains for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -225,13 +242,11 @@ export default async function RootLayout({ children, params }: Props) {
         {/* DNS prefetch for API backend (fallback) */}
         <link rel="dns-prefetch" href="//api.public-api.org" />
         {/* hreflang tags for SEO */}
-        <link rel="alternate" hrefLang="en" href={siteUrl} />
-        <link rel="alternate" hrefLang="zh" href={`${siteUrl}/zh`} />
-        <link rel="alternate" hrefLang="ja" href={`${siteUrl}/ja`} />
-        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es`} />
-        <link rel="alternate" hrefLang="pt-BR" href={`${siteUrl}/pt-BR`} />
-        <link rel="alternate" hrefLang="de" href={`${siteUrl}/de`} />
-        <link rel="alternate" hrefLang="x-default" href={siteUrl} />
+        {Object.entries(generateHreflangUrls("/", siteUrl)).map(
+          ([lang, href]) => (
+            <link key={lang} rel="alternate" hrefLang={lang} href={href} />
+          ),
+        )}
         {/* No-flash theme bootstrap */}
         <script
           dangerouslySetInnerHTML={{

@@ -615,3 +615,165 @@ body::before {
   border-color: var(--accent-green);
   color: var(--accent-green);
 }
+
+/* Star rating animation */
+@keyframes star-fill {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.star-animate {
+  animation: star-fill 0.3s ease-out forwards;
+}
+
+/* Quality score gradient backgrounds */
+.quality-excellent {
+  background: linear-gradient(135deg, hsla(140, 100%, 50%, 0.1) 0%, hsla(140, 100%, 50%, 0.05) 100%);
+}
+
+.quality-good {
+  background: linear-gradient(135deg, hsla(180, 100%, 50%, 0.1) 0%, hsla(180, 100%, 50%, 0.05) 100%);
+}
+
+.quality-fair {
+  background: linear-gradient(135deg, hsla(50, 100%, 55%, 0.1) 0%, hsla(50, 100%, 55%, 0.05) 100%);
+}
+
+.quality-poor {
+  background: linear-gradient(135deg, hsla(35, 100%, 55%, 0.1) 0%, hsla(35, 100%, 55%, 0.05) 100%);
+}
+
+/* Language tag hover effects */
+.lang-tag-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px currentColor;
+}
+
+/* Document structure tree lines */
+.doc-tree-line {
+  position: relative;
+}
+
+.doc-tree-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border-dim);
+}
+
+/* Collapsible section animation */
+details[open] > summary {
+  margin-bottom: 0.5rem;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details summary::marker {
+  display: none;
+}
+
+/* Smooth expand/collapse */
+details > *:not(summary) {
+  animation: details-expand 0.2s ease-out;
+}
+
+@keyframes details-expand {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .mobile-stack {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mobile-full {
+    width: 100%;
+  }
+
+  .mobile-text-sm {
+    font-size: 0.75rem;
+  }
+
+  .mobile-gap-2 {
+    gap: 0.5rem;
+  }
+
+  .mobile-p-3 {
+    padding: 0.75rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Lazy loading placeholder */
+.lazy-placeholder {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 0%,
+    var(--bg-secondary) 50%,
+    var(--bg-tertiary) 100%
+  );
+  background-size: 200% 100%;
+  animation: lazy-shimmer 1.5s infinite;
+}
+
+@keyframes lazy-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Focus visible improvements for accessibility */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--accent-green);
+  outline-offset: 2px;
+  box-shadow: var(--glow-green);
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .skeleton-pulse,
+  .dot-bounce,
+  .status-ping,
+  .lazy-placeholder {
+    animation: none;
+  }
+}

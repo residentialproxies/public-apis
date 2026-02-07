@@ -318,14 +318,15 @@ describe("API Detail Page - Characterization Tests", () => {
       const apiName = "Test API";
       const currentSlug: string = "test-api-v2";
       const canonicalSlug: string = "test-api";
+      const locale = "zh";
 
       vi.mocked(slugify).mockReturnValue(canonicalSlug);
 
       if (currentSlug !== canonicalSlug) {
-        redirect(`/api/123/${canonicalSlug}`);
+        redirect(`/${locale}/api/123/${canonicalSlug}`);
       }
 
-      expect(redirect).toHaveBeenCalledWith("/api/123/test-api");
+      expect(redirect).toHaveBeenCalledWith(`/zh/api/123/${canonicalSlug}`);
     });
 
     it("should handle missing optional data gracefully", async () => {

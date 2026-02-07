@@ -7,7 +7,7 @@
  * - HTML lang/Schema.org: BCP 47 hyphen format (zh-CN, ja-JP)
  */
 
-import type { Locale } from "@/i18n/config";
+import { defaultLocale, locales, type Locale } from "@/i18n/config";
 
 /**
  * Convert URL locale code to OpenGraph format (with underscore).
@@ -27,6 +27,51 @@ export function toOpenGraphLocale(locale: Locale): string {
     de: "de_DE",
   };
   return mapping[locale];
+}
+
+function normalizePath(basePath: string): string {
+  if (!basePath || basePath === "/") return "/";
+
+  const withLeadingSlash = basePath.startsWith("/")
+    ? basePath
+    : `/${basePath}`;
+
+  if (withLeadingSlash.length > 1 && withLeadingSlash.endsWith("/")) {
+    return withLeadingSlash.slice(0, -1);
+  }
+
+  return withLeadingSlash;
+}
+
+/**
+ * Build a locale-aware path following next-intl `localePrefix: "as-needed"`.
+ * - default locale (`en`) has no prefix
+ * - non-default locales use `/<locale>` prefix
+ */
+export function toLocalizedPath(basePath: string, locale: Locale): string {
+  const normalizedPath = normalizePath(basePath);
+  const localePrefix = locale === defaultLocale ? "" : `/${locale}`;
+
+  if (normalizedPath === "/") {
+    return localePrefix || "/";
+  }
+
+  return `${localePrefix}${normalizedPath}`;
+}
+
+/**
+ * Build a locale-aware absolute URL from site URL + path.
+ */
+export function toLocalizedUrl(
+  siteUrl: string,
+  basePath: string,
+  locale: Locale,
+): string {
+  const normalizedSiteUrl = siteUrl.endsWith("/")
+    ? siteUrl.slice(0, -1)
+    : siteUrl;
+
+  return `${normalizedSiteUrl}${toLocalizedPath(basePath, locale)}`;
 }
 
 /**
@@ -70,16 +115,14 @@ export function generateHreflangUrls(
   basePath: string,
   siteUrl: string,
 ): Record<string, string> {
-  // Import locales dynamically to avoid circular dependency
-  const supportedLocales: Locale[] = ["en", "zh", "ja", "es", "pt-BR", "de"];
   const urls: Record<string, string> = {};
 
-  for (const locale of supportedLocales) {
-    urls[locale] = `${siteUrl}/${locale}${basePath}`;
+  for (const locale of locales) {
+    urls[locale] = toLocalizedUrl(siteUrl, basePath, locale);
   }
 
-  // x-default points to the English version as the primary/fallback language
-  urls["x-default"] = `${siteUrl}/en${basePath}`;
+  // x-default points to the default locale version
+  urls["x-default"] = toLocalizedUrl(siteUrl, basePath, defaultLocale);
 
   return urls;
 }

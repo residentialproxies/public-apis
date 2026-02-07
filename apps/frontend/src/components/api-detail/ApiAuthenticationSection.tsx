@@ -84,7 +84,7 @@ export function ApiAuthenticationSection({
       default:
         return (
           <div className="text-[var(--text-secondary)]">
-            Refer to the official documentation for authentication details.
+            {t("authCodeExampleFallback")}
           </div>
         );
     }

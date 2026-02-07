@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CatalogPage } from "@/app/_components/CatalogPage";
 import { getSiteUrl } from "@/lib/site";
-import { generateHreflangUrls } from "@/lib/locales";
+import { generateHreflangUrls, toLocalizedUrl } from "@/lib/locales";
+import type { Locale } from "@/i18n/config";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "search" });
   const tMeta = await getTranslations({ locale, namespace: "metadata" });
   const siteUrl = getSiteUrl();
+  const localizedSearchUrl = toLocalizedUrl(siteUrl, "/search", locale as Locale);
 
   // SEO: Generate locale-aware canonical and hreflang URLs
   const hreflangUrls = generateHreflangUrls("/search", siteUrl);
@@ -24,13 +26,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: t("metaTitle"),
     description: t("metaDescription"),
     alternates: {
-      canonical: `${siteUrl}/${locale}/search`,
+      canonical: localizedSearchUrl,
       languages: hreflangUrls,
     },
     openGraph: {
       title: t("ogTitle"),
       description: t("ogDescription"),
-      url: `${siteUrl}/${locale}/search`,
+      url: localizedSearchUrl,
       siteName: tMeta("title"),
       type: "website",
     },

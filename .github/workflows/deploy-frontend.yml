@@ -11,6 +11,14 @@ on:
       - "packages/shared/**"
       - ".github/workflows/deploy-frontend.yml"
 
+  # Trigger on pull requests for preview deployments
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "apps/frontend/**"
+      - "packages/shared/**"
+
   # Allow manual deployment from GitHub UI
   workflow_dispatch:
     inputs:
@@ -23,13 +31,26 @@ on:
           - production
           - staging
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    name: Deploy to Cloudflare Workers
+# Prevent concurrent deployments
+concurrency:
+  group: deploy-frontend-${{ github.ref }}
+  cancel-in-progress: true
 
-    # Only run if not a bot commit
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "9"
+
+jobs:
+  # ==========================================================================
+  # Build Job - Shared between preview and production
+  # ==========================================================================
+  build:
+    runs-on: ubuntu-latest
+    name: Build Frontend
+
+    outputs:
+      worker_size: ${{ steps.build_info.outputs.worker_size }}
+      assets_size: ${{ steps.build_info.outputs.assets_size }}
 
     steps:
       - name: Checkout repository
@@ -37,15 +58,31 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
+
+      # Cache Next.js build cache
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            apps/frontend/.next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/frontend/**/*.ts', 'apps/frontend/**/*.tsx') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            nextjs-${{ runner.os }}-
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Run SEO gate
+        run: pnpm --filter @api-navigator/frontend seo:gate
 
       - name: Build shared package
         run: pnpm --filter @api-navigator/shared build
@@ -55,7 +92,7 @@ jobs:
         run: |
           cp wrangler.example.toml wrangler.toml
 
-          # Replace KV namespace IDs (match placeholders in wrangler.example.toml)
+          # Replace KV namespace IDs
           sed -i "s/YOUR_PRODUCTION_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}/g" wrangler.toml
           sed -i "s/YOUR_PREVIEW_KV_NAMESPACE_ID/${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}/g" wrangler.toml
 
@@ -71,7 +108,6 @@ jobs:
         working-directory: apps/frontend
         run: |
           # Create .env.production.local with production values
-          # This overrides .env.local and ensures correct URLs are baked into the build
           cat > .env.production.local << EOF
           NEXT_PUBLIC_CMS_URL=${{ secrets.NEXT_PUBLIC_CMS_URL || 'https://publicapi.expertbeacon.com' }}
           NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://public-api.org' }}
@@ -81,24 +117,230 @@ jobs:
           NEXT_PUBLIC_CMS_URL: ${{ secrets.NEXT_PUBLIC_CMS_URL || 'https://publicapi.expertbeacon.com' }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://public-api.org' }}
 
-      - name: Deploy to Cloudflare Workers
+      - name: Get build info
+        id: build_info
         working-directory: apps/frontend
-        run: pnpm deploy:worker
+        run: |
+          WORKER_SIZE=$(du -sh .open-next/worker.js | cut -f1)
+          ASSETS_SIZE=$(du -sh .open-next/assets | cut -f1)
+          echo "worker_size=$WORKER_SIZE" >> $GITHUB_OUTPUT
+          echo "assets_size=$ASSETS_SIZE" >> $GITHUB_OUTPUT
+
+      # Upload build artifacts for deploy job
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: |
+            apps/frontend/.open-next
+            apps/frontend/wrangler.toml
+          retention-days: 1
+
+  # ==========================================================================
+  # Deploy Preview - For Pull Requests
+  # ==========================================================================
+  deploy-preview:
+    runs-on: ubuntu-latest
+    name: Deploy Preview
+    needs: build
+    if: github.event_name == 'pull_request'
+
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: apps/frontend
+
+      - name: Install wrangler
+        run: pnpm add -g wrangler
+
+      - name: Deploy preview
+        id: deploy
+        working-directory: apps/frontend
+        run: |
+          # Deploy to staging environment with unique name for PR
+          PREVIEW_NAME="api-navigator-pr-${{ github.event.pull_request.number }}"
+
+          # Update worker name for preview
+          sed -i "s/name = \"api-navigator\"/name = \"$PREVIEW_NAME\"/g" wrangler.toml
+
+          # Deploy and capture URL
+          DEPLOY_OUTPUT=$(wrangler deploy --env staging 2>&1) || true
+          echo "$DEPLOY_OUTPUT"
+
+          # Extract preview URL
+          PREVIEW_URL=$(echo "$DEPLOY_OUTPUT" | grep -oP 'https://[^\s]+\.workers\.dev' | head -1 || echo "https://$PREVIEW_NAME.workers.dev")
+          echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const previewUrl = '${{ steps.deploy.outputs.preview_url }}';
+            const workerSize = '${{ needs.build.outputs.worker_size }}';
+            const assetsSize = '${{ needs.build.outputs.assets_size }}';
+
+            const body = `## Cloudflare Workers Preview Deployment
+
+            | Status | URL |
+            |--------|-----|
+            | Deployed | [${previewUrl}](${previewUrl}) |
+
+            ### Build Info
+            - Worker Size: \`${workerSize}\`
+            - Assets Size: \`${assetsSize}\`
+
+            ---
+            *Deployed at ${new Date().toISOString()}*`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(c =>
+              c.user.type === 'Bot' &&
+              c.body.includes('Cloudflare Workers Preview Deployment')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
+
+  # ==========================================================================
+  # Deploy Production - For main/production branches
+  # ==========================================================================
+  deploy-production:
+    runs-on: ubuntu-latest
+    name: Deploy to Production
+    needs: build
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+
+    # Only run if not a bot commit
+    # if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    environment:
+      name: production
+      url: https://public-api.org
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: apps/frontend
+
+      - name: Install wrangler
+        run: pnpm add -g wrangler
+
+      - name: Deploy to Cloudflare Workers
+        working-directory: apps/frontend
+        run: wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Purge Cloudflare Cache
+        if: success()
+        run: |
+          # Purge cache for the deployed site (optional, requires zone ID)
+          if [ -n "${{ secrets.CLOUDFLARE_ZONE_ID }}" ]; then
+            curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+              -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              --data '{"purge_everything":true}'
+          fi
+
       - name: Deployment Summary
         if: success()
         run: |
-          echo "### 🚀 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployment Successful!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Environment**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **URL**: https://public-api.org" >> $GITHUB_STEP_SUMMARY
-          echo "- **Time**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Environment | ${{ github.ref_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| URL | https://public-api.org |" >> $GITHUB_STEP_SUMMARY
+          echo "| Workers URL | https://api-navigator.workers.dev |" >> $GITHUB_STEP_SUMMARY
+          echo "| Worker Size | ${{ needs.build.outputs.worker_size }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Assets Size | ${{ needs.build.outputs.assets_size }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Time | $(date -u +'%Y-%m-%d %H:%M:%S UTC') |" >> $GITHUB_STEP_SUMMARY
 
-      - name: Cleanup
-        if: always()
-        working-directory: apps/frontend
-        run: rm -f wrangler.toml
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "### Deployment Failed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Check the logs above for details." >> $GITHUB_STEP_SUMMARY
+
+  # ==========================================================================
+  # Cleanup - Remove preview deployments when PR is closed
+  # ==========================================================================
+  cleanup-preview:
+    runs-on: ubuntu-latest
+    name: Cleanup Preview
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install wrangler
+        run: npm install -g wrangler
+
+      - name: Delete preview worker
+        run: |
+          PREVIEW_NAME="api-navigator-pr-${{ github.event.pull_request.number }}"
+          wrangler delete "$PREVIEW_NAME" --force || true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

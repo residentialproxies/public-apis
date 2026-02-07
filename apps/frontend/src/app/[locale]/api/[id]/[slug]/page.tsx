@@ -33,7 +33,12 @@ import {
 import { getSiteUrl } from "@/lib/site";
 import { slugify } from "@/lib/slugify";
 import { locales, type Locale } from "@/i18n/config";
-import { toOpenGraphLocale, generateHreflangUrls } from "@/lib/locales";
+import {
+  toLocalizedPath,
+  toLocalizedUrl,
+  toOpenGraphLocale,
+  generateHreflangUrls,
+} from "@/lib/locales";
 import {
   GettingStartedGenerator,
   CodeExamplesGenerator,
@@ -152,6 +157,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     getTranslations({ locale, namespace: "api" }),
   ]);
   if (!api) return { title: t("apiNotFound") };
+
+  const typedLocale = locale as Locale;
   const fallbackDescription =
     api.aiAnalysis?.summary?.trim() || api.description;
   const generatedDescription =
@@ -168,27 +175,32 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     t("defaultSeoTitle", { name: api.name });
   const canonicalSlug = slugify(api.name);
   const canonicalPath = `/api/${api.id}/${canonicalSlug}`;
-  const ogImage = `/api/${api.id}/${canonicalSlug}/opengraph-image`;
+  const localizedCanonicalUrl = toLocalizedUrl(
+    siteUrl,
+    canonicalPath,
+    typedLocale,
+  );
+  const ogImage = `${siteUrl}${canonicalPath}/opengraph-image`;
 
   // SEO: Generate hreflang links for all language versions
   // This prevents duplicate content issues and helps search engines serve the correct language
   const hreflangUrls = generateHreflangUrls(canonicalPath, siteUrl);
 
   // SEO: Use consistent locale formatting via helper function
-  const ogLocale = toOpenGraphLocale(locale as Locale);
+  const ogLocale = toOpenGraphLocale(typedLocale);
 
   return {
     title,
     description,
     alternates: {
-      canonical: `${siteUrl}/${locale}${canonicalPath}`,
+      canonical: localizedCanonicalUrl,
       languages: hreflangUrls,
     },
     openGraph: {
       title,
       description,
       type: "article",
-      url: `${siteUrl}/${locale}${canonicalPath}`,
+      url: localizedCanonicalUrl,
       images: [{ url: ogImage }],
       locale: ogLocale,
     },
@@ -203,6 +215,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function ApiDetailPage(props: Props) {
   const { locale, id, slug } = await props.params;
+  const typedLocale = locale as Locale;
   setRequestLocale(locale);
 
   const t = await getTranslations("api");
@@ -255,7 +268,7 @@ export default async function ApiDetailPage(props: Props) {
 
   const canonicalSlug = slugify(api.name);
   if (slug !== canonicalSlug) {
-    redirect(`/api/${api.id}/${canonicalSlug}`);
+    redirect(toLocalizedPath(`/api/${api.id}/${canonicalSlug}`, typedLocale));
   }
 
   // Build template context for PSEO content generation

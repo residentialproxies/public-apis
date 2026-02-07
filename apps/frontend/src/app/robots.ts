@@ -7,41 +7,74 @@ export default function robots(): MetadataRoute.Robots {
 
   return {
     rules: [
-      // Default rules for all crawlers
       {
         userAgent: "*",
-        allow: ["/", "/api/", "/category/", "/about", "/bot", "/catalog"],
+        allow: [
+          "/",
+          "/api/",
+          "/category/",
+          "/about",
+          "/bot",
+          "/catalog",
+          "/privacy",
+          "/terms",
+          "/trust",
+          "/screenshots/",
+          "/en/",
+          "/zh/",
+          "/ja/",
+          "/es/",
+          "/pt-BR/",
+          "/de/",
+          "/zh/privacy",
+          "/ja/privacy",
+          "/es/privacy",
+          "/pt-BR/privacy",
+          "/de/privacy",
+          "/zh/terms",
+          "/ja/terms",
+          "/es/terms",
+          "/pt-BR/terms",
+          "/de/terms",
+          "/zh/trust",
+          "/ja/trust",
+          "/es/trust",
+          "/pt-BR/trust",
+          "/de/trust",
+        ],
         disallow: [
           "/_next/",
           "/_next/static/",
           "/api/*/health",
+          "/search",
+          "/en/search",
+          "/zh/search",
+          "/ja/search",
+          "/es/search",
+          "/pt-BR/search",
+          "/de/search",
           "/admin/",
           "/*.json$",
           "/api/v1/",
-          "/screenshots/*.webp",
         ],
-        crawlDelay: 1, // Be polite to the server
+        crawlDelay: 1,
       },
-      // Googlebot - full access with image indexing
       {
         userAgent: "Googlebot",
-        allow: "/",
+        allow: ["/", "/screenshots/", "/opengraph-image"],
         disallow: ["/_next/", "/admin/", "/api/v1/"],
       },
-      // Googlebot Image - allow screenshot indexing
       {
         userAgent: "Googlebot-Image",
         allow: ["/screenshots/", "/opengraph-image"],
         disallow: ["/_next/static/"],
       },
-      // Bingbot
       {
         userAgent: "Bingbot",
-        allow: "/",
+        allow: ["/", "/screenshots/"],
         disallow: ["/_next/", "/admin/", "/api/v1/"],
         crawlDelay: 2,
       },
-      // AI Crawlers - allow access for AI training
       {
         userAgent: "GPTBot",
         allow: "/",
@@ -62,7 +95,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/admin/", "/api/v1/"],
       },
-      // Block known bad bots
       {
         userAgent: "AhrefsBot",
         crawlDelay: 10,
@@ -72,7 +104,11 @@ export default function robots(): MetadataRoute.Robots {
         crawlDelay: 10,
       },
     ],
-    sitemap: `${siteUrl}/sitemap.xml`,
+    sitemap: [
+      `${siteUrl}/sitemap-index.xml`,
+      `${siteUrl}/sitemap.xml`,
+      `${siteUrl}/sitemap-images.xml`,
+    ],
     host: siteUrl,
   };
 }

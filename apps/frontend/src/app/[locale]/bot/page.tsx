@@ -4,6 +4,9 @@ import { Link } from "@/i18n/navigation";
 
 import { fetchPublicApisRepoStats, fallbackRepoStats } from "@/lib/github";
 import { formatCompactNumber, formatDate } from "@/lib/format";
+import { getSiteUrl } from "@/lib/site";
+import { generateHreflangUrls, toLocalizedPath, toLocalizedUrl } from "@/lib/locales";
+import type { Locale } from "@/i18n/config";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -12,14 +15,20 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "bot" });
+  const siteUrl = getSiteUrl();
+  const localizedBotUrl = toLocalizedUrl(siteUrl, "/bot", locale as Locale);
 
   return {
     title: t("title"),
     description: t("subtitle"),
-    alternates: { canonical: "/bot" },
+    alternates: {
+      canonical: localizedBotUrl,
+      languages: generateHreflangUrls("/bot", siteUrl),
+    },
     openGraph: {
       title: t("title"),
       description: t("subtitle"),
+      url: localizedBotUrl,
       type: "website",
     },
   };
@@ -49,9 +58,11 @@ const TerminalWindow = ({
 
 export default async function BotPage({ params }: Props) {
   const { locale } = await params;
+  const typedLocale = locale as Locale;
   setRequestLocale(locale);
 
   const t = await getTranslations("bot");
+  const siteUrl = getSiteUrl();
 
   const repoStats = await fetchPublicApisRepoStats().catch(() =>
     fallbackRepoStats(),
@@ -70,6 +81,7 @@ export default async function BotPage({ params }: Props) {
       applicationCategory: "WebCrawler",
       operatingSystem: "Cloud",
       description: t("subtitle"),
+      url: `${siteUrl}${toLocalizedPath("/bot", typedLocale)}`,
     },
   };
 

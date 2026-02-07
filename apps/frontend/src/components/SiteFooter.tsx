@@ -22,12 +22,46 @@ export function SiteFooter() {
     { href: "/", label: tNav("catalog") },
     { href: "/about", label: tNav("about") },
     { href: "/bot", label: tNav("bot") },
+    { href: "/trust", label: "Trust Policy" },
+    { href: "/privacy", label: "Privacy" },
+    { href: "/terms", label: "Terms" },
   ];
 
   const externalLinks = [
     {
       href: "https://github.com/public-apis/public-apis",
       label: t("githubRepo"),
+      external: true,
+    },
+    {
+      href: "/sitemap-index.xml",
+      label: "Sitemap Index",
+      external: false,
+    },
+    {
+      href: "/sitemap.xml",
+      label: t("sitemap"),
+      external: false,
+    },
+    {
+      href: "/sitemap-images.xml",
+      label: "Image Sitemap",
+      external: false,
+    },
+    {
+      href: "/feed.xml",
+      label: "RSS Feed",
+      external: false,
+    },
+    {
+      href: "/feed.atom",
+      label: "Atom Feed",
+      external: false,
+    },
+    {
+      href: "mailto:info@public-api.org",
+      label: t("contact"),
+      external: true,
     },
   ];
 
@@ -38,7 +72,6 @@ export function SiteFooter() {
     >
       <div className="mx-auto max-w-6xl px-6 py-10">
         <div className="grid gap-8 md:grid-cols-3">
-          {/* ASCII Logo & Branding */}
           <div className="space-y-4">
             <pre
               className="ascii-art text-[8px] leading-[1.1] text-[var(--accent-green)] opacity-60 sm:text-[10px]"
@@ -56,7 +89,6 @@ export function SiteFooter() {
             </p>
           </div>
 
-          {/* Navigation Links */}
           <nav aria-label={tA11y("footerNavAriaLabel")}>
             <h2 className="mb-4 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
               <span className="text-[var(--accent-purple)]">#</span>{" "}
@@ -82,7 +114,6 @@ export function SiteFooter() {
             </ul>
           </nav>
 
-          {/* External Links */}
           <div>
             <h2 className="mb-4 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
               <span className="text-[var(--accent-orange)]">#</span>{" "}
@@ -91,70 +122,68 @@ export function SiteFooter() {
             <ul className="space-y-2" role="list">
               {externalLinks.map((link) => (
                 <li key={link.href}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-2 font-mono text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--accent-green)]"
-                  >
-                    <span
-                      className="text-[var(--text-dim)] transition-colors group-hover:text-[var(--accent-green)]"
-                      aria-hidden="true"
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      target={
+                        link.href.startsWith("http") ? "_blank" : undefined
+                      }
+                      rel={
+                        link.href.startsWith("http")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      className="group flex items-center gap-2 font-mono text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--accent-green)]"
                     >
-                      &gt;
-                    </span>
-                    {link.label}
-                    <svg
-                      className="size-3 text-[var(--text-dim)]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
+                      <span
+                        className="text-[var(--text-dim)] transition-colors group-hover:text-[var(--accent-green)]"
+                        aria-hidden="true"
+                      >
+                        &gt;
+                      </span>
+                      {link.label}
+                      {link.href.startsWith("http") ? (
+                        <>
+                          <svg
+                            className="size-3 text-[var(--text-dim)]"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
+                          <span className="sr-only">
+                            {tA11y("opensInNewTab")}
+                          </span>
+                        </>
+                      ) : null}
+                    </a>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="group flex items-center gap-2 font-mono text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--accent-green)]"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                      />
-                    </svg>
-                    <span className="sr-only">{tA11y("opensInNewTab")}</span>
-                  </a>
+                      <span
+                        className="text-[var(--text-dim)] transition-colors group-hover:text-[var(--accent-green)]"
+                        aria-hidden="true"
+                      >
+                        &gt;
+                      </span>
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               ))}
-              <li>
-                <a
-                  href="https://public-api.org/sitemap.xml"
-                  className="group flex items-center gap-2 font-mono text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--accent-green)]"
-                >
-                  <span
-                    className="text-[var(--text-dim)] transition-colors group-hover:text-[var(--accent-green)]"
-                    aria-hidden="true"
-                  >
-                    &gt;
-                  </span>
-                  {t("sitemap")}
-                </a>
-              </li>
-              <li>
-                <a
-                  href="mailto:info@public-api.org"
-                  className="group flex items-center gap-2 font-mono text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--accent-green)]"
-                >
-                  <span
-                    className="text-[var(--text-dim)] transition-colors group-hover:text-[var(--accent-green)]"
-                    aria-hidden="true"
-                  >
-                    &gt;
-                  </span>
-                  {t("contact")}
-                </a>
-              </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="mt-10 border-t border-[var(--border-dim)] pt-6">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <p className="font-mono text-xs text-[var(--text-dim)]">
