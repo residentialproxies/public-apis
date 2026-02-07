@@ -129,9 +129,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
-          path: |
-            apps/frontend/.open-next
-            apps/frontend/wrangler.toml
+          path: apps/frontend
+          include-hidden-files: true
           retention-days: 1
 
   # ==========================================================================
