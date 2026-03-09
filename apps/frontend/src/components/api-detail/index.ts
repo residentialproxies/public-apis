@@ -3,6 +3,7 @@ export { ApiAuthenticationSection } from "./ApiAuthenticationSection";
 export { PlaceholderSection } from "./PlaceholderSection";
 export { ApiErrorCodesSection } from "./ApiErrorCodesSection";
 export { ApiHealthSection } from "./ApiHealthSection";
+export { ApiHealthSectionClient } from "./ApiHealthSectionClient";
 export { ApiSeoContentSection } from "./ApiSeoContentSection";
 export { ApiRelatedApisSection } from "./ApiRelatedApisSection";
 export { ApiAiAnalysisSection } from "./ApiAiAnalysisSection";

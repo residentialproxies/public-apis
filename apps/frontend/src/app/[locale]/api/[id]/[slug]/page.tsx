@@ -11,7 +11,7 @@ import { ContentBlock } from "@/components/ContentBlock";
 import { FAQSection } from "@/components/FAQSection";
 import {
   ApiHeader,
-  ApiHealthSection,
+  ApiHealthSectionClient,
   ApiScreenshotSection,
   ApiHomepageSection,
   ApiAiAnalysisSection,
@@ -26,7 +26,6 @@ import {
 } from "@/components/api-detail";
 import {
   fetchApiDetail,
-  fetchApiHealthSummary,
   fetchApiOpenapiSpec,
   fetchApisList,
 } from "@/lib/backend";
@@ -221,10 +220,7 @@ export default async function ApiDetailPage(props: Props) {
   const t = await getTranslations("api");
   const tCategories = await getTranslations("categories");
 
-  const [api, healthSummary] = await Promise.all([
-    fetchApiDetail(id).catch(() => null),
-    fetchApiHealthSummary(id, 30).catch(() => null),
-  ]);
+  const api = await fetchApiDetail(id).catch(() => null);
   if (!api) notFound();
 
   const description = api.aiAnalysis?.summary?.trim() || api.description;
@@ -347,17 +343,7 @@ export default async function ApiDetailPage(props: Props) {
             }
           : undefined,
     },
-    healthSummary: healthSummary
-      ? {
-          uptimePct: healthSummary.uptimePct ?? undefined,
-          avgLatencyMs: healthSummary.avgLatencyMs ?? undefined,
-          series: (healthSummary.series ?? []).map((s) => ({
-            date: s.checkedAt ?? "",
-            status: s.healthStatus ?? "",
-            latencyMs: s.latencyMs ?? undefined,
-          })),
-        }
-      : undefined,
+    healthSummary: undefined,
     relatedApis: related.map((r) => ({
       id: typeof r.id === "string" ? parseInt(r.id, 10) : r.id,
       name: r.name,
@@ -445,7 +431,7 @@ export default async function ApiDetailPage(props: Props) {
 
       <ApiHeader
         api={api}
-        healthSummary={healthSummary}
+        healthSummary={null}
         apiVersion={apiVersion}
         t={t}
         tCategories={tCategories}
@@ -453,7 +439,7 @@ export default async function ApiDetailPage(props: Props) {
 
       <ApiScreenshotSection api={api} canonicalSlug={canonicalSlug} t={t} />
 
-      <ApiHealthSection healthSummary={healthSummary} t={t} />
+      <ApiHealthSectionClient apiId={id} cmsUrl={cmsUrl()} />
 
       <ApiHomepageSection api={api} t={t} />
 

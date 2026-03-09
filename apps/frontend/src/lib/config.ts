@@ -100,12 +100,12 @@ export const CACHE_CONFIG = {
   facets: { revalidate: 600 }, // 10 minutes
 
   // Semi-stable data
-  apisList: { revalidate: 300 }, // 5 minutes
-  apiDetail: { revalidate: 600 }, // 10 minutes
+  apisList: { revalidate: 1800 }, // 30 minutes
+  apiDetail: { revalidate: 3600 }, // 1 hour
 
-  // Real-time data
-  health: { revalidate: 60 }, // 1 minute
-  search: { revalidate: 120 }, // 2 minutes
+  // Real-time data (health is now client-side, this is unused for ISR)
+  health: { revalidate: 60 }, // 1 minute (client-side only)
+  search: { revalidate: 300 }, // 5 minutes
 } as const;
 
 // Validate config at module load time (server-side)
