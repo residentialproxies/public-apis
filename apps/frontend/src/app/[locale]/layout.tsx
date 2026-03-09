@@ -240,7 +240,7 @@ export default async function RootLayout({ children, params }: Props) {
         {cmsUrl && <link rel="preconnect" href={cmsUrl} />}
         {cmsUrl && <link rel="dns-prefetch" href={cmsUrl} />}
         {/* DNS prefetch for API backend (fallback) */}
-        <link rel="dns-prefetch" href="//cms.public-api.org" />
+        <link rel="dns-prefetch" href="//api.public-api.org" />
         {/* hreflang tags for SEO */}
         {Object.entries(generateHreflangUrls("/", siteUrl)).map(
           ([lang, href]) => (
