@@ -26,7 +26,7 @@ pnpm dev
 
 项目已提供：
 
-- `open-next.config.ts`：R2 incremental cache + KV tag cache
-- `wrangler.toml`：bindings 示例（需要替换 KV namespace id）
+- `open-next.config.ts`：dummy incremental/tag cache，不依赖前端 R2 或 KV
+- `wrangler.toml`：仅保留 Worker 运行所需 bindings 与环境变量
 
 参考：仓库根目录 `docs-new/deployment-guide.md`。

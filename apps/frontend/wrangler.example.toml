@@ -1,46 +1,93 @@
-# Cloudflare Workers 配置示例
-# 复制此文件为 wrangler.toml 并填写实际值
-
-# ⚠️ account_id 已移除，改用环境变量 CLOUDFLARE_ACCOUNT_ID
-# 获取方法: wrangler whoami
-# 本地部署: export CLOUDFLARE_ACCOUNT_ID=your_account_id
-# CI/CD: 在 GitHub Secrets 中设置
+# =============================================================================
+# Cloudflare Workers Configuration for API Navigator Frontend
+# =============================================================================
+# Copy this file to wrangler.toml and fill in actual values
+#
+# Prerequisites:
+#   1. Set environment variable: export CLOUDFLARE_ACCOUNT_ID=your_account_id
+#
+# Note: No R2 bucket or KV namespace required for frontend deployment.
+#       Frontend uses dummy cache (live SSR). Only the backend
+#       SCREENSHOT_BUCKET R2 binding remains in use.
+#
+# For CI/CD: Configure GitHub Secrets (see DEPLOYMENT.md)
+# =============================================================================
 
 name = "api-navigator"
 main = ".open-next/worker.js"
 compatibility_date = "2025-12-15"
 compatibility_flags = ["nodejs_compat"]
 
-# Assets binding - serves static files (CSS, JS, images, etc.)
+# Enable workers.dev subdomain for testing
+workers_dev = true
+
+# =============================================================================
+# Worker Limits & Performance
+# =============================================================================
+# CPU time limit (paid plan: 50ms default, can increase)
+# Uncomment for paid plans with higher limits
+# [limits]
+# cpu_ms = 50
+
+# =============================================================================
+# Static Assets Configuration
+# =============================================================================
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
+# Enable HTML handling for SPA fallback
+html_handling = "auto-trailing-slash"
+# Serve pre-compressed assets (gzip/brotli)
+serve_directly = true
 
+# =============================================================================
+# Environment Variables
+# =============================================================================
 [vars]
 NEXT_PUBLIC_CMS_URL = "https://publicapi.expertbeacon.com"
 NEXT_PUBLIC_SITE_URL = "https://public-api.org"
+# Cache control
+CACHE_MAX_AGE = "3600"
+STALE_WHILE_REVALIDATE = "86400"
 
-# OpenNext (Cloudflare) cache bindings
-# - R2: incremental cache (ISR)
-# 创建命令: wrangler r2 bucket create api-navigator-inc-cache
-[[r2_buckets]]
-binding = "NEXT_INC_CACHE_R2_BUCKET"
-bucket_name = "api-navigator-inc-cache"
-preview_bucket_name = "api-navigator-inc-cache-preview"
-
-# - KV: tag cache (revalidation tags)
-# 创建命令: wrangler kv namespace create "NEXT_TAG_CACHE_KV"
-# ⚠️ 必须配置：使用实际的 KV namespace ID
-[[kv_namespaces]]
-binding = "NEXT_TAG_CACHE_KV"
-id = "YOUR_PRODUCTION_KV_NAMESPACE_ID"
-preview_id = "YOUR_PREVIEW_KV_NAMESPACE_ID"
-
-# 自定义域名配置（可选）
+# =============================================================================
+# Custom Domain Configuration (Optional)
+# =============================================================================
+# Uncomment and configure after domain is added to Cloudflare
 # [[routes]]
-# pattern = "api-navigator.com/*"
+# pattern = "public-api.org/*"
 # custom_domain = true
 
 # [[routes]]
-# pattern = "www.api-navigator.com/*"
+# pattern = "www.public-api.org/*"
+# custom_domain = true
+
+# OpenNext cache storage is disabled in open-next.config.ts.
+# No frontend R2 or KV bindings are required.
+
+# =============================================================================
+# Staging Environment
+# =============================================================================
+[env.staging]
+name = "api-navigator-staging"
+workers_dev = true
+
+[env.staging.vars]
+NEXT_PUBLIC_CMS_URL = "https://publicapi.expertbeacon.com"
+NEXT_PUBLIC_SITE_URL = "https://api-navigator-staging.workers.dev"
+
+# =============================================================================
+# Production Environment (explicit)
+# =============================================================================
+[env.production]
+name = "api-navigator"
+workers_dev = false
+
+[env.production.vars]
+NEXT_PUBLIC_CMS_URL = "https://publicapi.expertbeacon.com"
+NEXT_PUBLIC_SITE_URL = "https://public-api.org"
+
+# Production custom domain
+# [[env.production.routes]]
+# pattern = "public-api.org/*"
 # custom_domain = true

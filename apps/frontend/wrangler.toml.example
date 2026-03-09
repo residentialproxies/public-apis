@@ -22,19 +22,5 @@ compatibility_flags = ["nodejs_compat"]
 NEXT_PUBLIC_CMS_URL = "https://cms.api-navigator.com"
 NEXT_PUBLIC_SITE_URL = "https://public-api.org"
 
-# OpenNext (Cloudflare) cache bindings
-# R2 bucket for incremental cache (ISR)
-[[r2_buckets]]
-binding = "NEXT_INC_CACHE_R2_BUCKET"
-bucket_name = "api-navigator-inc-cache"
-preview_bucket_name = "api-navigator-inc-cache-preview"
-
-# KV namespace for tag cache (revalidation tags)
-# Steps to create:
-# 1. Run: wrangler kv:namespace create NEXT_TAG_CACHE_KV
-# 2. Run: wrangler kv:namespace create NEXT_TAG_CACHE_KV --preview
-# 3. Replace the IDs below with the output from above commands
-[[kv_namespaces]]
-binding = "NEXT_TAG_CACHE_KV"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_KV_PREVIEW_NAMESPACE_ID"
+# OpenNext (Cloudflare) cache storage is disabled.
+# No frontend R2 or KV bindings are required.

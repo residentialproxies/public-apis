@@ -11,41 +11,7 @@ npm install -g wrangler
 wrangler login
 ```
 
-## 步骤 1: 创建 KV Namespace
-
-### 生产环境
-
-```bash
-wrangler kv namespace create "NEXT_TAG_CACHE_KV"
-```
-
-输出示例：
-
-```
-Created namespace with id "abc123def456..."
-```
-
-### 预览环境
-
-```bash
-wrangler kv namespace create "NEXT_TAG_CACHE_KV" --preview
-```
-
-## 步骤 2: 创建 R2 Bucket
-
-### 生产环境
-
-```bash
-wrangler r2 bucket create api-navigator-inc-cache
-```
-
-### 预览环境
-
-```bash
-wrangler r2 bucket create api-navigator-inc-cache-preview
-```
-
-## 步骤 3: 获取 Account ID
+## 步骤 1: 获取 Account ID
 
 ```bash
 wrangler whoami
@@ -58,22 +24,19 @@ Account Name: Your Name
 Account ID: 1234567890abcdef
 ```
 
-## 步骤 4: 更新 wrangler.toml
+## 步骤 2: 更新 wrangler.toml
 
 将以下配置添加到 `wrangler.toml`：
 
 ```toml
 # 在文件顶部添加
-account_id = "YOUR_ACCOUNT_ID"  # 从步骤3获取
+account_id = "YOUR_ACCOUNT_ID"
 
-# 更新 KV namespace IDs
-[[kv_namespaces]]
-binding = "NEXT_TAG_CACHE_KV"
-id = "YOUR_PRODUCTION_KV_ID"    # 从步骤1获取
-preview_id = "YOUR_PREVIEW_KV_ID"  # 从步骤1获取
+# 前端 OpenNext 持久缓存已禁用
+# 不需要 NEXT_INC_CACHE_R2_BUCKET / NEXT_TAG_CACHE_KV 绑定
 ```
 
-## 步骤 5: 环境变量配置
+## 步骤 3: 环境变量配置
 
 ### 本地开发 (.env.local)
 
@@ -98,7 +61,7 @@ NEXT_PUBLIC_CMS_URL = "https://cms.api-navigator.com"
 NEXT_PUBLIC_SITE_URL = "https://api-navigator.com"
 ```
 
-## 步骤 6: 部署
+## 步骤 4: 部署
 
 ### 预览部署
 
@@ -119,23 +82,22 @@ pnpm --filter @api-navigator/frontend deploy:worker
 2. 进入 Workers & Pages
 3. 找到 `api-navigator` worker
 4. 检查：
-   - ✅ KV Namespace 已绑定
-   - ✅ R2 Bucket 已绑定
+   - ✅ Worker 与静态资源已成功部署
    - ✅ 环境变量已设置
    - ✅ 自定义域名已配置（如需要）
 
 ## 故障排查
 
-### 问题: KV/R2 绑定失败
+### 问题: 仍然报 NEXT_INC_CACHE_R2_BUCKET / NEXT_TAG_CACHE_KV 缺失
 
-**解决**: 确保 wrangler.toml 中的 binding 名称与 open-next.config.ts 中一致：
+**解决**: 检查 `open-next.config.ts` 是否仍为 dummy cache 配置，并删除旧的 wrangler 绑定：
 
-- `NEXT_INC_CACHE_R2_BUCKET`
-- `NEXT_TAG_CACHE_KV`
+- `incrementalCache: "dummy"`
+- `tagCache: "dummy"`
 
-### 问题: 部署后 ISR 不工作
+### 问题: 部署后页面不再使用持久 ISR 缓存
 
-**解决**: 检查 R2 bucket 权限，确保 Worker 有读写权限
+**说明**: 这是预期行为。当前前端直接从运行时/源站获取数据，不再写入前端 R2/KV。
 
 ### 问题: 环境变量未生效
 
@@ -145,11 +107,9 @@ pnpm --filter @api-navigator/frontend deploy:worker
 
 基于免费/付费套餐：
 
-- **KV Namespace**: 免费 100k 读/天，1k 写/天
-- **R2 Bucket**: 免费 10GB 存储，1M Class A 操作/月
 - **Workers**: 免费 100k 请求/天
 
-对于中小型流量，免费套餐足够使用。
+当前前端成本主要来自 Workers 请求；截图存储成本仍由后端截图桶单独承担。
 
 ## 安全最佳实践
 
@@ -162,5 +122,4 @@ pnpm --filter @api-navigator/frontend deploy:worker
 
 - [OpenNext Cloudflare 文档](https://opennext.js.org/cloudflare)
 - [Wrangler CLI 文档](https://developers.cloudflare.com/workers/wrangler/)
-- [KV 存储文档](https://developers.cloudflare.com/kv/)
-- [R2 存储文档](https://developers.cloudflare.com/r2/)
+- [Cloudflare Workers 文档](https://developers.cloudflare.com/workers/)

@@ -1,13 +1,10 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare/config";
-import r2IncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/r2-incremental-cache";
-import kvNextTagCache from "@opennextjs/cloudflare/overrides/tag-cache/kv-next-tag-cache";
 
 export default defineCloudflareConfig({
-  // R2 for ISR cache - stores pre-rendered pages
-  incrementalCache: r2IncrementalCache,
-
-  // KV for tag-based revalidation
-  tagCache: kvNextTagCache,
+  // No persistent R2/KV cache — pages render from live origin.
+  // Eliminates all R2 PutObject writes to api-navigator-inc-cache.
+  incrementalCache: "dummy",
+  tagCache: "dummy",
 
   // Direct queue processing (no Durable Objects needed)
   queue: "direct",
