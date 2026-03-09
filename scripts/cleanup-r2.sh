@@ -7,7 +7,7 @@ source "$(dirname "$0")/../.env.local" 2>/dev/null || true
 
 ACCOUNT="${CLOUDFLARE_ACCOUNT_ID}"
 TOKEN="${CLOUDFLARE_API_TOKEN}"
-BUCKETS=("api-navigator-inc-cache" "api-navigator-inc-cache-preview")
+BUCKETS=("api-navigator-inc-cache" "api-navigator-inc-cache-preview" "sitejson-assets")
 
 for bucket in "${BUCKETS[@]}"; do
   resp=$(curl -s \
