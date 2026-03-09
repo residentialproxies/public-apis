@@ -277,6 +277,10 @@ jobs:
       - name: Install wrangler
         run: pnpm add -g wrangler
 
+      - name: Restore binary permissions
+        working-directory: apps/frontend
+        run: chmod +x node_modules/.bin/* 2>/dev/null || true
+
       - name: Deploy to Cloudflare Workers
         working-directory: apps/frontend
         run: wrangler deploy
